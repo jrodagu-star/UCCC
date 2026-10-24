@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Distribución fármacos</title>
+<style>
+:root{
+  --bg:#eef2f5; --text:#14232c; --muted:#56656f; --navy:#0b4f6c;
+  --dist:#9f1239; --dist-bg:#fff1f4;
+  --med:#5b3d8a; --med-bg:#f4effb;
+  --prox:#0f5f8a; --prox-bg:#e8f4fb;
+  --per:#1d7a4f; --per-bg:#e8f6ee;
+  --bad:#b3261e; --bad-bg:#fbe9e7;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font)}
+body{padding:16px}
+h1,h2,p{margin:0}
+.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;background:linear-gradient(135deg,#0b4f6c,#0e6688);color:#fff;border-radius:16px;padding:14px 16px;margin-bottom:14px}
+.kicker{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:#cfe3ec;font-weight:800}
+h1{font-size:1.55rem;line-height:1.1;margin-top:2px}
+.sub{color:#d3e6ee;font-size:.88rem;max-width:46ch;text-align:right}
+.stage{display:grid;grid-template-columns:118px 1fr;gap:0 8px;align-items:stretch}
+.spine{position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:18px 0}
+.spine::before{content:"";position:absolute;left:58px;top:28px;bottom:28px;width:8px;border-radius:8px;background:linear-gradient(#9f1239,#5b3d8a 50%,#0f5f8a)}
+.hub{position:relative;z-index:1;align-self:center;width:86px;height:86px;border-radius:50%;background:#0b4f6c;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(11,79,108,.25);text-align:center}
+.hub b{font-size:.95rem;line-height:1}
+.hub span{font-size:.68rem;letter-spacing:.04em;text-transform:uppercase;opacity:.85}
+.rails{display:flex;flex-direction:column;gap:10px}
+.rail{display:grid;grid-template-columns:92px 1fr;min-height:78px;background:#fff;border-radius:16px;overflow:hidden;border:1px solid #d7e0e6;box-shadow:0 1px 0 rgba(20,35,44,.04)}
+.port{background:var(--c);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative}
+.port::after{content:"";position:absolute;right:-7px;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:var(--c);box-shadow:0 0 0 4px #fff}
+.port b{font-size:.95rem;line-height:1}
+.port span{font-size:.68rem;letter-spacing:.04em;text-transform:uppercase;opacity:.9;margin-top:3px}
+.body{padding:8px 12px 8px 18px}
+.body p{color:var(--muted);font-size:.78rem;margin-top:5px}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{background:var(--bgc);color:var(--c);border-radius:99px;padding:3px 8px;font-size:.78rem;font-weight:750;font-weight:700}
+.arm{margin-top:12px;display:grid;grid-template-columns:118px 1fr;gap:8px;align-items:center}
+.cannula{justify-self:center;width:86px;height:86px;border-radius:22px;background:var(--per);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(29,122,79,.22)}
+.cannula b{font-size:1.35rem;line-height:1}
+.cannula span{font-size:.68rem;letter-spacing:.04em;text-transform:uppercase}
+.bans{margin-top:14px;background:#fff;border:1px solid #d7e0e6;border-radius:16px;padding:12px}
+.bans h2{color:var(--bad);margin-bottom:8px}
+.pairs{display:flex;flex-wrap:wrap;gap:8px}
+.pair{display:flex;align-items:center;gap:6px;background:var(--bad-bg);border-radius:999px;padding:5px 8px 5px 10px;font-size:.8rem;font-weight:700}
+.pair i{width:18px;height:18px;border-radius:50%;background:var(--bad);color:#fff;font-style:normal;display:grid;place-items:center;font-size:.75rem}
+.cases{margin-top:10px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.case{background:#fff;border-radius:14px;border:1px solid #d7e0e6;padding:10px 12px;border-top:5px solid var(--c,var(--navy))}
+.case b{display:block;margin-bottom:4px}
+.case p{font-size:.8rem;color:#24343d}
+</style>
+</head>
+<body>
+  <header class="hero">
+    <div>
+      <p class="kicker">Hemodinámica · Propuesta de la unidad</p>
+      <h1>Distribución fármacos</h1>
+    </div>
+    <p class="sub">Central de 3 luces y una periférica del 18. Cada grupo entra siempre por la misma vía.</p>
+  </header>
+
+  <div class="stage">
+    <div class="spine">
+      <div class="hub"><b>CVC</b><span>3 luces</span></div>
+    </div>
+    <div class="rails">
+      <article class="rail">
+        <div class="port" style="--c:var(--dist)"><b>Distal</b><span>Vasopresores</span></div>
+        <div class="body">
+          <div class="chips">
+            <span class="chip" style="--c:var(--dist);--bgc:var(--dist-bg)">Noradrenalina</span>
+            <span class="chip" style="--c:var(--dist);--bgc:var(--dist-bg)">Vasopresina</span>
+            <span class="chip" style="--c:var(--dist);--bgc:var(--dist-bg)">Adrenalina</span>
+            <span class="chip" style="--c:var(--dist);--bgc:var(--dist-bg)">Angiotensina II</span>
+          </div>
+          <p>No se para para dar un bolo. No bicarbonato, calcio, nutrición ni sangre.</p>
+        </div>
+      </article>
+      <article class="rail">
+        <div class="port" style="--c:var(--med)"><b>Medial</b><span>Sedoanalgesia</span></div>
+        <div class="body">
+          <div class="chips">
+            <span class="chip" style="--c:var(--med);--bgc:var(--med-bg)">Remifentanilo</span>
+            <span class="chip" style="--c:var(--med);--bgc:var(--med-bg)">Fentanilo</span>
+            <span class="chip" style="--c:var(--med);--bgc:var(--med-bg)">Propofol</span>
+            <span class="chip" style="--c:var(--med);--bgc:var(--med-bg)">Midazolam</span>
+            <span class="chip" style="--c:var(--med);--bgc:var(--med-bg)">Dexmedetomidina</span>
+            <span class="chip" style="--c:var(--med);--bgc:var(--med-bg)">Ketamina</span>
+          </div>
+          <p>Analgésico y sedante en esta luz. El propofol no va en la misma jeringa.</p>
+        </div>
+      </article>
+      <article class="rail">
+        <div class="port" style="--c:var(--prox)"><b>Proximal</b><span>Inotrópicos</span></div>
+        <div class="body">
+          <div class="chips">
+            <span class="chip" style="--c:var(--prox);--bgc:var(--prox-bg)">Dobutamina</span>
+            <span class="chip" style="--c:var(--prox);--bgc:var(--prox-bg)">Dopamina</span>
+            <span class="chip" style="--c:var(--prox);--bgc:var(--prox-bg)">Milrinona</span>
+            <span class="chip" style="--c:var(--prox);--bgc:var(--prox-bg)">Levosimendán</span>
+            <span class="chip" style="--c:var(--prox);--bgc:var(--prox-bg)">Insulina</span>
+          </div>
+          <p>Milrinona lejos de furosemida, bumetanida y bicarbonato. Levosimendán solo en SG 5 %.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <div class="arm">
+    <div class="cannula"><b>18</b><span>Periférica</span></div>
+    <article class="rail">
+      <div class="port" style="--c:var(--per)"><b>18</b><span>Volumen</span></div>
+      <div class="body">
+        <div class="chips">
+          <span class="chip" style="--c:var(--per);--bgc:var(--per-bg)">Suero</span>
+          <span class="chip" style="--c:var(--per);--bgc:var(--per-bg)">Antibióticos</span>
+          <span class="chip" style="--c:var(--per);--bgc:var(--per-bg)">Furosemida</span>
+          <span class="chip" style="--c:var(--per);--bgc:var(--per-bg)">Potasio</span>
+          <span class="chip" style="--c:var(--per);--bgc:var(--per-bg)">Magnesio</span>
+          <span class="chip" style="--c:var(--per);--bgc:var(--per-bg)">Calcio o bicarbonato</span>
+        </div>
+        <p>Calcio o bicarbonato, nunca los dos a la vez. La sangre va sola: se para el resto y se lava.</p>
+      </div>
+    </article>
+  </div>
+
+  <section class="bans">
+    <h2>Nunca en la misma luz</h2>
+    <div class="pairs">
+      <div class="pair">Calcio <i>✕</i> Bicarbonato</div>
+      <div class="pair">Calcio <i>✕</i> Fosfato</div>
+      <div class="pair">Calcio <i>✕</i> Nutrición</div>
+      <div class="pair">Calcio <i>✕</i> Ceftriaxona</div>
+      <div class="pair">Milrinona <i>✕</i> Furosemida</div>
+      <div class="pair">Milrinona <i>✕</i> Bumetanida</div>
+      <div class="pair">Milrinona <i>✕</i> Bicarbonato</div>
+      <div class="pair">Levosimendán <i>✕</i> Suero que no sea SG 5 %</div>
+      <div class="pair">Sangre <i>✕</i> Glucosa, calcio o fármacos</div>
+      <div class="pair">Nutrición <i>✕</i> Cualquier otra perfusión</div>
+    </div>
+  </section>
+
+  <section class="cases">
+    <article class="case" style="--c:var(--prox)">
+      <b>Si hay nutrición parenteral</b>
+      <p>Ocupa sola la proximal. Dobutamina y dopamina pasan a la 18. Milrinona y levosimendán no bajan a esa vía: se pide otra central.</p>
+    </article>
+    <article class="case" style="--c:var(--bad)">
+      <b>Si hay bicarbonato o calcio</b>
+      <p>Van por la 18, uno cada vez. El bicarbonato no entra en la distal ni con milrinona. El calcio no va con sangre.</p>
+    </article>
+    <article class="case" style="--c:var(--per)">
+      <b>Si hay sangre</b>
+      <p>Se usa la 18 sola. Se paran las otras perfusiones de esa vía y se lava antes y después.</p>
+    </article>
+  </section>
+</body>
+</html>

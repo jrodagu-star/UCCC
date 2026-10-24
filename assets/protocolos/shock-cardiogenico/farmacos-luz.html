@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fármacos: misma luz</title>
+<style>
+:root{
+  --bg:#f5f7f8; --surface:#fff; --line:#d6dee3; --text:#14232c; --muted:#56656f;
+  --navy:#0b4f6c; --ok:#1d7a4f; --ok-bg:#e5f4ec; --bad:#b3261e; --bad-bg:#fbe9e7;
+  --warn:#8a5a00; --warn-bg:#fff4df;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.35}
+body{padding:14px}
+h1,h2,p{margin:0}
+h1{font-size:1.35rem;line-height:1.2}
+h2{font-size:1rem}
+.hero{background:linear-gradient(135deg,#0b4f6c,#0e6688);color:#fff;border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.kicker{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:#cfe3ec;font-weight:700;margin-bottom:4px}
+.sub{margin-top:4px;color:#d3e6ee;font-size:.86rem}
+.chips{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.chip{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.chip b{display:block;font-size:.78rem;color:var(--navy);margin-bottom:2px}
+.chip span{font-size:.8rem;color:var(--muted)}
+.block{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px}
+.block:last-child{margin-bottom:0}
+.head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px}
+.tag{font-size:.72rem;font-weight:700;border:1px solid currentColor;border-radius:99px;padding:2px 8px;white-space:nowrap}
+.tag.bad{color:var(--bad)}
+.tag.navy{color:var(--navy)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}
+th{font-size:.72rem;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);background:#f3f6f8}
+tr:last-child td{border-bottom:0}
+.name{font-weight:700}
+.pill{display:inline-block;border-radius:99px;padding:1px 7px;font-size:.75rem;font-weight:700;white-space:nowrap}
+.ok{background:var(--ok-bg);color:var(--ok)}
+.bad{background:var(--bad-bg);color:var(--bad)}
+.mid{background:var(--warn-bg);color:var(--warn)}
+.note{margin-top:10px;background:#eef2f4;border-radius:8px;padding:8px 10px;font-size:.84rem;color:#24343d}
+.split{display:grid;grid-template-columns:1.1fr .9fr;gap:10px}
+.card{border-radius:10px;padding:10px 12px;min-width:0}
+.card h2{margin-bottom:6px}
+.card ul{margin:0;padding-left:1.1em}
+.card li{margin:4px 0}
+.sep{background:var(--bad-bg);border:1px solid #f3c7c2}
+.sep h2{color:var(--bad)}
+.open{background:#eef4f8;border:1px solid #d3e2ec}
+.open h2{color:var(--navy)}
+@media (max-width:760px){
+  .chips,.split{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+  <header class="hero">
+    <p class="kicker">Hemodinámica · Fármacos</p>
+    <h1>Misma luz y principios</h1>
+    <p class="sub">Según el esquema rápido y las fichas de perfusión. «Luz NO» significa que no hay que proteger el fármaco de la luz.</p>
+  </header>
+
+  <div class="chips">
+    <div class="chip"><b>PVC</b><span>Compatible en los que la hoja lo indica.</span></div>
+    <div class="chip"><b>Luz</b><span>No hace falta protección de la luz.</span></div>
+    <div class="chip"><b>Estabilidad</b><span>Más de 24 h, salvo el levosimendán.</span></div>
+    <div class="chip"><b>Vía</b><span>Central, salvo dobutamina y dopamina.</span></div>
+  </div>
+
+  <section class="block">
+    <div class="head">
+      <h2>Fármacos de la hoja</h2>
+      <span class="tag navy">70 kg en las dosis de la tabla original</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Fármaco</th>
+          <th>Diluyente</th>
+          <th>PVC</th>
+          <th>Luz</th>
+          <th>Estabilidad</th>
+          <th>Vía</th>
+          <th>Misma luz</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="name">Noradrenalina</td>
+          <td>SG 5 % · 100 ml</td>
+          <td><span class="pill ok">Sí</span></td>
+          <td><span class="pill ok">No proteger</span></td>
+          <td>&gt; 24 h</td>
+          <td>Preferible central</td>
+          <td><span class="pill mid">No consta</span></td>
+        </tr>
+        <tr>
+          <td class="name">Vasopresina</td>
+          <td>SSF 0,9 % · 50 ml</td>
+          <td><span class="pill ok">Sí</span></td>
+          <td><span class="pill ok">No proteger</span></td>
+          <td>&gt; 24 h</td>
+          <td>Preferible central</td>
+          <td><span class="pill mid">No consta</span></td>
+        </tr>
+        <tr>
+          <td class="name">Angiotensina II</td>
+          <td>SG 5 % o SSF · 250 ml</td>
+          <td><span class="pill ok">Sí</span></td>
+          <td><span class="pill ok">No proteger</span></td>
+          <td>&gt; 24 h</td>
+          <td>Central</td>
+          <td><span class="pill mid">No consta</span></td>
+        </tr>
+        <tr>
+          <td class="name">Adrenalina</td>
+          <td>SG 5 % · 100 ml</td>
+          <td><span class="pill ok">Sí</span></td>
+          <td><span class="pill ok">No proteger</span></td>
+          <td>&gt; 24 h</td>
+          <td>Preferible central</td>
+          <td><span class="pill mid">No consta</span></td>
+        </tr>
+        <tr>
+          <td class="name">Dobutamina</td>
+          <td>SG 5 % · 250 ml</td>
+          <td><span class="pill ok">Sí</span></td>
+          <td><span class="pill ok">No proteger</span></td>
+          <td>&gt; 24 h</td>
+          <td>Periférica posible</td>
+          <td><span class="pill mid">No consta</span></td>
+        </tr>
+        <tr>
+          <td class="name">Dopamina</td>
+          <td>SG 5 % · 250 ml</td>
+          <td><span class="pill ok">Sí</span></td>
+          <td><span class="pill ok">No proteger</span></td>
+          <td>&gt; 24 h</td>
+          <td>Periférica posible</td>
+          <td><span class="pill mid">No consta</span></td>
+        </tr>
+        <tr>
+          <td class="name">Milrinona</td>
+          <td>SG 5 %, SSF 0,9 % o NaCl 0,45 %</td>
+          <td><span class="pill mid">No consta</span></td>
+          <td><span class="pill mid">No consta</span></td>
+          <td><span class="pill mid">No consta</span></td>
+          <td><span class="pill mid">No consta</span></td>
+          <td><span class="pill bad">Separar</span></td>
+        </tr>
+        <tr>
+          <td class="name">Levosimendán</td>
+          <td>Solo SG 5 % · 250 ml</td>
+          <td><span class="pill mid">No consta</span></td>
+          <td><span class="pill mid">No consta</span></td>
+          <td>24 h · no congelar</td>
+          <td><span class="pill mid">No consta</span></td>
+          <td><span class="pill bad">Solo SG 5 %</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <div class="split">
+    <section class="card sep">
+      <div class="head"><h2>Separar</h2><span class="tag bad">Consta en la ficha</span></div>
+      <ul>
+        <li><b>Milrinona</b> no va por la misma vía que furosemida ni bumetanida.</li>
+        <li><b>Milrinona</b> no se diluye en bicarbonato sódico: precipita.</li>
+        <li><b>Levosimendán</b> solo en suero glucosado al 5 %. Otro diluyente puede precipitar.</li>
+      </ul>
+    </section>
+    <section class="card open">
+      <div class="head"><h2>Compartir luz</h2><span class="tag navy">No consta</span></div>
+      <ul>
+        <li>La hoja no dice qué vasopresores o inotrópicos pueden ir juntos en la misma luz.</li>
+        <li>La checklist de noradrenalina y vasopresina pide revisar los fármacos concomitantes y las compatibilidades.</li>
+        <li>Si la mezcla del servicio no coincide, seguir la ficha técnica y farmacia clínica.</li>
+      </ul>
+    </section>
+  </div>
+</body>
+</html>

@@ -32,6 +32,14 @@ const SECTIONS = [
           }
         ]
       }
+    ],
+    posters: [
+      {
+        title: 'Principales cuidados',
+        path: '../assets/protocolos/vm-cuidados-integrales/esquema-nz-humid-dds.html?v=20261024e',
+        width: 905,
+        height: 1105
+      }
     ]
   },
   {
@@ -150,6 +158,21 @@ const SECTIONS = [
             view: 'document'
           }
         ]
+      },
+      {
+        id: 'transfusion-masiva',
+        title: 'Protocolo transfusión masiva',
+        description: 'Protocolo de transfusión masiva en UCI de cirugía cardiaca.',
+        parts: [
+          {
+            id: 'protocolo',
+            title: 'Protocolo transfusión masiva',
+            description: 'Activación, fases empírica y dirigida, productos y monitorización en UCI cardiaca.',
+            path: '../assets/protocolos/transfusion-masiva/protocolo-transfusion-masiva.html?v=20261024t',
+            ext: '.html',
+            view: 'document'
+          }
+        ]
       }
     ]
   },
@@ -185,12 +208,44 @@ const SECTIONS = [
             view: 'document'
           }
         ]
+      },
+      {
+        id: 'anaconda',
+        title: 'Sedación inhalada con AnaConDa',
+        description: 'Póster de enfermería: isoflurano y sevoflurano con AnaConDa.',
+        parts: [
+          {
+            id: 'poster',
+            title: 'Sedación inhalada con AnaConDa',
+            description: 'Guía de actuación: indicaciones, montaje, cuidados y recambios.',
+            path: '../assets/protocolos/anaconda/poster-anaconda.html?v=20261024p',
+            ext: '.html',
+            view: 'document',
+            enlarge: true,
+            width: 1188,
+            height: 1680
+          }
+        ]
       }
     ]
   },
   {
     id: 'hemodinamica',
     title: 'Hemodinámica',
+    posters: [
+      {
+        title: 'Fármacos: misma luz',
+        path: '../assets/protocolos/shock-cardiogenico/farmacos-luz.html?v=20261024f',
+        width: 980,
+        height: 730
+      },
+      {
+        title: 'Distribución fármacos',
+        path: '../assets/protocolos/shock-cardiogenico/luces-paciente-2.html?v=20261024l',
+        width: 980,
+        height: 766
+      }
+    ],
     items: [
       {
         id: 'escalas-shock',
@@ -298,6 +353,13 @@ const SECTIONS = [
             ext: '.pdf'
           }
         ]
+      },
+      {
+        id: 'inventario-uccc',
+        title: 'Inventario UCCC',
+        description: 'Enlace directo al inventario de la unidad.',
+        url: 'https://inventario-ucc-asistencia.pplx.app',
+        direct: true
       }
     ]
   }
@@ -395,13 +457,16 @@ function openSection(sectionId) {
     return;
   }
 
-  const cards = items.map((item) =>
-    '<button type="button" class="card" data-item-id="' + escapeHtml(item.id) + '">' +
+  const cards = items.map((item) => {
+    const inner =
       '<span class="card-title">' + escapeHtml(item.title) + '</span>' +
       '<span class="card-desc">' + escapeHtml(item.description || '') + '</span>' +
-      '<span class="card-cta">Abrir</span>' +
-    '</button>'
-  ).join('');
+      '<span class="card-cta">Abrir</span>';
+    if (item.url && item.direct) {
+      return '<a class="card" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' + inner + '</a>';
+    }
+    return '<button type="button" class="card" data-item-id="' + escapeHtml(item.id) + '">' + inner + '</button>';
+  }).join('');
 
   const posters = section.posters || (section.poster ? [section.poster] : []);
   const poster = posters.length
@@ -434,15 +499,27 @@ function openSection(sectionId) {
 
 function openPoster(poster) {
   const box = document.createElement('div');
-  box.className = 'poster-lightbox';
+  box.className = 'poster-lightbox' + (poster.fullWidth ? ' is-full' : '');
+  const sheetW = poster.fullWidth ? '100%' : ((poster.width || 760) + 2) + 'px';
   box.innerHTML =
-    '<div class="poster-sheet" style="--poster-w:' + (poster.width + 2) + 'px" role="dialog" aria-modal="true" aria-label="' + escapeHtml(poster.title) + '">' +
+    '<div class="poster-sheet' + (poster.fullWidth ? ' is-full' : '') + '" style="--poster-w:' + sheetW + '" role="dialog" aria-modal="true" aria-label="' + escapeHtml(poster.title) + '">' +
       '<header>' +
         '<button type="button" class="btn btn-accent" id="posterClose">Cerrar</button>' +
       '</header>' +
-      '<iframe title="' + escapeHtml(poster.title) + '" src="' + escapeHtml(poster.path) + '"></iframe>' +
+      '<iframe title="' + escapeHtml(poster.title) + '"></iframe>' +
     '</div>';
   document.body.appendChild(box);
+  const frame = box.querySelector('iframe');
+  function applyZoom() {
+    if (!poster.fullWidth) return;
+    try {
+      if (frame.contentWindow && typeof frame.contentWindow.ajustarPoster === 'function') {
+        frame.contentWindow.ajustarPoster(true);
+      }
+    } catch (err) {}
+  }
+  frame.addEventListener('load', applyZoom);
+  frame.src = poster.path;
   function close() {
     box.remove();
     document.removeEventListener('keydown', onKey);
@@ -543,9 +620,23 @@ function openPart(section, item, part) {
     ? () => openItem(section.id, item.id)
     : () => openSection(section.id);
 
+  const enlarge = part.enlarge
+    ? {
+        title: part.title,
+        path: src + (src.indexOf('?') === -1 ? '?' : '&') + 'modo=ampliado',
+        fullWidth: true
+      }
+    : null;
+
   let body = '';
   if (ext === '.png' || ext === '.jpg' || ext === '.jpeg' || ext === '.webp' || ext === '.gif') {
     body = '<div class="doc-image-wrap"><img src="' + escapeHtml(src) + '" alt="' + escapeHtml(part.title) + '"></div>';
+  } else if (enlarge) {
+    body =
+      '<div class="doc-poster">' +
+        '<iframe class="doc-frame" title="' + escapeHtml(part.title) + '" src="' + escapeHtml(src) + '" tabindex="-1"></iframe>' +
+        '<button type="button" class="poster-open" id="enlargeDocHit" aria-label="Ampliar ' + escapeHtml(part.title) + '"><span>Ampliar</span></button>' +
+      '</div>';
   } else {
     body = '<iframe class="doc-frame" title="' + escapeHtml(part.title) + '" src="' + escapeHtml(src) + '"></iframe>';
   }
@@ -555,6 +646,7 @@ function openPart(section, item, part) {
       '<div class="doc-toolbar">' +
         '<div class="doc-toolbar-title">' + escapeHtml(part.title) + '</div>' +
         '<div class="doc-toolbar-actions">' +
+          (enlarge ? '<button type="button" class="btn" id="enlargeDocBtn">Ampliar</button>' : '') +
           '<a class="btn" href="' + escapeHtml(src) + '" target="_blank" rel="noopener noreferrer">Abrir en pestaña</a>' +
           '<button type="button" class="btn btn-accent" id="closeDocBtn">Cerrar</button>' +
         '</div>' +
@@ -564,6 +656,13 @@ function openPart(section, item, part) {
 
   const closeBtn = document.getElementById('closeDocBtn');
   if (closeBtn) closeBtn.addEventListener('click', backTarget);
+  if (enlarge) {
+    const open = () => openPoster(enlarge);
+    const enlargeBtn = document.getElementById('enlargeDocBtn');
+    const enlargeHit = document.getElementById('enlargeDocHit');
+    if (enlargeBtn) enlargeBtn.addEventListener('click', open);
+    if (enlargeHit) enlargeHit.addEventListener('click', open);
+  }
 }
 
 renderNav();

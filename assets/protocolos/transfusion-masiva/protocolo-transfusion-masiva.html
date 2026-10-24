@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Protocolo de transfusión masiva · UCI Cirugía Cardiaca</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EDF0EE;
+  --card:#FFFFFF;
+  --ink:#0C1A1C;
+  --muted:#5A6A6A;
+  --line:#D3DAD6;
+  --line-soft:#E4E9E6;
+  --deep:#0A2B2E;
+  --deep-2:#0F3B3F;
+  --deep-3:#15494D;
+  --teal:#0E6A6E;
+  --red:#B3261E;
+  --red-soft:#F6E7E5;
+  --amber:#A9691A;
+  --amber-soft:#F8EFDF;
+  --green:#2F6B4F;
+  --green-soft:#E6EFE9;
+  --plasma:#C08A29;
+  --plt:#3C7C84;
+  --rbc:#A62F26;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;
+  --cond:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --shadow:0 1px 2px rgba(10,43,46,.05), 0 8px 24px -18px rgba(10,43,46,.35);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:15.5px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(14,106,110,.35)}
+a:hover{border-bottom-color:var(--teal)}
+h1,h2,h3,h4{margin:0;font-weight:600}
+p{margin:0 0 .8em}
+ul,ol{margin:0 0 .8em;padding-left:1.15em}
+li{margin:.22em 0}
+strong{font-weight:600}
+
+/* ---------- SHELL ---------- */
+.shell{display:grid;grid-template-columns:252px minmax(0,1fr);min-height:100vh}
+
+/* ---------- RAIL ---------- */
+.rail{
+  background:var(--deep);color:#DCE7E4;position:sticky;top:0;height:100vh;
+  display:flex;flex-direction:column;overflow-y:auto;
+  border-right:1px solid #06191B;
+}
+.rail-brand{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,.09)}
+.brand-mark{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.brand-mark svg{flex:0 0 auto}
+.brand-mark span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:#8FB0AE;text-transform:uppercase}
+.rail-brand h1{
+  font-family:var(--cond);font-size:26px;line-height:.98;letter-spacing:.01em;
+  text-transform:uppercase;color:#F4F8F7;font-weight:600;
+}
+.rail-brand h1 em{font-style:normal;color:#E9A08F;display:block}
+.rail-brand p{font-size:11.5px;color:#8FB0AE;margin:10px 0 0;line-height:1.4}
+.rail-nav{padding:12px 10px;display:flex;flex-direction:column;gap:2px}
+.rail-label{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:#6D8C8A;padding:12px 10px 7px;
+}
+.nav-btn{
+  display:grid;grid-template-columns:26px 1fr;align-items:center;gap:8px;
+  background:none;border:0;border-left:2px solid transparent;color:#C6D6D3;
+  font-family:var(--sans);font-size:13.2px;text-align:left;padding:8px 10px 8px 9px;
+  cursor:pointer;border-radius:0 4px 4px 0;transition:background .15s,color .15s;
+}
+.nav-btn .num{font-family:var(--mono);font-size:10px;color:#6D8C8A;letter-spacing:.04em}
+.nav-btn:hover{background:rgba(255,255,255,.055);color:#fff}
+.nav-btn[aria-current="true"]{background:rgba(255,255,255,.09);color:#fff;border-left-color:#E0715C}
+.nav-btn[aria-current="true"] .num{color:#E9A08F}
+.rail-foot{margin-top:auto;padding:14px 20px 18px;border-top:1px solid rgba(255,255,255,.09)}
+.rail-foot p{font-family:var(--mono);font-size:9.5px;color:#6D8C8A;line-height:1.6;margin:0;letter-spacing:.03em}
+.rail-foot b{color:#A9C2BF;font-weight:500}
+
+/* ---------- MAIN ---------- */
+main{min-width:0;display:flex;flex-direction:column}
+.topbar{
+  position:sticky;top:0;z-index:40;background:rgba(237,240,238,.94);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:14px;padding:9px 30px;
+}
+.crumbs{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.crumbs b{color:var(--ink);font-weight:500}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.pill{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;
+  padding:4px 8px;border:1px solid var(--line);border-radius:3px;color:var(--muted);background:#fff;
+}
+.pill.live{border-color:#C9D9CF;color:#2F6B4F;background:#EDF5F0}
+.pill.live::before{content:"●";margin-right:5px;color:#2F6B4F;font-size:8px;vertical-align:1px}
+.print-btn{
+  font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+  background:#fff;border:1px solid var(--line);color:var(--ink);padding:5px 10px;border-radius:3px;cursor:pointer;
+}
+.print-btn:hover{border-color:var(--deep-3);color:var(--teal)}
+
+.panel{display:none;padding:22px 30px 64px;max-width:1180px;width:100%}
+.panel.is-active{display:block;animation:fade .22s ease}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ---------- HERO ---------- */
+.hero{
+  position:relative;background:var(--deep);color:#EAF2F0;border-radius:6px;
+  padding:30px 32px 28px;overflow:hidden;box-shadow:var(--shadow);
+  display:grid;grid-template-columns:minmax(0,1.55fr) minmax(210px,.75fr);gap:26px;
+}
+.hero::before{
+  content:"";position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
+  background-size:26px 26px;pointer-events:none;
+  mask-image:linear-gradient(115deg,#000 30%,transparent 78%);
+}
+.hero>*{position:relative}
+.eyebrow{
+  font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#8FB0AE;
+  display:flex;align-items:center;gap:9px;margin-bottom:14px;
+}
+.eyebrow::before{content:"";width:22px;height:1px;background:#E0715C}
+.hero h2{
+  font-family:var(--cond);font-weight:600;font-size:clamp(34px,4.6vw,52px);line-height:.94;
+  text-transform:uppercase;letter-spacing:.005em;margin-bottom:14px;color:#fff;
+}
+.hero h2 em{font-style:normal;color:#F0B4A4}
+.hero-lead{font-size:14.2px;color:#B8CCCA;max-width:56ch;line-height:1.6;margin:0}
+.hero-lead b{color:#fff;font-weight:500}
+.codebox{
+  border:1px solid rgba(255,255,255,.16);border-radius:4px;padding:16px 16px 14px;
+  background:rgba(255,255,255,.035);align-self:start;
+}
+.codebox .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:#8FB0AE}
+.codebox .v{font-family:var(--cond);font-size:27px;text-transform:uppercase;letter-spacing:.02em;color:#fff;line-height:1.05;margin:4px 0 10px}
+.codebox .row{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:11px;color:#C6D6D3;border-top:1px solid rgba(255,255,255,.1);padding:6px 0}
+.codebox .row span:last-child{color:#fff}
+.codebox .note{font-size:10.5px;color:#8FB0AE;margin:8px 0 0;line-height:1.45}
+
+/* ---------- SECTION HEADS ---------- */
+.sec-head{display:flex;gap:18px;align-items:flex-start;margin:4px 0 22px;flex-wrap:wrap}
+.sec-head .idx{
+  font-family:var(--mono);font-size:11px;color:var(--red);padding-top:9px;letter-spacing:.1em;
+  border-top:2px solid var(--red);min-width:42px;
+}
+.sec-head h2{
+  font-family:var(--cond);font-size:clamp(28px,3.4vw,38px);line-height:.98;
+  text-transform:uppercase;letter-spacing:.005em;font-weight:600;flex:1 1 340px;
+}
+.sec-head h2 small{display:block;font-family:var(--sans);font-size:12.5px;letter-spacing:0;text-transform:none;color:var(--muted);font-weight:400;margin-top:7px}
+.sec-meta{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:var(--ink);
+  text-align:left;line-height:1.55;padding:2px 0 0 14px;border-left:1px solid var(--line);
+  flex:0 0 auto;margin-left:auto;min-width:150px;
+}
+.sec-meta b{display:block;font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:1px}
+
+/* ---------- GRID + CARDS ---------- */
+.grid{display:grid;gap:14px;align-items:start}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:5px;padding:16px 17px;
+  box-shadow:var(--shadow);
+}
+.card.tight{padding:13px 14px}
+.card h3{
+  font-family:var(--cond);font-size:19px;text-transform:uppercase;letter-spacing:.02em;
+  margin-bottom:8px;line-height:1.1;
+}
+.card h4{font-size:12px;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:9px;font-weight:500}
+.card p:last-child,.card ul:last-child,.card ol:last-child{margin-bottom:0}
+.card.flat{box-shadow:none}
+.tag{
+  display:inline-block;font-family:var(--mono);font-size:9px;letter-spacing:.07em;text-transform:uppercase;
+  padding:2.5px 6px;border-radius:2px;background:#EEF2F0;color:#4A5C5C;border:1px solid #DDE4E0;white-space:nowrap;
+}
+.tag.red{background:var(--red-soft);color:#8E2019;border-color:#EBD0CC}
+.tag.amber{background:var(--amber-soft);color:#855313;border-color:#EBDABB}
+.tag.green{background:var(--green-soft);color:#275941;border-color:#CFE0D5}
+.tag.teal{background:#E4F0F0;color:#0B5457;border-color:#CBE0E0}
+.src{font-family:var(--mono);font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:#7A8B8A;margin-top:10px;display:block}
+
+/* ---------- TRIGGER TILES ---------- */
+.triggers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:16px 0 4px}
+.trig{
+  background:#fff;border:1px solid var(--line);border-top:3px solid var(--red);border-radius:4px;
+  padding:13px 14px 12px;box-shadow:var(--shadow);
+}
+.trig .n{font-family:var(--cond);font-size:36px;line-height:.9;font-weight:600;letter-spacing:-.01em}
+.trig .n span{font-size:17px;letter-spacing:0}
+.trig .t{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.35}
+.trig .t b{color:var(--ink);font-weight:600}
+.trig.alt{border-top-color:var(--amber)}
+.trig.alt2{border-top-color:var(--teal)}
+
+/* ---------- LISTS / CALLOUTS ---------- */
+.callout{
+  border-left:3px solid var(--teal);background:#F4F8F8;padding:12px 15px;border-radius:0 4px 4px 0;
+  font-size:13.4px;color:#274849;margin:14px 0;
+}
+.callout.warn{border-left-color:var(--amber);background:#FAF4E9;color:#5C451F}
+.callout.crit{border-left-color:var(--red);background:#FAEFED;color:#6D241D}
+.callout b{font-weight:600}
+.callout p:last-child{margin-bottom:0}
+
+ul.checks{list-style:none;padding:0;margin:0}
+ul.checks li{
+  display:grid;grid-template-columns:20px 1fr;gap:9px;align-items:start;
+  padding:7px 0;border-bottom:1px dashed var(--line-soft);font-size:13.4px;
+}
+ul.checks li:last-child{border-bottom:0}
+ul.checks input{margin:3px 0 0;accent-color:var(--teal);width:14px;height:14px}
+.counter{
+  font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--muted);
+  display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);
+  padding-bottom:8px;margin-bottom:4px;
+}
+
+/* ---------- TIMELINE ---------- */
+.timeline{position:relative;margin:22px 0 6px;padding-top:18px}
+.timeline::before{content:"";position:absolute;left:0;right:0;top:9px;height:1px;background:var(--line)}
+.tl-track{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.tl-item{position:relative;padding-top:4px}
+.tl-item::before{
+  content:"";position:absolute;top:-14px;left:0;width:9px;height:9px;border-radius:50%;
+  background:#fff;border:2px solid var(--teal);
+}
+.tl-item.hot::before{background:var(--red);border-color:var(--red)}
+.tl-item .t{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--red);text-transform:uppercase}
+.tl-item .d{font-size:12.6px;color:var(--ink);line-height:1.42;margin-top:4px}
+.tl-item .d b{display:block;font-weight:600;margin-bottom:2px}
+
+/* ---------- TABLES ---------- */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:5px;background:#fff}
+table{width:100%;border-collapse:collapse;font-size:13.3px;min-width:0}
+thead th{
+  text-align:left;font-family:var(--mono);font-size:9.3px;letter-spacing:.07em;text-transform:uppercase;
+  color:#3E5151;background:#F1F4F2;padding:9px 11px;border-bottom:1px solid var(--line);font-weight:500;
+}
+td{padding:9px 11px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:#FAFBFA}
+td.num{font-family:var(--mono);font-size:12.5px;white-space:nowrap}
+td b{font-weight:600}
+.tbl-note{font-size:11.5px;color:var(--muted);margin-top:8px}
+
+/* ---------- PRODUCT CARDS ---------- */
+.prod{
+  background:#fff;border:1px solid var(--line);border-radius:5px;overflow:hidden;box-shadow:var(--shadow);
+  display:flex;flex-direction:column;height:100%;
+}
+.prod-top{padding:11px 14px 10px;border-bottom:1px solid var(--line-soft);border-top:3px solid var(--rbc);background:#FCFDFC}
+.prod-top .abbr{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.prod-top h3{font-family:var(--cond);font-size:22px;text-transform:uppercase;line-height:1;margin-top:2px}
+.prod-body{padding:12px 14px 14px;flex:1}
+.prod-body dl{margin:0}
+.prod-body dt{font-family:var(--mono);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:#7A8B8A;margin-top:9px}
+.prod-body dt:first-child{margin-top:0}
+.prod-body dd{margin:2px 0 0;font-size:13px;line-height:1.42}
+.prod.fib .prod-top{border-top-color:#6E5B8C}
+.prod.pfc .prod-top{border-top-color:var(--plasma)}
+.prod.plt .prod-top{border-top-color:var(--plt)}
+.prod.ccp .prod-top{border-top-color:#3E6B8C}
+.prod.rf .prod-top{border-top-color:#8C3E5B}
+
+/* ---------- TRAFFIC TARGETS ---------- */
+.targets{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.tgt{background:#fff;border:1px solid var(--line);border-radius:4px;padding:12px 13px;position:relative;overflow:hidden}
+.tgt::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--green)}
+.tgt.amber::after{background:var(--amber)}
+.tgt.red::after{background:var(--red)}
+.tgt .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.tgt .v{font-family:var(--cond);font-size:29px;line-height:1;font-weight:600;margin:5px 0 3px}
+.tgt .v small{font-size:13px;font-weight:500;color:var(--muted)}
+.tgt .d{font-size:11.5px;color:var(--muted);line-height:1.35}
+
+/* ---------- TWO COL / COMPARE ---------- */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:5px;overflow:hidden;background:#fff}
+.compare>div{padding:16px 17px}
+.compare>div:first-child{border-right:1px solid var(--line);background:#FBF7F6}
+.compare h3{font-family:var(--cond);font-size:20px;text-transform:uppercase;margin-bottom:8px}
+.compare ul{font-size:13.2px;margin:0;padding-left:1.1em}
+
+/* ---------- STEPS ---------- */
+.steps{counter-reset:s;display:grid;gap:7px}
+.step{
+  position:relative;background:#fff;border:1px solid var(--line);border-radius:4px;
+  padding:10px 13px 10px 40px;font-size:13.3px;line-height:1.5;
+}
+.step::before{
+  counter-increment:s;content:counter(s,decimal-leading-zero);
+  position:absolute;left:13px;top:10px;
+  font-family:var(--mono);font-size:10px;color:var(--teal);
+}
+
+/* ---------- TIMELINE MATRIX (bandas sincronizadas) ---------- */
+.tl-wrap{background:#fff;border:1px solid var(--line);border-radius:6px;padding:18px 16px 16px;box-shadow:var(--shadow)}
+.tl-legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:14px;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tl-legend span{display:inline-flex;align-items:center;gap:6px}
+.tl-legend i{width:9px;height:9px;border-radius:2px;display:inline-block}
+.tl-legend .clock{margin-left:auto;color:#7A8B8A}
+.tl-hint{display:none;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.tl-scroll{overflow-x:auto;padding-bottom:2px;scrollbar-width:thin}
+.tl-scroll::-webkit-scrollbar{height:6px}
+.tl-scroll::-webkit-scrollbar-thumb{background:#C9D3CF;border-radius:3px}
+.tl-grid{display:grid;grid-template-columns:74px repeat(7,minmax(0,1fr));gap:8px}
+.tl-spine{grid-column:1/-1;height:0;border-top:0}
+
+/* cabecera de tiempos */
+.tl-time{position:relative;padding-bottom:22px}
+.tl-time b{display:block;font-family:var(--mono);font-size:12.5px;letter-spacing:.01em;color:var(--ink)}
+.tl-time span{display:block;font-family:var(--mono);font-size:8.3px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:1px}
+.tl-time::after{
+  content:"";position:absolute;left:0;bottom:0px;width:11px;height:11px;border-radius:50%;
+  background:#fff;border:2px solid var(--teal);
+}
+.tl-time.hot::after{background:var(--red);border-color:var(--red)}
+.tl-time.cold::after{border-color:#7FA6A2}
+.tl-timerow{grid-column:1/-1;height:2px;margin:-6px 0 6px;background:linear-gradient(90deg,var(--red) 0%,#C4705F 24%,var(--teal) 58%,#7FA6A2 100%);opacity:.45;border-radius:2px}
+
+/* etiquetas de banda */
+.band-label{
+  display:flex;flex-direction:column;justify-content:center;gap:3px;
+  border-radius:4px;padding:10px 8px;font-family:var(--mono);
+  font-size:9px;letter-spacing:.13em;text-transform:uppercase;line-height:1.2;
+}
+.band-label b{font-size:11px;letter-spacing:.1em;font-weight:600}
+.band-label small{font-size:7.5px;letter-spacing:.1em;opacity:.75}
+.band-label.act{background:#E4F0F0;color:#0B5457;border:1px solid #CBE0E0}
+.band-label.ped{background:#F8E9E6;color:#8E2019;border:1px solid #EBD0CC}
+.band-label.med{background:#F9F1E2;color:#855313;border:1px solid #EBDABB}
+
+/* banda actuar */
+.actu{
+  background:#FCFDFD;border:1px solid #D7E2DF;border-left:3px solid var(--teal);
+  border-radius:4px;padding:9px 10px 10px;display:flex;flex-direction:column;gap:6px;
+}
+.actu .n{
+  font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;color:#6C8C8A;
+  display:flex;justify-content:space-between;align-items:center;gap:6px;
+  border-bottom:1px solid #E3EBE8;padding-bottom:4px;
+}
+.actu .n b{color:var(--teal);font-weight:600;letter-spacing:.08em}
+.actu ul{margin:0;padding-left:.85em;font-size:11.8px;line-height:1.38}
+.actu li{margin:.14em 0}
+.actu b{font-weight:600;color:#0A2B2E}
+
+/* separador entre bandas */
+.band-split{
+  grid-column:1/-1;display:flex;align-items:center;gap:12px;margin:13px 0 11px;
+  font-family:var(--mono);font-size:8.8px;letter-spacing:.16em;text-transform:uppercase;color:#7A8B8A;
+}
+.band-split::before,.band-split::after{content:"";height:1px;background:var(--line);flex:1}
+.band-split span{white-space:nowrap;padding:3px 9px;border:1px solid var(--line);border-radius:20px;background:#F7FAF9}
+
+/* bandas pedir / medir */
+.cell{
+  border:1px solid var(--line);border-radius:4px;padding:8px 9px;font-size:11.2px;line-height:1.36;
+  background:#fff;
+}
+.cell.ped{background:#FDF8F7;border-color:#EBD5D1}
+.cell.med{background:#FCF9F2;border-color:#E9DCC4}
+.cell ul{margin:0;padding-left:.8em}
+.cell li{margin:.12em 0}
+.cell b{font-weight:600}
+.cell em{font-style:normal;font-family:var(--mono);font-size:10px;background:#EFE8DA;padding:0 2px;border-radius:2px;white-space:nowrap}
+.cell.ped em{background:#F2DFDB}
+.cell .flag{font-family:var(--mono);font-size:8.5px;letter-spacing:.09em;text-transform:uppercase;color:#8E2019;display:block;margin-bottom:3px}
+.cell.med{line-height:1.35}
+.cell.med ul{list-style:none;padding-left:0}
+.cell.med li{margin:0 0 6px}
+.cell.med li:last-child{margin-bottom:0}
+.mk{display:block;font-size:11px;color:#4A3A1E}
+.mv{
+  display:inline-block;margin-top:1px;
+  font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:0;
+  color:#6D4A12;background:#F2E5CB;border-radius:2px;padding:1px 4px;
+}
+.mv.key{background:#EAD6AC;color:#4E3408;font-weight:600}
+.cell.med b .mv{background:transparent;padding:0}
+@media print{
+  .cell.med li{margin:0 0 3px}
+  .mk{font-size:8px}
+  .mv{font-size:7.6px;padding:0 2px}
+}
+.cell.med .flag{color:#855313}
+
+.tl-foot{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:15px}
+.tl-foot div{border:1px solid var(--line);border-left:3px solid var(--teal);border-radius:0 4px 4px 0;padding:10px 12px;background:#F7FAF9}
+.tl-foot div:nth-child(2){border-left-color:var(--red);background:#FCF6F5}
+.tl-foot div:nth-child(3){border-left-color:var(--amber);background:#FCF8F1}
+.tl-foot h4{margin-bottom:5px;font-size:9px}
+.tl-foot p{font-size:12.2px;margin:0;line-height:1.45}
+
+@media (max-width:1180px){
+  .tl-grid{grid-template-columns:74px repeat(7,158px);min-width:1260px}
+  .tl-hint{display:block}
+  .tl-foot{grid-template-columns:1fr}
+}
+@media print{
+  .tl-scroll{overflow:visible}
+  .tl-hint{display:none}
+  .tl-grid{grid-template-columns:64px repeat(7,1fr);min-width:0;gap:5px}
+  .actu ul{font-size:8.6px}
+  .cell{font-size:8.3px;padding:5px 6px}
+  .band-label{font-size:7.5px;padding:6px 5px}
+  .band-label b{font-size:9px}
+  .tl-time b{font-size:10px}
+  .tl-time span{font-size:7px}
+  .tl-foot{grid-template-columns:repeat(3,1fr)}
+  .actu .n{display:block;font-size:7.4px}
+  .actu .n b{display:block;margin-top:1px;font-size:8.4px}
+  .actu{padding:6px 6px 7px}
+  .actu li{margin:.08em 0}
+  .tl-wrap{padding:10px 8px 8px}
+  .tl-legend{font-size:8px;margin-bottom:8px}
+  .band-split{font-size:7.4px;margin:8px 0 7px}
+  .tl-foot p{font-size:9px}
+  .tl-foot h4{font-size:7.6px}
+  main>.panel:last-of-type{page-break-after:auto}
+  .page-foot{page-break-before:avoid;padding-top:8px}
+}
+
+/* ---------- POCKET ---------- */
+.pocket{background:#0A2B2E;color:#DCE7E4;border-radius:6px;padding:26px 28px}
+.pocket h2{font-family:var(--cond);font-size:34px;text-transform:uppercase;color:#fff;line-height:1;margin-bottom:4px}
+.pocket .sub{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#8FB0AE;margin-bottom:20px}
+.pocket-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.pocket h3{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#E9A08F;margin-bottom:8px}
+.pocket ul{padding-left:1.05em;font-size:12.8px;line-height:1.5;margin:0;color:#CFDDDA}
+.pocket li{margin:.3em 0}
+.pocket b{color:#fff;font-weight:500}
+.pocket .pfoot{border-top:1px solid rgba(255,255,255,.14);margin-top:20px;padding-top:12px;font-family:var(--mono);font-size:9.5px;color:#8FB0AE;letter-spacing:.05em}
+
+/* ---------- REFS ---------- */
+ol.refs{padding-left:0;list-style:none;counter-reset:r;margin:0}
+ol.refs li{
+  counter-increment:r;position:relative;padding:12px 0 12px 44px;
+  border-bottom:1px solid var(--line-soft);font-size:13.2px;line-height:1.55;
+}
+ol.refs li::before{
+  content:"[" counter(r) "]";position:absolute;left:0;top:13px;
+  font-family:var(--mono);font-size:11px;color:var(--red);
+}
+ol.refs .j{color:var(--muted);font-size:12.3px}
+ol.refs a{word-break:break-word;font-family:var(--mono);font-size:11.5px}
+
+/* ---------- FOOTER ---------- */
+.page-foot{
+  border-top:1px solid var(--line);padding:14px 30px 26px;max-width:1180px;
+  font-size:11.5px;color:var(--muted);display:flex;gap:20px;flex-wrap:wrap;justify-content:space-between;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:1080px){
+  .g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .triggers{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .targets{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .tl-track{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:22px}
+  .timeline::before{display:none}
+  .tl-item::before{display:none}
+  .pocket-grid{grid-template-columns:1fr}
+}
+@media (max-width:860px){
+  .shell{grid-template-columns:1fr}
+  .rail{position:relative;height:auto;overflow:visible}
+  .rail-nav{flex-direction:row;overflow-x:auto;gap:4px;padding:8px 10px 10px}
+  .rail-label{display:none}
+  .nav-btn{grid-template-columns:1fr;white-space:nowrap;padding:7px 10px;border-left:0;border-bottom:2px solid transparent;border-radius:3px 3px 0 0}
+  .nav-btn .num{display:none}
+  .nav-btn[aria-current="true"]{border-left:0;border-bottom-color:#E0715C}
+  .rail-foot{display:none}
+  .hero{grid-template-columns:1fr;padding:24px 20px}
+  .panel{padding:18px 16px 48px}
+  .topbar{padding:8px 16px}
+  .g2,.g3,.compare{grid-template-columns:1fr}
+  .compare>div:first-child{border-right:0;border-bottom:1px solid var(--line)}
+  .page-foot{padding:14px 16px 26px}
+  .sec-meta{text-align:left;border-left:0;padding-left:0;margin-left:0}
+}
+@media (max-width:560px){
+  .triggers,.targets,.g4{grid-template-columns:1fr 1fr}
+  .tl-track{grid-template-columns:1fr 1fr}
+}
+@media print{
+  .rail,.topbar,.print-btn{display:none!important}
+  .shell{display:block}
+  .panel{display:block!important;padding:0 0 14px;page-break-after:always;max-width:none}
+  body{background:#fff;font-size:10.5px}
+  .card,.prod,.tbl-wrap,.trig,.tgt,.tl-wrap,.actu,.cell{box-shadow:none}
+  /* hero y tarjeta: forzar tinta sobre papel */
+  .hero,.pocket{background:#fff!important;border:1px solid #9AA5A2;border-radius:3px}
+  .hero *, .pocket *{color:#111!important}
+  .hero::before{display:none}
+  .hero .eyebrow,.hero .codebox .k,.hero .codebox .note,
+  .pocket .sub,.pocket .pfoot{color:#4A5C5C!important}
+  .hero .codebox{background:#fff!important;border-color:#C4CCC9!important}
+  .hero .codebox .row{border-top-color:#D8DEDB!important}
+  .pocket{border-top:3px solid #0A2B2E}
+  .pocket .pfoot{border-top-color:#D8DEDB!important}
+  .hero, .tl-wrap{break-inside:avoid}
+  .card,.prod,.trig{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="rail">
+  <div class="rail-brand">
+    <div class="brand-mark">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 2.5v6.2M12 15.3v6.2M4.6 7.6l5.4 3.1M14 13.3l5.4 3.1M19.4 7.6L14 10.7M10 13.3l-5.4 3.1" stroke="#E9A08F" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="12" cy="12" r="2.1" fill="#E0715C"/>
+      </svg>
+      <span>UCI · Cirugía cardiaca</span>
+    </div>
+    <h1>Transfusión<em>masiva</em></h1>
+    <p>Protocolo operativo de hemorragia crítica en el postoperatorio y en la unidad de críticos.</p>
+  </div>
+  <nav class="rail-nav" aria-label="Apartados del protocolo">
+    <div class="rail-label">Protocolo</div>
+    <button class="nav-btn" data-tab="activacion" aria-current="true"><span class="num">01</span><span>Activación</span></button>
+    <button class="nav-btn" data-tab="fase1"><span class="num">02</span><span>Fase I · empírica</span></button>
+    <button class="nav-btn" data-tab="fase2"><span class="num">03</span><span>Fase II · dirigida</span></button>
+    <button class="nav-btn" data-tab="productos"><span class="num">04</span><span>Productos y dosis</span></button>
+    <button class="nav-btn" data-tab="cec"><span class="num">05</span><span>CEC, UCI y ECMO</span></button>
+    <div class="rail-label">Soporte</div>
+    <button class="nav-btn" data-tab="monitor"><span class="num">06</span><span>Monitorización</span></button>
+    <button class="nav-btn" data-tab="complic"><span class="num">07</span><span>Complicaciones</span></button>
+    <button class="nav-btn" data-tab="calidad"><span class="num">08</span><span>Calidad y seguridad</span></button>
+    <button class="nav-btn" data-tab="resumen"><span class="num">09</span><span>Tarjeta de bolsillo</span></button>
+    <button class="nav-btn" data-tab="linea"><span class="num">10</span><span>Línea de tiempo</span></button>
+    <button class="nav-btn" data-tab="refs"><span class="num">11</span><span>Referencias</span></button>
+  </nav>
+  <div class="rail-foot">
+    <p><b>Versión 1.0</b> · 2026<br>Revisión prevista: 12 meses<br>Documento de uso interno</p>
+  </div>
+</aside>
+
+<main>
+  <div class="topbar">
+    <div class="crumbs">UCI Cirugía Cardiaca / <b id="crumb-here">Activación</b></div>
+    <div class="topbar-right">
+      <span class="pill live">Código MTP</span>
+      <span class="pill">v1.0 · 2026</span>
+      <button class="print-btn" onclick="window.print()">Imprimir</button>
+    </div>
+  </div>
+
+  <!-- ========== 01 ACTIVACIÓN ========== -->
+  <section class="panel is-active" id="activacion">
+    <div class="hero">
+      <div>
+        <div class="eyebrow">Protocolo institucional · hemorragia crítica</div>
+        <h2>Activar,<br>no esperar<br><em>al laboratorio</em></h2>
+        <p class="hero-lead">La transfusión masiva en cirugía cardiaca se decide por <b>sangrado + inestabilidad</b>, no por una cifra de hemoglobina. El objetivo es doble: <b>controlar el foco quirúrgico</b> y <b>reconstruir la coagulación</b> sin dilución.</p>
+      </div>
+      <div class="codebox">
+        <div class="k">Llamada de activación</div>
+        <div class="v">MTP · Código rojo</div>
+        <div class="row"><span>Banco de sangre</span><span>ext. ____</span></div>
+        <div class="row"><span>Coordinador UCI</span><span>ext. ____</span></div>
+        <div class="row"><span>Perfusionista</span><span>ext. ____</span></div>
+        <div class="row"><span>Hematología guardia</span><span>ext. ____</span></div>
+        <p class="note">Anotar hora de activación y nombre del líder. Una sola voz dirige el protocolo.</p>
+      </div>
+    </div>
+
+    <div class="triggers">
+      <div class="trig">
+        <div class="n">≥4 <span>CH / 1 h</span></div>
+        <div class="t">Con sangrado activo o <b>previsión de ≥10 CH en 24 h</b>.</div>
+      </div>
+      <div class="trig">
+        <div class="n">&gt;500 <span>ml 1.ª h</span></div>
+        <div class="t">Débito torácico, o <b>&gt;400 ml/h × 2 h / &gt;300 × 3 h</b>.</div>
+      </div>
+      <div class="trig alt">
+        <div class="n">&gt;1 <span>volemia / 24 h</span></div>
+        <div class="t">Reposición equivalente a <b>≥10 CH</b> o sangrado mantenido.</div>
+      </div>
+      <div class="trig alt2">
+        <div class="n">Shock <span>hemorrágico</span></div>
+        <div class="t">PAS &lt;90 · FC &gt;120 · lactato &gt;4 · <b>vasopresor en ascenso</b>.</div>
+      </div>
+    </div>
+
+    <div class="callout warn" style="margin-top:16px">
+      <p><b>No existe un criterio único validado.</b> Los umbrales son operativos y locales: la decisión es clínica y debe considerar la velocidad del sangrado, su trayectoria esperada y la respuesta a la reanimación. La hipotensión es un signo tardío. <span class="tag">Consenso local</span></p>
+    </div>
+
+    <div class="grid g2" style="margin-top:20px">
+      <div class="card">
+        <h4>Cuándo activar en cirugía cardiaca</h4>
+        <ul class="checks" id="chk">
+          <li><input type="checkbox"><span>Sangrado microvascular difuso tras revertir heparina, sin punto quirúrgico evidente.</span></li>
+          <li><input type="checkbox"><span>Débito torácico &gt;500 ml en la primera hora o &gt;200 ml/h sostenido.</span></li>
+          <li><input type="checkbox"><span>Necesidad de &gt;2 CH en 30 min con inestabilidad hemodinámica.</span></li>
+          <li><input type="checkbox"><span>Taponamiento o sangrado súbito masivo (activar y avisar a cirugía).</span></li>
+          <li><input type="checkbox"><span>Ruptura aórtica, disección complicada o reintervención urgente.</span></li>
+          <li><input type="checkbox"><span>Coagulopatía conocida con sangrado (ECMO, cirrosis, DOAC reciente).</span></li>
+        </ul>
+        <div class="counter"><span>Checklist de activación</span><span id="chk-count">0 / 6</span></div>
+      </div>
+
+      <div class="card">
+        <h4>Primeros 10 minutos</h4>
+        <div class="steps">
+          <div class="step">Designar <b>líder MTP</b> y registrar la hora. Un único interlocutor con el banco.</div>
+          <div class="step">Activar <b>vía de gran calibre</b> y calentador; extraer analítica urgente (gasometría con calcio iónico, hemograma, coagulación, fibrinógeno, ROTEM).</div>
+          <div class="step">Pedir <b>pack 1</b>: 4 CH + 4 PFC + 1 pool de plaquetas (aproximación 1:1:1).</div>
+          <div class="step">Administrar <b>ácido tranexámico</b> si no se ha dado y <b>calcio</b> según protocolo.</div>
+          <div class="step">Mantener <b>normotermia</b> activa y evitar cristaloides innecesarios.</div>
+          <div class="step">Reevaluar <b>control quirúrgico</b>: ecografía, drenajes, mediastino.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <h4>Reloj de reanimación · primeras 2 horas</h4>
+      <div class="timeline">
+        <div class="tl-track">
+          <div class="tl-item hot"><div class="t">00 min</div><div class="d"><b>Activar</b>Líder + aviso banco + analítica + calcio + TXA</div></div>
+          <div class="tl-item"><div class="t">10–15 min</div><div class="d"><b>Pack 1</b>4 CH · 4 PFC · 1 pool plaquetas</div></div>
+          <div class="tl-item"><div class="t">15–20 min</div><div class="d"><b>POC</b>ROTEM/TEG y gasometría con iCa</div></div>
+          <div class="tl-item"><div class="t">30 min</div><div class="d"><b>Ajuste dirigido</b>Fibrinógeno, plaquetas, PFC/CCP</div></div>
+          <div class="tl-item hot"><div class="t">45–60 min</div><div class="d"><b>Decisión</b>Reexploración si sangrado quirúrgico</div></div>
+          <div class="tl-item"><div class="t">60–120 min</div><div class="d"><b>Estabilizar</b>Segundo control POC y desactivar</div></div>
+        </div>
+      </div>
+      <p class="tbl-note">Los tiempos son objetivos de proceso, no garantías clínicas. El control del foco manda sobre cualquier algoritmo.</p>
+    </div>
+
+    <div class="grid g2" style="margin-top:14px">
+      <div class="card">
+        <h4>Roles</h4>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Rol</th><th>Responsabilidad</th></tr></thead>
+            <tbody>
+              <tr><td><b>Líder MTP</b></td><td>Decide activación, paquetes, objetivos y desactivación. Única voz.</td></tr>
+              <tr><td><b>Banco de sangre</b></td><td>Prepara y libera packs; informa stock y tiempos de descongelación.</td></tr>
+              <tr><td><b>Perfusionista</b></td><td>Recuperación de sangre de campo y de bomba; soporte circulatorio.</td></tr>
+              <tr><td><b>Enfermería UCI</b></td><td>Vías, calentador, administración, registro y trazabilidad unitaria.</td></tr>
+              <tr><td><b>Cirujano / anestesia</b></td><td>Control del foco, reevaluación y decisión de reexploración.</td></tr>
+              <tr><td><b>Hematología</b></td><td>Asesoría en coagulopatía compleja y antifíbrinolíticos.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <h4>Criterios de desactivación</h4>
+        <ul>
+          <li><b>Sangrado controlado:</b> débito &lt;100 ml/h durante 2 h consecutivas.</li>
+          <li><b>Sin necesidad de nuevos productos</b> en los últimos 30–60 min.</li>
+          <li><b>Estabilidad hemodinámica</b> sin escalada de vasopresores ni volumen.</li>
+          <li><b>Coagulación corregida</b> y temperatura &gt;36 °C.</li>
+          <li>Decisión explícita del líder, registrada con hora.</li>
+        </ul>
+        <div class="callout crit" style="margin-bottom:0">
+          <p><b>Reactivar sin dudar</b> si reaparece sangrado. La desactivación no es irreversible.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 02 FASE I ========== -->
+  <section class="panel" id="fase1">
+    <div class="sec-head">
+      <div class="idx">02</div>
+      <h2>Fase I · reanimación empírica
+        <small>Paquete balanceado mientras llega el resultado. Reconstruir, no solo rellenar.</small>
+      </h2>
+      <div class="sec-meta"><b>Duración</b>0–45 min<br><b>Base</b>Guias de hemorragia masiva 2023–2025</div>
+    </div>
+
+    <div class="grid g2">
+      <div class="card">
+        <h4>Composición del paquete</h4>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Pack</th><th>Contenido</th><th>Equivalencia</th></tr></thead>
+            <tbody>
+              <tr><td class="num"><b>1</b></td><td>4 CH + 4 PFC + 1 pool de plaquetas</td><td class="num">≈ 1:1:1</td></tr>
+              <tr><td class="num"><b>2</b></td><td>4 CH + 4 PFC + 1 pool de plaquetas</td><td class="num">≈ 1:1:1</td></tr>
+              <tr><td class="num"><b>3+</b></td><td>Según POC: fibrinógeno, plaquetas o PFC adicionales</td><td class="num">dirigido</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="tbl-note">Cada 15–20 min hasta control del sangrado. El banco no debe esperar petición individual: el pack se libera en bloque.</p>
+        <div class="callout" style="margin-bottom:0">
+          <p><b>Por qué 1:1:1:</b> en hemorragia grave, la reposición equilibrada inicial reduce la coagulopatía dilucional. El ratio óptimo sigue en debate y debe cederse el paso a la estrategia dirigida en cuanto haya resultados.</p>
+          <span class="src">Rossaint 2023 · Shah 2023 · Lin 2025</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>Las 4 C de la reanimación</h4>
+        <div class="grid g2" style="gap:10px">
+          <div class="tgt"><div class="k">Calcio</div><div class="v">iCa <small>&gt;1,1</small></div><div class="d">mmol/L. Reponer antes de que aparezca hipotensión refractaria.</div></div>
+          <div class="tgt"><div class="k">Calor</div><div class="v">36 <small>°C</small></div><div class="d">Normotermia activa: suero calentado, manta, circuito humidificado.</div></div>
+          <div class="tgt amber"><div class="k">Coagulación</div><div class="v">POC</div><div class="d">ROTEM/TEG a los 15–20 min y tras cada paquete.</div></div>
+          <div class="tgt red"><div class="k">Cirugía</div><div class="v">Foco</div><div class="d">Sin control quirúrgico, ningún producto detiene la hemorragia.</div></div>
+        </div>
+        <div class="callout warn" style="margin-bottom:0">
+          <p><b>Permisividad de volumen:</b> evitar cristaloides en bolos repetidos; usar vasopresor y productos como reanimación. La dilución es el enemigo.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <h4>Receta de primera línea · adulto de 70 kg</h4>
+      <div class="grid g4" style="gap:10px;align-items:stretch">
+        <div class="card tight flat" style="border-left:3px solid var(--red)">
+          <div class="k" style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Ácido tranexámico</div>
+          <div style="font-family:var(--cond);font-size:28px;line-height:1.05;margin:4px 0">1 g</div>
+          <p style="font-size:12px;color:var(--muted);margin:0">Bolo en 10 min + 1 g en 8 h. En cirugía cardiaca puede usarse pauta alta (50–100 mg/kg) con más eficacia y más convulsiones.</p>
+        </div>
+        <div class="card tight flat" style="border-left:3px solid var(--amber)">
+          <div class="k" style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Calcio</div>
+          <div style="font-family:var(--cond);font-size:28px;line-height:1.05;margin:4px 0">1–2 g</div>
+          <p style="font-size:12px;color:var(--muted);margin:0">Gluconato cálcico por cada 4 CH o paquete; cloruro si vía central. Guiar por iCa, no por pauta fija.</p>
+        </div>
+        <div class="card tight flat" style="border-left:3px solid #6E5B8C">
+          <div class="k" style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Fibrinógeno</div>
+          <div style="font-family:var(--cond);font-size:28px;line-height:1.05;margin:4px 0">2–4 g</div>
+          <p style="font-size:12px;color:var(--muted);margin:0">Si fibrinógeno &lt;1,5 g/L o FIBTEM A10 &lt;10 mm. Equivale a 25–50 mg/kg.</p>
+        </div>
+        <div class="card tight flat" style="border-left:3px solid var(--teal)">
+          <div class="k" style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Plaquetas</div>
+          <div style="font-family:var(--cond);font-size:28px;line-height:1.05;margin:4px 0">1 pool</div>
+          <p style="font-size:12px;color:var(--muted);margin:0">Si plaquetas &lt;50 ×10⁹/L con sangrado, o disfunción plaquetaria con antiagregantes.</p>
+        </div>
+      </div>
+      <p class="tbl-note">Dosis orientativas para el primer ciclo; el ajuste posterior se guía por POC y respuesta clínica. Ver apartado 04 para cada producto.</p>
+    </div>
+
+    <div class="grid g2" style="margin-top:14px">
+      <div class="card">
+        <h4>Objetivos de la fase empírica</h4>
+        <ul>
+          <li><b>Fibrinógeno &gt;1,5 g/L</b> en hemorragia no obstétrica; &gt;2 g/L en hemorragia posparto. <span class="tag">Shah 2023</span></li>
+          <li><b>Plaquetas &gt;50 ×10⁹/L</b> durante sangrado activo; &gt;100 ×10⁹/L si antiagregantes o disfunción.</li>
+          <li><b>PFC:</b> relación 1:1 con CH en la fase inicial del trauma mayor, sin esperar coagulación. No es un umbral de INR.</li>
+          <li><b>Calcio iónico</b> medido de forma seriada; la hipocalcemia es frecuente y predictor de sangrado grave.</li>
+          <li><b>Temperatura &gt;36 °C</b> y pH próximo a 7,4: la coagulación es enzimática.</li>
+        </ul>
+        <span class="src">EACTS/EACTAIC 2024 · Rossaint 2023 · Rushton 2024</span>
+      </div>
+      <div class="card">
+        <h4>Errores frecuentes</h4>
+        <ul>
+          <li><b>Transfundir por cifra aislada</b> de Hb en un paciente que sangra: la Hb tarda en caer.</li>
+          <li><b>PFC como expansor</b> o para “corregir” un INR límite sin sangrado.</li>
+          <li><b>Olvidar el calcio</b> hasta que aparece hipotensión refractaria o arritmia.</li>
+          <li><b>Infundir frío</b>: cada producto a 4 °C agrava la coagulopatía.</li>
+          <li><b>Retrasar la reexploración</b> por seguir transfundiendo.</li>
+          <li><b>No registrar</b> hora, lote y unidad: se pierde la trazabilidad y la auditoría.</li>
+        </ul>
+        <div class="callout crit" style="margin-bottom:0">
+          <p>Si el sangrado es <b>arterial o quirúrgico</b>, la respuesta a productos es transitoria. La decisión de reexplorar no debe demorarse más de 4 h.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 03 FASE II ========== -->
+  <section class="panel" id="fase2">
+    <div class="sec-head">
+      <div class="idx">03</div>
+      <h2>Fase II · terapia dirigida
+        <small>Del ratio fijo al defecto concreto: pruebas viscoelásticas y coagulación convencional.</small>
+      </h2>
+      <div class="sec-meta"><b>Inicio</b>15–20 min<br><b>Repetición</b>cada 30–60 min</div>
+    </div>
+
+    <div class="callout">
+      <p><b>Regla de oro:</b> una vez controlada la fase exanguinante, se abandona la reposición por ratios y se pasa a una estrategia guiada por resultados. Los algoritmos con TEG/ROTEM reducen de forma consistente la transfusión de CH, PFC y plaquetas en cirugía cardiovascular. <span class="tag teal">EACTS 2024</span></p>
+    </div>
+
+    <div class="card">
+      <h4>Algoritmo ROTEM · interpretación y acción</h4>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Parámetro</th><th>Umbral orientativo</th><th>Interpretación</th><th>Acción</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="num"><b>EXTEM CT</b></td><td class="num">&gt; 90 s</td>
+              <td>Retraso en la formación del coágulo: déficit de factores</td>
+              <td>PFC 10–15 ml/kg <b>o</b> CCP 25 U/kg si INR &gt;1,5 o necesidad urgente</td>
+            </tr>
+            <tr>
+              <td class="num"><b>FIBTEM A10</b></td><td class="num">&lt; 10 mm</td>
+              <td>Déficit de fibrinógeno / hipofibrinogenemia</td>
+              <td>Fibrinógeno 25–50 mg/kg (2–4 g) o crioprecipitado 10 U</td>
+            </tr>
+            <tr>
+              <td class="num"><b>EXTEM A10</b></td><td class="num">&lt; 40 mm <span class="tag">con FIBTEM ≥10</span></td>
+              <td>Coágulo débil con fibrinógeno suficiente: plaquetas</td>
+              <td>1 pool de plaquetas; repetir si persiste</td>
+            </tr>
+            <tr>
+              <td class="num"><b>INTEM / HEPTEM</b></td><td class="num">CT ratio &gt;1,2</td>
+              <td>Efecto heparina residual o rebote</td>
+              <td>Protamina 25–50 mg; reevaluar anti-Xa</td>
+            </tr>
+            <tr>
+              <td class="num"><b>EXTEM ML / LY</b></td><td class="num">ML &gt;15 % · LY30 &gt;3 %</td>
+              <td>Hiperfibrinólisis</td>
+              <td>Ácido tranexámico 1 g; valorar repetir</td>
+            </tr>
+            <tr>
+              <td class="num"><b>Todo normal</b></td><td class="num">—</td>
+              <td>Coagulación conservada</td>
+              <td><b>Sangrado quirúrgico:</b> reexplorar, no transfundir más</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tbl-note">Los puntos de corte no son universales: varían con la plataforma, el cartucho y el activador. Validar localmente antes de adoptarlos. En FIBTEM, elevar el fibrinógeno por encima de ~2,9 g/L (MCF 14 mm) no reduce más el sangrado.</p>
+      <span class="src">ROTEM pocket · EACTS 2024 · Natalini 2025 · Xu 2025</span>
+    </div>
+
+    <div class="grid g2" style="margin-top:14px">
+      <div class="card">
+        <h4>Coagulación convencional</h4>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Prueba</th><th>Objetivo</th><th>Acción si fuera de rango</th></tr></thead>
+            <tbody>
+              <tr><td>Hemoglobina</td><td class="num">7,5 g/dL</td><td>CH 1 U y reevaluar (rango 7–8)</td></tr>
+              <tr><td>Plaquetas</td><td class="num">&gt;50 ×10⁹/L</td><td>Pool si &lt;50 o &lt;100 con antiagregantes</td></tr>
+              <tr><td>INR</td><td class="num">&lt;1,5</td><td>CCP 25 U/kg; PFC si no disponible</td></tr>
+              <tr><td>Fibrinógeno</td><td class="num">&gt;1,5 g/L</td><td>Concentrado 25–50 mg/kg</td></tr>
+              <tr><td>aPTT</td><td class="num">&lt;1,5 ×</td><td>Descartar heparina residual</td></tr>
+              <tr><td>Calcio iónico</td><td class="num">&gt;1,1 mmol/L</td><td>Gluconato cálcico 1–2 g</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="tbl-note">La Hb no es un objetivo de reanimación en sangrado activo: es un marcador tardío.</p>
+      </div>
+      <div class="card">
+        <h4>Trampas de interpretación</h4>
+        <ul>
+          <li><b>Heparina residual:</b> un ROTEM “prolongado” puede ser heparina, no déficit de factores. Comprobar HEPTEM o anti-Xa antes de dar PFC.</li>
+          <li><b>Hipotermia y acidosis:</b> alteran el trazado y la coagulación real; corregirlas antes de escalar productos.</li>
+          <li><b>Antiagregantes:</b> el recuento puede ser normal con función plaquetaria alterada; el ROTEM no siempre lo detecta.</li>
+          <li><b>Dilución:</b> tras 10 unidades, el fibrinógeno cae antes que el INR suba.</li>
+          <li><b>Pruebas congeladas:</b> resultados de 45–60 min; no esperar para tratar la hemorragia exanguinante.</li>
+        </ul>
+        <div class="callout warn" style="margin-bottom:0">
+          <p><b>No retrasar el tratamiento</b> por pruebas convencionales o viscoelásticas en hemorragia potencialmente letal.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 04 PRODUCTOS ========== -->
+  <section class="panel" id="productos">
+    <div class="sec-head">
+      <div class="idx">04</div>
+      <h2>Productos y dosis
+        <small>Qué pedir, cuánto, qué esperar y qué vigilar. Dosis de adulto de referencia.</small>
+      </h2>
+      <div class="sec-meta"><b>Revisión</b>2026<br><b>Uso</b>UCI y quirófano</div>
+    </div>
+
+    <div class="grid g4" style="align-items:stretch">
+      <div class="prod">
+        <div class="prod-top"><div class="abbr">CH · hematíes</div><h3>Concentrado de hematíes</h3></div>
+        <div class="prod-body"><dl>
+          <dt>Dosis</dt><dd>1 unidad; repetir tras reevaluar</dd>
+          <dt>Efecto</dt><dd>↑ Hb ≈1 g/dL (0,8–1)</dd>
+          <dt>Indicación</dt><dd>Sangrado activo con Hb &lt;7,5 g/dL o isquemia</dd>
+          <dt>Precaución</dt><dd>No corrige coagulopatía; sobrecarga y TRALI</dd>
+        </dl></div>
+      </div>
+      <div class="prod pfc">
+        <div class="prod-top"><div class="abbr">PFC · plasma</div><h3>Plasma fresco congelado</h3></div>
+        <div class="prod-body"><dl>
+          <dt>Dosis</dt><dd>10–15 ml/kg (≈3–4 U)</dd>
+          <dt>Efecto</dt><dd>Reposición de factores ≈15–20 %</dd>
+          <dt>Indicación</dt><dd>Sangrado con coagulopatía; reversión de AVK si no hay CCP</dd>
+          <dt>Precaución</dt><dd>No usar como expansor; TACO y TRALI</dd>
+        </dl></div>
+      </div>
+      <div class="prod plt">
+        <div class="prod-top"><div class="abbr">PLT · plaquetas</div><h3>Pool de plaquetas</h3></div>
+        <div class="prod-body"><dl>
+          <dt>Dosis</dt><dd>1 pool de adulto (≈3 × 10¹¹)</dd>
+          <dt>Efecto</dt><dd>↑ 30–50 × 10⁹/L</dd>
+          <dt>Indicación</dt><dd>&lt;50 × 10⁹/L con sangrado; disfunción por antiagregantes</dd>
+          <dt>Precaución</dt><dd>Refractariedad; no usar de forma profiláctica</dd>
+        </dl></div>
+      </div>
+      <div class="prod fib">
+        <div class="prod-top"><div class="abbr">FIB · fibrinógeno</div><h3>Concentrado de fibrinógeno</h3></div>
+        <div class="prod-body"><dl>
+          <dt>Dosis</dt><dd>25–50 mg/kg (≈2–4 g)</dd>
+          <dt>Efecto</dt><dd>↑ ≈0,5–1 g/L según consumo</dd>
+          <dt>Indicación</dt><dd>Fibrinógeno &lt;1,5 g/L o FIBTEM A10 &lt;10 mm</dd>
+          <dt>Precaución</dt><dd>No profiláctico; control a los 15–30 min</dd>
+        </dl></div>
+      </div>
+      <div class="prod fib">
+        <div class="prod-top"><div class="abbr">CRIO · crioprecipitado</div><h3>Crioprecipitado</h3></div>
+        <div class="prod-body"><dl>
+          <dt>Dosis</dt><dd>10 U (1 U/10 kg)</dd>
+          <dt>Efecto</dt><dd>↑ fibrinógeno ≈0,7–1 g/L</dd>
+          <dt>Indicación</dt><dd>Alternativa al concentrado; fibrinógeno bajo</dd>
+          <dt>Precaución</dt><dd>Descongelación lenta; volumen adicional</dd>
+        </dl></div>
+      </div>
+      <div class="prod ccp">
+        <div class="prod-top"><div class="abbr">CCP · complejo protrombínico</div><h3>Concentrado de complejo protrombínico</h3></div>
+        <div class="prod-body"><dl>
+          <dt>Dosis</dt><dd>25 U/kg (hasta 50 U/kg en rescate)</dd>
+          <dt>Efecto</dt><dd>Reversión rápida de factores II, VII, IX, X</dd>
+          <dt>Indicación</dt><dd>INR &gt;1,5 con sangrado; reversión de AVK</dd>
+          <dt>Precaución</dt><dd>Riesgo trombótico; añadir vitamina K 5–10 mg IV</dd>
+        </dl></div>
+      </div>
+      <div class="prod rf">
+        <div class="prod-top"><div class="abbr">rFVIIa · off-label</div><h3>Factor VII activado</h3></div>
+        <div class="prod-body"><dl>
+          <dt>Dosis</dt><dd>15–90 µg/kg, dosis única</dd>
+          <dt>Efecto</dt><dd>Generación de trombina en el sitio de lesión</dd>
+          <dt>Indicación</dt><dd>Rescate tras control quirúrgico y corrección de pH, Ca, plaquetas y fibrinógeno</dd>
+          <dt>Precaución</dt><dd>Trombosis; no usar antes de corregir lo corregible</dd>
+        </dl></div>
+      </div>
+      <div class="prod">
+        <div class="prod-top" style="border-top-color:var(--teal)"><div class="abbr">TXA · antifibrinolítico</div><h3>Ácido tranexámico</h3></div>
+        <div class="prod-body"><dl>
+          <dt>Dosis</dt><dd>1 g en 10 min + 1 g en 8 h</dd>
+          <dt>Efecto</dt><dd>Inhibe la fibrinólisis</dd>
+          <dt>Indicación</dt><dd>Hemorragia, cirugía con CEC, hiperfibrinólisis</dd>
+          <dt>Precaución</dt><dd>Convulsiones con dosis altas; ajustar en insuficiencia renal</dd>
+        </dl></div>
+      </div>
+      <div class="prod">
+        <div class="prod-top" style="border-top-color:#8A6A3A"><div class="abbr">PROT · antagonista</div><h3>Protamina</h3></div>
+        <div class="prod-body"><dl>
+          <dt>Dosis</dt><dd>1 mg por 100 U de heparina residual</dd>
+          <dt>Efecto</dt><dd>Revierte la heparina en minutos</dd>
+          <dt>Indicación</dt><dd>Fin de CEC, rebote heparinico, anti-Xa elevado</dd>
+          <dt>Precaución</dt><dd>Exceso paradójicamente prohemorrágico; hipotensión y anafilaxia</dd>
+        </dl></div>
+      </div>
+      <div class="prod">
+        <div class="prod-top" style="border-top-color:#4C7A5E"><div class="abbr">DDAVP · análogo</div><h3>Desmopresina</h3></div>
+        <div class="prod-body"><dl>
+          <dt>Dosis</dt><dd>0,3 µg/kg IV</dd>
+          <dt>Efecto</dt><dd>Liberación de factor von Willebrand</dd>
+          <dt>Indicación</dt><dd>Disfunción plaquetaria, uremia, antiagregantes, CEC prolongada</dd>
+          <dt>Precaución</dt><dd>Hiponatremia; taquifilaxia si se repite</dd>
+        </dl></div>
+      </div>
+      <div class="prod">
+        <div class="prod-top" style="border-top-color:#6B6B6B"><div class="abbr">Vit K · antagonista AVK</div><h3>Vitamina K</h3></div>
+        <div class="prod-body"><dl>
+          <dt>Dosis</dt><dd>5–10 mg IV lenta</dd>
+          <dt>Efecto</dt><dd>Revierte AVK en 6–12 h</dd>
+          <dt>Indicación</dt><dd>Sangrado con warfarina; siempre con CCP</dd>
+          <dt>Precaución</dt><dd>No sustituye la reversión inmediata</dd>
+        </dl></div>
+      </div>
+      <div class="prod">
+        <div class="prod-top" style="border-top-color:#7A8B8A"><div class="abbr">Albúmina · no hemostático</div><h3>Albúmina</h3></div>
+        <div class="prod-body"><dl>
+          <dt>Dosis</dt><dd>No protocolizada en MTP</dd>
+          <dt>Efecto</dt><dd>Volumen, no coagulación</dd>
+          <dt>Indicación</dt><dd>Hipoalbuminemia grave; cebado de CEC seleccionado</dd>
+          <dt>Precaución</dt><dd>No es un expansor de primera línea ni corrige coagulopatía</dd>
+        </dl></div>
+      </div>
+    </div>
+
+    <div class="callout crit" style="margin-top:16px">
+      <p><b>Sangre total de donante único:</b> opción emergente en trauma, con evidencia limitada en cirugía cardiaca. No forma parte del protocolo estándar de esta unidad; su uso requiere decisión del líder y disponibilidad del banco.</p>
+    </div>
+    <p class="tbl-note">Dosis orientativas de práctica clínica; ajustar a peso, edad, función renal, sangrado y respuesta. Verificar prospecto y protocolo del centro antes de administrar.</p>
+  </section>
+
+  <!-- ========== 05 CEC / UCI / ECMO ========== -->
+  <section class="panel" id="cec">
+    <div class="sec-head">
+      <div class="idx">05</div>
+      <h2>CEC, UCI y ECMO
+        <small>La coagulopatía del postoperatorio cardiaco no es la del trauma: heparina, protamina y bomba.</small>
+      </h2>
+      <div class="sec-meta"><b>Contexto</b>Post-CEC<br><b>Foco</b>Diferenciar causa</div>
+    </div>
+
+    <div class="grid g2">
+      <div class="card">
+        <h4>Por qué sangra el paciente post-CEC</h4>
+        <div class="grid g2" style="gap:8px">
+          <div class="card tight flat"><b style="font-size:13px">Hemodilución</b><p style="font-size:12.3px;color:var(--muted);margin:3px 0 0">Cebado del circuito, cristaloides, pérdidas.</p></div>
+          <div class="card tight flat"><b style="font-size:13px">Disfunción plaquetaria</b><p style="font-size:12.3px;color:var(--muted);margin:3px 0 0">Activación y consumo por superficies artificiales.</p></div>
+          <div class="card tight flat"><b style="font-size:13px">Hiperfibrinólisis</b><p style="font-size:12.3px;color:var(--muted);margin:3px 0 0">Respuesta inflamatoria y tPA endógeno.</p></div>
+          <div class="card tight flat"><b style="font-size:13px">Heparina residual</b><p style="font-size:12.3px;color:var(--muted);margin:3px 0 0">Rebote a las 2–6 h; anti-Xa elevado.</p></div>
+          <div class="card tight flat"><b style="font-size:13px">Hipotermia</b><p style="font-size:12.3px;color:var(--muted);margin:3px 0 0">Recalentamiento rápido = coagulopatía.</p></div>
+          <div class="card tight flat"><b style="font-size:13px">Factor quirúrgico</b><p style="font-size:12.3px;color:var(--muted);margin:3px 0 0">Sutura, injerto, anastomosis, taponamiento.</p></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>Manejo intraoperatorio · puntos clave</h4>
+        <ul>
+          <li><b>Heparina:</b> monitorizar con ACT (300–600 s) o niveles; individualizar reduce sangrado.</li>
+          <li><b>Protamina:</b> ratio &lt;1,0 respecto a la heparina inicial. El exceso aumenta el sangrado.</li>
+          <li><b>Recuperación de sangre de campo:</b> recomendada de forma sistemática; precaución si se reinfunden &gt;1000 ml.</li>
+          <li><b>Sangre de bomba:</b> procesar y reinfundir si procede; evitar volumen libre.</li>
+          <li><b>Normotermia estricta</b> y recalentamiento progresivo, no rápido.</li>
+          <li><b>POC</b> al destete de CEC si sangrado microvascular difuso.</li>
+        </ul>
+        <span class="src">EACTS/EACTAIC 2024</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <h4>Sangrado postoperatorio · umbrales de reexploración</h4>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Débito torácico</th><th>Interpretación</th><th>Conducta</th></tr></thead>
+          <tbody>
+            <tr><td class="num"><b>&gt;500 ml en la 1.ª hora</b></td><td>Alto riesgo de sangrado quirúrgico</td><td>Reevaluar urgente; avisar a cirugía; activar MTP si inestable</td></tr>
+            <tr><td class="num"><b>&gt;400 ml/h × 2 h</b></td><td>Sangrado mantenido</td><td>POC + corregir coagulopatía; valorar reexploración</td></tr>
+            <tr><td class="num"><b>&gt;300 ml/h × 3 h</b></td><td>Sangrado persistente</td><td>Indicación quirúrgica si no remite</td></tr>
+            <tr><td class="num"><b>&gt;200 ml/h × 4 h</b></td><td>Zona gris</td><td>Individualizar; ecografía y hemodinámica</td></tr>
+            <tr><td class="num"><b>&gt;1000 ml en 4 h</b></td><td>Sangrado mayor</td><td>Reexploración precoz</td></tr>
+            <tr><td class="num"><b>Súbito masivo</b></td><td>Taponamiento o vaso</td><td>Reexploración inmediata</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tbl-note">Cifras orientativas (Bojar, Sundt): pueden variar según drenaje pleural y técnica. Un drenaje que deja de sangrar de forma brusca con deterioro hemodinámico sugiere taponamiento, no mejoría. La reexploración precoz —idealmente &lt;4 h— mejora la supervivencia.</p>
+      <span class="src">EACTS 2024 · IBCC CTS · Salenger 2025</span>
+    </div>
+
+    <div class="grid g2" style="margin-top:14px">
+      <div class="card">
+        <h4>Taponamiento · señales de alarma</h4>
+        <ul>
+          <li>Hipotensión con <b>PVC elevada</b> e igualación de presiones.</li>
+          <li><b>Drenaje que cesa</b> bruscamente tras sangrado abundante.</li>
+          <li>Taquicardia, oliguria, acidosis, mala perfusión.</li>
+          <li>Ecografía: colección pericárdica, colapso de cavidades derechas.</li>
+        </ul>
+        <div class="callout crit" style="margin-bottom:0"><p><b>No es un problema de coagulación:</b> requiere descompresión y quirófano.</p></div>
+      </div>
+      <div class="card">
+        <h4>ECMO / soporte circulatorio</h4>
+        <ul>
+          <li>Equilibrio <b>hemorragia–trombosis</b>: no suspender anticoagulación sin decisión multidisciplinar.</li>
+          <li>Objetivos habituales: <b>plaquetas &gt;50–100 ×10⁹/L</b>, fibrinógeno &gt;1,5 g/L, Hb 7–8 g/dL.</li>
+          <li>El sangrado del canuto es <b>quirúrgico</b> hasta que se demuestre lo contrario.</li>
+          <li>Evitar sobrecarga de volumen: la ECMO ya impone precarga.</li>
+          <li>Vigilar hemólisis (LDH, haptoglobina, hemoglobinuria) y trombosis del circuito.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="compare" style="margin-top:14px">
+      <div>
+        <h3>Sangrado quirúrgico</h3>
+        <ul>
+          <li>Inicio súbito, sangre roja, coágulos.</li>
+          <li>Débito mantenido &gt;umbral pese a productos.</li>
+          <li>Deterioro hemodinámico con coagulación normal.</li>
+          <li>ROTEM/TEG sin defecto corregible.</li>
+          <li><b>Conducta:</b> reexplorar.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Coagulopatía</h3>
+        <ul>
+          <li>Sangrado difuso, microvascular, campos que rezuman.</li>
+          <li>Débito moderado pero persistente.</li>
+          <li>ROTEM alterado con defecto identificable.</li>
+          <li>Hipotermia, acidosis, dilución, heparina.</li>
+          <li><b>Conducta:</b> corregir dirigidamente y reevaluar.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <h4>Reversión de antitrombóticos</h4>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Fármaco</th><th>Reversión</th><th>Notas</th></tr></thead>
+          <tbody>
+            <tr><td><b>Heparina no fraccionada</b></td><td>Protamina 1 mg/100 U residual</td><td>Ratio total &lt;1; vigilar rebote</td></tr>
+            <tr><td><b>HBPM</b></td><td>Protamina (reversión parcial)</td><td>Repetir anti-Xa; no es completa</td></tr>
+            <tr><td><b>Warfarina (AVK)</b></td><td>CCP 25 U/kg + vitamina K 5–10 mg IV</td><td>PFC solo si no hay CCP</td></tr>
+            <tr><td><b>Dabigatrán</b></td><td>Idarucizumab 5 g IV</td><td>Si no disponible: CCP 25–50 U/kg</td></tr>
+            <tr><td><b>Apixabán / rivaroxabán</b></td><td>Andexanet alfa (si disponible) o CCP 25–50 U/kg</td><td>Decisión urgente con hematología</td></tr>
+            <tr><td><b>Antiagregantes</b></td><td>Plaquetas ± DDAVP 0,3 µg/kg</td><td>No revertir de forma rutinaria fuera de sangrado</td></tr>
+            <tr><td><b>Fondaparinux</b></td><td>CCP / rFVIIa (rescate)</td><td>Sin antídoto específico</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tbl-note">La reversión solo se plantea ante hemorragia grave o cirugía urgente. Cada decisión debe individualizarse con hematología y registrarse.</p>
+      <span class="src">Levy 2024 · Budd 2026 · EACTS 2024</span>
+    </div>
+  </section>
+
+  <!-- ========== 06 MONITORIZACIÓN ========== -->
+  <section class="panel" id="monitor">
+    <div class="sec-head">
+      <div class="idx">06</div>
+      <h2>Monitorización
+        <small>Objetivos numéricos y frecuencia. Si no se mide, no se corrige.</small>
+      </h2>
+      <div class="sec-meta"><b>Frecuencia</b>30–60 min<br><b>Durante</b>Todo el protocolo</div>
+    </div>
+
+    <div class="targets">
+      <div class="tgt"><div class="k">Hemoglobina</div><div class="v">7,5<small> g/dL</small></div><div class="d">Rango 7–8; individualizar en isquemia</div></div>
+      <div class="tgt"><div class="k">Plaquetas</div><div class="v">&gt;50<small> ×10⁹/L</small></div><div class="d">&gt;100 si antiagregantes o disfunción</div></div>
+      <div class="tgt"><div class="k">Fibrinógeno</div><div class="v">&gt;1,5<small> g/L</small></div><div class="d">&gt;2 g/L en sangrado refractario</div></div>
+      <div class="tgt amber"><div class="k">Calcio iónico</div><div class="v">&gt;1,1<small> mmol/L</small></div><div class="d">Reponer si &lt;1,0 o sintomático</div></div>
+      <div class="tgt"><div class="k">pH</div><div class="v">&gt;7,25</div><div class="d">Corregir acidosis para coagular</div></div>
+      <div class="tgt"><div class="k">Temperatura</div><div class="v">&gt;36<small> °C</small></div><div class="d">Calentador y manta activos</div></div>
+      <div class="tgt"><div class="k">INR</div><div class="v">&lt;1,5</div><div class="d">CCP si &gt;1,5 con sangrado</div></div>
+      <div class="tgt"><div class="k">Lactato</div><div class="v">↓</div><div class="d">Tendencia descendente = respuesta</div></div>
+      <div class="tgt"><div class="k">Magnesio</div><div class="v">&gt;0,7<small> mmol/L</small></div><div class="d">Arritmias y vasoplejía</div></div>
+      <div class="tgt amber"><div class="k">Potasio</div><div class="v">&lt;5,5<small> mmol/L</small></div><div class="d">CH almacenados → hipercalemia</div></div>
+    </div>
+
+    <div class="grid g2" style="margin-top:14px">
+      <div class="card">
+        <h4>Panel analítico seriado</h4>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Prueba</th><th>Frecuencia</th><th>Comentario</th></tr></thead>
+            <tbody>
+              <tr><td>Gasometría + iCa + lactato</td><td class="num">cada 30 min</td><td>El calcio iónico es el parámetro más olvidado</td></tr>
+              <tr><td>Hemograma</td><td class="num">cada 45–60 min</td><td>Hb y plaquetas</td></tr>
+              <tr><td>Coagulación (INR, aPTT, fibrinógeno)</td><td class="num">cada 60 min</td><td>Fibrinógeno antes que INR</td></tr>
+              <tr><td>ROTEM / TEG</td><td class="num">0, 30, 60 min</td><td>Y tras cada paquete</td></tr>
+              <tr><td>Anti-Xa (si sospecha)</td><td class="num">según caso</td><td>Heparina residual o rebote</td></tr>
+              <tr><td>Potasio, magnesio, fósforo</td><td class="num">cada 2–4 h</td><td>Alteraciones por citrato y almacenamiento</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <h4>Cuidados de enfermería</h4>
+        <ul class="checks" id="chk2">
+          <li><input type="checkbox"><span>Vía de gran calibre, llave de 3 pasos y bomba de infusión rápida.</span></li>
+          <li><input type="checkbox"><span>Calentador de fluidos y productos; manta térmica.</span></li>
+          <li><input type="checkbox"><span>Filtro de 170–200 µm para hematíes; nunca con PFC ni plaquetas.</span></li>
+          <li><input type="checkbox"><span>Doble verificación de unidad, grupo y paciente a pie de cama.</span></li>
+          <li><input type="checkbox"><span>Registro de hora de inicio y fin de cada unidad.</span></li>
+          <li><input type="checkbox"><span>Vigilar reacción: fiebre, urticaria, disnea, hipotensión, hemoglobinuria.</span></li>
+          <li><input type="checkbox"><span>Débito torácico horario y características (rojo, oscuro, coágulos).</span></li>
+          <li><input type="checkbox"><span>Diuresis, temperatura y estado neurológico cada hora.</span></li>
+        </ul>
+        <div class="counter"><span>Checklist de enfermería</span><span id="chk2-count">0 / 8</span></div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:14px">
+      <p><b>La tendencia vale más que el valor aislado.</b> Un lactato que baja, un débito que cede y un paciente que calienta indican que la reanimación funciona; un fibrinógeno normal con sangrado abundante indica que el problema es quirúrgico.</p>
+    </div>
+  </section>
+
+  <!-- ========== 07 COMPLICACIONES ========== -->
+  <section class="panel" id="complic">
+    <div class="sec-head">
+      <div class="idx">07</div>
+      <h2>Complicaciones
+        <small>Reconocerlas a tiempo es parte del protocolo, no un anexo.</small>
+      </h2>
+      <div class="sec-meta"><b>Vigilancia</b>Continua<br><b>Registro</b>Hemovigilancia</div>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Complicación</th><th>Mecanismo</th><th>Clínica / detección</th><th>Prevención y tratamiento</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>Hipocalcemia</b></td>
+            <td>Citrato de los hemoderivados quelante del calcio</td>
+            <td>iCa bajo, hipotensión refractaria, QT largo, arritmias, parestesias</td>
+            <td>Medición seriada; gluconato cálcico 1–2 g; objetivo iCa &gt;1,1 mmol/L</td>
+          </tr>
+          <tr>
+            <td><b>Hipotermia</b></td>
+            <td>Productos a 4 °C y exposición quirúrgica</td>
+            <td>T &lt;36 °C, escalofríos, coagulopatía, acidosis</td>
+            <td>Calentador, manta, fluidos templados; recalentamiento progresivo</td>
+          </tr>
+          <tr>
+            <td><b>Hipercalemia</b></td>
+            <td>Potasio libre de hematíes almacenados</td>
+            <td>K &gt;5,5, arritmias, ondas T picudas</td>
+            <td>CH frescos o lavados; limitar volumen; tratar con insulina-glucosa, calcio</td>
+          </tr>
+          <tr>
+            <td><b>Acidosis</b></td>
+            <td>Hipoperfusión y cristaloides</td>
+            <td>pH &lt;7,25, lactato alto, respuesta vasopresora pobre</td>
+            <td>Control del sangrado, perfusión, evitar suero salino en exceso</td>
+          </tr>
+          <tr>
+            <td><b>Coagulopatía dilucional</b></td>
+            <td>Reposición sin factores ni plaquetas</td>
+            <td>Sangrado difuso, fibrinógeno bajo, INR alto</td>
+            <td>Ratios equilibrados y POC; fibrinógeno precoz</td>
+          </tr>
+          <tr>
+            <td><b>TRALI</b></td>
+            <td>Anticuerpos del donante contra leucocitos</td>
+            <td>Hipoxemia e infiltrados en las 6 h, sin sobrecarga</td>
+            <td>Suspender transfusión; soporte ventilatorio; notificar</td>
+          </tr>
+          <tr>
+            <td><b>TACO</b></td>
+            <td>Sobrecarga circulatoria</td>
+            <td>Disnea, hipertensión, edema, BNP elevado</td>
+            <td>Diurético, restricción de volumen, infusión lenta</td>
+          </tr>
+          <tr>
+            <td><b>Hemólisis</b></td>
+            <td>Administración a presión, calentador inadecuado, error de grupo</td>
+            <td>Hemoglobinuria, fiebre, dolor lumbar, hipotensión</td>
+            <td>Detener la transfusión; muestras; soporte; notificar incidente</td>
+          </tr>
+          <tr>
+            <td><b>Trombosis</b></td>
+            <td>CCP, rFVIIa y estados protrombóticos</td>
+            <td>Isquemia, trombosis de injerto o circuito</td>
+            <td>Uso restrictivo y dirigido; valorar tromboprofilaxis tras control</td>
+          </tr>
+          <tr>
+            <td><b>Hiperpotasemia por transfusión masiva</b></td>
+            <td>Más de 10 unidades en poco tiempo</td>
+            <td>Parada cardíaca, bradicardia, QRS ancho</td>
+            <td>Monitorización continua; calcio, insulina, bicarbonato</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid g2" style="margin-top:14px">
+      <div class="card">
+        <h4>Reacción transfusional · actuación inmediata</h4>
+        <div class="steps">
+          <div class="step"><b>Detener</b> la transfusión y mantener la vía con suero salino.</div>
+          <div class="step">Comprobar <b>identidad y unidad</b>; avisar a banco de sangre.</div>
+          <div class="step">Constantes, saturación, diuresis; buscar <b>hemólisis o edema</b>.</div>
+          <div class="step">Extraer muestras y <b>notificar</b> el incidente en hemovigilancia.</div>
+          <div class="step">Tratar según mecanismo: soporte, antihistamínico, diurético o hemoderivados.</div>
+        </div>
+      </div>
+      <div class="card">
+        <h4>Errores que cuestan vidas</h4>
+        <ul>
+          <li>Confundir <b>taponamiento</b> con coagulopatía y seguir transfundiendo.</li>
+          <li>No corregir <b>calcio, temperatura y pH</b> antes de escalar productos.</li>
+          <li>Administrar <b>PFC como volumen</b> en hipotensión sin sangrado.</li>
+          <li>Usar <b>rFVIIa</b> con fibrinógeno bajo o acidosis: no funciona y trombosa.</li>
+          <li>No registrar la <b>trazabilidad</b> unidad-paciente.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 08 CALIDAD ========== -->
+  <section class="panel" id="calidad">
+    <div class="sec-head">
+      <div class="idx">08</div>
+      <h2>Calidad y seguridad
+        <small>Un protocolo sin auditoría es solo un documento. Medir, revisar, formar.</small>
+      </h2>
+      <div class="sec-meta"><b>Revisión</b>Anual<br><b>Responsable</b>UCI + Banco</div>
+    </div>
+
+    <div class="grid g3">
+      <div class="card">
+        <h4>Indicadores de proceso</h4>
+        <ul style="font-size:13.2px">
+          <li>Tiempo activación → primer CH: <b>&lt;10 min</b></li>
+          <li>Tiempo activación → POC: <b>&lt;20 min</b></li>
+          <li>Packs completos administrados: <b>&gt;90 %</b></li>
+          <li>Calcio iónico medido cada 30 min: <b>&gt;90 %</b></li>
+          <li>Temperatura &gt;36 °C al cierre: <b>&gt;90 %</b></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Indicadores de resultado</h4>
+        <ul style="font-size:13.2px">
+          <li>Reexploración por sangrado: tendencia a la baja</li>
+          <li>Mortalidad a 30 días del episodio MTP</li>
+          <li>Unidades descongeladas no usadas (<b>wastage</b>)</li>
+          <li>Reacciones transfusionales notificadas</li>
+          <li>Estancia en UCI y días de ventilación</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Gobernanza</h4>
+        <ul style="font-size:13.2px">
+          <li>Revisión anual del protocolo y de los umbrales locales.</li>
+          <li>Auditoría trimestral de 10 casos consecutivos.</li>
+          <li>Simulación anual del equipo (activación y roles).</li>
+          <li>Revisión conjunta UCI–Anestesia–Cirugía–Banco.</li>
+          <li>Registro único de activaciones y resultados.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="grid g2" style="margin-top:14px">
+      <div class="card">
+        <h4>Debriefing 24 h post-evento</h4>
+        <div class="steps">
+          <div class="step">¿Se activó a tiempo? ¿Qué criterio se cumplía?</div>
+          <div class="step">¿Se identificó y controló el foco quirúrgico?</div>
+          <div class="step">¿Se midió calcio, temperatura y POC con la frecuencia prevista?</div>
+          <div class="step">¿Sobró o faltó algún producto? ¿Hubo retraso del banco?</div>
+          <div class="step">¿Qué se cambia en el protocolo o en la formación?</div>
+        </div>
+      </div>
+      <div class="card">
+        <h4>Documentación mínima</h4>
+        <ul>
+          <li>Hora de activación, líder y motivo.</li>
+          <li>Unidades administradas con lote y hora.</li>
+          <li>Resultados de POC y decisiones tomadas.</li>
+          <li>Hora de desactivación y estado final.</li>
+          <li>Reacciones adversas y notificación a hemovigilancia.</li>
+        </ul>
+        <div class="callout" style="margin-bottom:0">
+          <p><b>Trazabilidad completa</b> es obligatoria: permite auditar, aprender y responder ante una reacción.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <h4>Grado de evidencia de las recomendaciones de este documento</h4>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Recomendación</th><th>Base</th><th>Fuerza</th></tr></thead>
+          <tbody>
+            <tr><td>Estrategia restrictiva de transfusión (Hb 7–8 g/dL)</td><td>EACTS/EACTAIC 2024; AABB</td><td><span class="tag green">Alta</span></td></tr>
+            <tr><td>POC (ROTEM/TEG) para guiar la transfusión</td><td>EACTS 2024; metaanálisis</td><td><span class="tag green">Alta</span></td></tr>
+            <tr><td>Fibrinógeno &gt;1,5 g/L en sangrado</td><td>Shah 2023; EACTS 2024</td><td><span class="tag green">Alta</span></td></tr>
+            <tr><td>Ratio 1:1:1 inicial en hemorragia exanguinante</td><td>Rossaint 2023; Lin 2025</td><td><span class="tag amber">Moderada</span></td></tr>
+            <tr><td>Plaquetas &gt;50 ×10⁹/L con sangrado</td><td>EACTS 2024</td><td><span class="tag amber">Moderada</span></td></tr>
+            <tr><td>Calcio guiado por iCa, sin pauta fija universal</td><td>Revisiones 2025; ausencia de umbral validado</td><td><span class="tag amber">Baja-moderada</span></td></tr>
+            <tr><td>Reexploración precoz &lt;4 h</td><td>EACTS 2024; series observacionales</td><td><span class="tag amber">Moderada</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tbl-note">Las fuerzas se expresan de forma orientativa para uso clínico; no sustituyen la graduación formal de cada guía.</p>
+    </div>
+  </section>
+
+  <!-- ========== 09 TARJETA ========== -->
+  <section class="panel" id="resumen">
+    <div class="sec-head">
+      <div class="idx">09</div>
+      <h2>Tarjeta de bolsillo
+        <small>Todo el protocolo en una pantalla. Imprimible y plastificable.</small>
+      </h2>
+      <div class="sec-meta"><b>Formato</b>A4<br><b>Uso</b>Guardia</div>
+    </div>
+
+    <div class="pocket">
+      <h2>Hemorragia masiva · UCI cardiaca</h2>
+      <div class="sub">Activa · reconstruye · mide · controla el foco</div>
+      <div class="pocket-grid">
+        <div>
+          <h3>1 · Activar</h3>
+          <ul>
+            <li><b>≥4 CH/h</b> o previsión ≥10 CH/24 h</li>
+            <li>Drenaje <b>&gt;500 ml 1.ª h</b></li>
+            <li><b>&gt;400 ml/h ×2 h</b> · &gt;300 ×3 h</li>
+            <li>Shock: PAS &lt;90, FC &gt;120, lactato &gt;4</li>
+            <li>Llamar banco + líder + cirugía</li>
+          </ul>
+        </div>
+        <div>
+          <h3>2 · Paquete</h3>
+          <ul>
+            <li><b>4 CH + 4 PFC + 1 pool PLT</b></li>
+            <li>TXA <b>1 g</b> + 1 g/8 h</li>
+            <li>Calcio <b>1–2 g</b> por pack</li>
+            <li>Fibrinógeno si <b>&lt;1,5 g/L</b> → 2–4 g</li>
+            <li>Normotermia y mínimo cristaloide</li>
+          </ul>
+        </div>
+        <div>
+          <h3>3 · Medir</h3>
+          <ul>
+            <li>Gasometría + <b>iCa</b> cada 30 min</li>
+            <li>ROTEM a los 15–20 min</li>
+            <li>Objetivos: Hb <b>7,5</b>, PLT <b>&gt;50</b>, FIB <b>&gt;1,5</b></li>
+            <li>iCa <b>&gt;1,1</b>, pH <b>&gt;7,25</b>, T <b>&gt;36 °C</b></li>
+            <li>INR &lt;1,5 · lactato en descenso</li>
+          </ul>
+        </div>
+        <div>
+          <h3>4 · Dirigir</h3>
+          <ul>
+            <li>EXTEM CT &gt;90 s → <b>PFC / CCP</b></li>
+            <li>FIBTEM A10 &lt;10 → <b>fibrinógeno</b></li>
+            <li>EXTEM A10 &lt;40 → <b>plaquetas</b></li>
+            <li>Heparina → <b>protamina</b></li>
+            <li>Fibrinólisis → <b>TXA</b></li>
+          </ul>
+        </div>
+        <div>
+          <h3>5 · Decidir</h3>
+          <ul>
+            <li>Débito &gt;umbral pese a corrección → <b>reexplorar</b></li>
+            <li>Reexploración ideal <b>&lt;4 h</b></li>
+            <li>Drenaje que cesa + hipotensión → <b>taponamiento</b></li>
+            <li>POC normal + sangrado → <b>quirúrgico</b></li>
+          </ul>
+        </div>
+        <div>
+          <h3>6 · Cerrar</h3>
+          <ul>
+            <li>Desactivar si &lt;100 ml/h ×2 h y estable</li>
+            <li>Registrar hora, lote y unidades</li>
+            <li>Debriefing en 24&nbsp;h</li>
+            <li>Notificar reacciones</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pfoot">Protocolo de transfusión masiva · UCI Cirugía Cardiaca · v1.0 · 2026 · Documento de apoyo: no sustituye el juicio clínico.</div>
+    </div>
+
+    <div class="callout warn" style="margin-top:16px">
+      <p><b>Antes de imprimir:</b> completar los números de extensión, el nombre del hospital y la fecha de aprobación en la portada. Los campos en blanco son deliberados.</p>
+    </div>
+  </section>
+
+
+  <!-- ========== 10 LÍNEA DE TIEMPO ========== -->
+  <section class="panel" id="linea">
+    <div class="sec-head">
+      <div class="idx">10</div>
+      <h2>Línea de tiempo · actuar, pedir, medir
+        <small>Banda superior: lo que se hace. Banda inferior: lo que se pide y lo que se mide, en el mismo instante.</small>
+      </h2>
+      <div class="sec-meta"><b>Horizonte</b>0–120 min<br><b>Revisión</b>Cada 15 min</div>
+    </div>
+
+    <div class="tl-wrap">
+      <div class="tl-legend">
+        <span><i style="background:#0E6A6E"></i>Actuar</span>
+        <span><i style="background:#B3261E"></i>Pedir</span>
+        <span><i style="background:#A9691A"></i>Medir</span>
+        <span class="clock">Hora de activación: ______</span>
+      </div>
+
+      <p class="tl-hint">Desliza horizontalmente para recorrer la línea de tiempo →</p>
+      <div class="tl-scroll">
+      <div class="tl-grid">
+
+        <!-- cabecera de tiempos -->
+        <div></div>        <div class="tl-time hot"><b>T + 0</b><span>Activación</span></div>        <div class="tl-time "><b>T + 10</b><span>Pack 1</span></div>        <div class="tl-time "><b>T + 20</b><span>Primer POC</span></div>        <div class="tl-time "><b>T + 30</b><span>Ajuste</span></div>        <div class="tl-time hot"><b>T + 45</b><span>Decisión</span></div>        <div class="tl-time "><b>T + 60</b><span>Revaloración</span></div>        <div class="tl-time cold"><b>T + 120</b><span>Cierre</span></div>        <div class="tl-timerow"></div>
+
+        <!-- ===== BANDA SUPERIOR · ACTUAR ===== -->
+        <div class="band-label act"><b>Actuar</b><small>Qué se hace</small></div>        <div class="actu">
+          <div class="n"><span>Paso 01</span><b>MTP</b></div>
+          <ul><li>Nombrar <b>líder único</b> y dar la hora</li><li>Avisar banco, cirugía y perfusión</li><li>2 vías gruesas, calentador y aspirador</li></ul>
+        </div>        <div class="actu">
+          <div class="n"><span>Paso 02</span><b>Pack 1</b></div>
+          <ul><li>CH y PFC <b>en paralelo</b></li><li>Normotermia activa</li><li>Presión directa en el foco quirúrgico</li></ul>
+        </div>        <div class="actu">
+          <div class="n"><span>Paso 03</span><b>POC</b></div>
+          <ul><li>Leer ROTEM y nombrar el <b>defecto</b></li><li>Descartar <b>heparina residual</b></li><li>No transfundir a ciegas</li></ul>
+        </div>        <div class="actu">
+          <div class="n"><span>Paso 04</span><b>Ajuste</b></div>
+          <ul><li>Corregir <b>solo lo medido</b></li><li>Protamina si hay heparina</li><li>Cristaloides al mínimo</li></ul>
+        </div>        <div class="actu">
+          <div class="n"><span>Paso 05</span><b>Decisión</b></div>
+          <ul><li><b>¿Foco controlado?</b> Avisar cirugía</li><li>Decidir <b>reexploración</b> (ideal &lt;4 h)</li><li>Ecografía si sospecha taponamiento</li></ul>
+        </div>        <div class="actu">
+          <div class="n"><span>Paso 06</span><b>Control</b></div>
+          <ul><li>Segundo ROTEM y reevaluar</li><li>Comprobar perfusión y diuresis</li><li>Iniciar criterios de desactivación</li></ul>
+        </div>        <div class="actu">
+          <div class="n"><span>Paso 07</span><b>Cierre</b></div>
+          <ul><li>Documentar hora, lote y productos</li><li>Debriefing en 24&nbsp;h</li><li>Notificar reacciones adversas</li></ul>
+        </div>
+        <div class="band-split"><span>Qué pedir y qué medir · mismo instante que la banda superior</span></div>
+
+        <!-- ===== BANDA INFERIOR · PEDIR ===== -->
+        <div class="band-label ped"><b>Pedir</b><small>Qué se pide</small></div>
+        <div class="cell ped"><ul><li><em>Pack 1</em>: 4 CH + 4 PFC + 1 pool</li><li>TXA <b>1 g</b> en 10 min</li><li>Calcio <b>1–2 g</b></li></ul></div>
+        <div class="cell ped"><ul><li><em>Pack 2</em> en preparación</li><li>Confirmar stock y tiempos del banco</li></ul></div>
+        <div class="cell ped"><ul><li>Fibrinógeno <b>2–4 g</b> si FIBTEM &lt;10</li><li>Pool si EXTEM A10 &lt;40</li><li>CCP si CT &gt;90 s e INR &gt;1,5</li></ul></div>
+        <div class="cell ped"><ul><li>Producto del déficit concreto</li><li>Repetir fibrinógeno si &lt;1,5 g/L</li></ul></div>
+        <div class="cell ped"><ul><li>Reservar 2 CH si va a quirófano</li><li>Parar packs si el débito cede</li></ul></div>
+        <div class="cell ped"><ul><li>Productos <b>solo si hay déficit</b></li><li>Devolver unidades no usadas</li></ul></div>
+        <div class="cell ped"><ul><li>Reponer stock del banco</li><li>Analítica de control</li></ul></div>
+
+        <!-- ===== BANDA INFERIOR · MEDIR ===== -->
+        <div class="band-label med" style="margin-top:8px"><b>Medir</b><small>Qué se mide</small></div>
+        <div class="cell med" style="margin-top:8px"><ul><li><span class="mk">Gaso + iCa</span><span class="mv key">&gt;1,1 mmol/L</span></li><li><span class="mk">Hb diana</span><span class="mv key">7,5 g/dL</span></li><li><span class="mk">Fibrinógeno</span><span class="mv key">&gt;1,5 g/L</span></li><li><span class="mk"><b>ROTEM basal</b></span></li></ul></div>
+        <div class="cell med" style="margin-top:8px"><ul><li><span class="mk">Débito horario</span><span class="mv">&gt;500 ml 1.ª h</span></li><li><span class="mk">iCa tras 2.ª U</span><span class="mv key">&gt;1,1 mmol/L</span></li><li><span class="mk">Temperatura</span><span class="mv">&gt;36 °C</span></li></ul></div>
+        <div class="cell med" style="margin-top:8px"><ul><li><span class="mk">FIBTEM A10</span><span class="mv">≥10 mm</span></li><li><span class="mk">EXTEM A10</span><span class="mv">≥40 mm</span></li><li><span class="mk">EXTEM CT</span><span class="mv">≤90 s</span></li></ul></div>
+        <div class="cell med" style="margin-top:8px"><ul><li><span class="mk">Fibrinógeno</span><span class="mv key">&gt;1,5 g/L</span></li><li><span class="mk">Plaquetas</span><span class="mv key">&gt;50 ×10⁹/L</span></li><li><span class="mk">iCa</span><span class="mv key">&gt;1,1 mmol/L</span></li></ul></div>
+        <div class="cell med" style="margin-top:8px"><ul><li><span class="mk">Débito</span><span class="mv">&lt;100 ml/h</span></li><li><span class="mk">pH</span><span class="mv">&gt;7,25</span></li><li><span class="mk">Lactato</span><span class="mv">en descenso</span></li></ul></div>
+        <div class="cell med" style="margin-top:8px"><ul><li><span class="mk">Plaquetas</span><span class="mv key">&gt;50 ×10⁹/L</span></li><li><span class="mk">Con antiagregantes</span><span class="mv key">&gt;100 ×10⁹/L</span></li><li><span class="mk">Fibrinógeno</span><span class="mv key">&gt;1,5 g/L</span></li><li><span class="mk">iCa · Temperatura</span><span class="mv key">&gt;1,1 · &gt;36 °C</span></li></ul></div>
+        <div class="cell med" style="margin-top:8px"><ul><li><span class="mk">Hb final</span><span class="mv">7,5 g/dL</span></li><li><span class="mk">INR</span><span class="mv">&lt;1,5</span></li><li><span class="mk"><b>Balance hídrico</b></span></li></ul></div>
+
+      </div>
+      </div>
+
+      <div class="tl-foot">
+        <div>
+          <h4>Actuar · lo que no se delega</h4>
+          <p>Nombrar líder, controlar el foco y decidir reexploración. Es la banda que cambia el pronóstico.</p>
+        </div>
+        <div>
+          <h4>Pedir · sin esperar resultados</h4>
+          <p><b>Pack 1 · TXA · calcio</b> en el minuto cero. El banco tarda más que la hemorragia.</p>
+        </div>
+        <div>
+          <h4>Medir · lo que guía el ajuste</h4>
+          <p><b>iCa cada 30 min</b> y <b>ROTEM a los 20 min</b>: los dos datos que más cambian la conducta.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout warn" style="margin-top:16px">
+      <p><b>Cada 15 minutos, tres preguntas:</b> ¿sigue sangrando el foco?, ¿coagula con lo que tiene?, ¿está caliente y perfundido? Las tres respuestas definen el siguiente paso mejor que cualquier cifra aislada.</p>
+    </div>
+
+    <p class="tbl-note">Los tiempos son objetivos de proceso de este protocolo, no intervalos validados en ensayos. Si el paciente se desestabiliza, se vuelve al paso 01.</p>
+  </section>
+
+  <!-- ========== 11 REFERENCIAS ========== -->
+  <section class="panel" id="refs">
+    <div class="sec-head">
+      <div class="idx">11</div>
+      <h2>Referencias
+        <small>Guías, revisiones y protocolos consultados. Fuentes primarias enlazadas.</small>
+      </h2>
+      <div class="sec-meta"><b>Actualizado</b>2026<br><b>N</b>16</div>
+    </div>
+
+    <ol class="refs">
+      <li><b>Casselman FPA, et al.</b> 2024 EACTS/EACTAIC Guidelines on patient blood management in adult cardiac surgery in collaboration with EBCP. <span class="j">Eur J Cardiothorac Surg. 2025;67(5):ezae352.</span><br><a href="https://pubmed.ncbi.nlm.nih.gov/39385500/" target="_blank" rel="noopener">PubMed 39385500</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12257489/" target="_blank" rel="noopener">Texto completo PMC</a></li>
+      <li><b>Rossaint R, Afshari A, Bouillon B, et al.</b> The European guideline on management of major bleeding and coagulopathy following trauma: sixth edition. <span class="j">Crit Care. 2023.</span><br><a href="https://pubmed.ncbi.nlm.nih.gov/36859355/" target="_blank" rel="noopener">PubMed 36859355</a></li>
+      <li><b>Shah A, Kerner V, Stanworth SJ, et al.</b> Major haemorrhage: past, present and future. <span class="j">Anaesthesia. 2023.</span><br><a href="https://pubmed.ncbi.nlm.nih.gov/36089857/" target="_blank" rel="noopener">PubMed 36089857</a></li>
+      <li><b>Lin TL, Liu HT, Hsieh CH.</b> Current controversies and advances in massive transfusion: balancing evidence and practice. <span class="j">J Formos Med Assoc. 2025.</span><br><a href="https://pubmed.ncbi.nlm.nih.gov/40683811/" target="_blank" rel="noopener">PubMed 40683811</a></li>
+      <li><b>Marinho DS, Brunetta DM, Carlos LMB, et al.</b> A comprehensive review of massive transfusion and major hemorrhage protocols: origins, core principles and practical implementation. <span class="j">Braz J Anesthesiol. 2025.</span><br><a href="https://pubmed.ncbi.nlm.nih.gov/39730103/" target="_blank" rel="noopener">PubMed 39730103</a></li>
+      <li><b>Santiago R, Slocum G, Riggi G.</b> Resuscitating massive transfusion knowledge: an update for the pharmacist. <span class="j">Am J Health Syst Pharm. 2025.</span><br><a href="https://pubmed.ncbi.nlm.nih.gov/40580496/" target="_blank" rel="noopener">PubMed 40580496</a></li>
+      <li><b>Rushton TJ, Tian DH, Baron A, et al.</b> Hypocalcaemia upon arrival in trauma patients who did and did not receive prehospital blood products: systematic review and meta-analysis. <span class="j">Eur J Trauma Emerg Surg. 2024.</span><br><a href="https://pubmed.ncbi.nlm.nih.gov/38319350/" target="_blank" rel="noopener">PubMed 38319350</a></li>
+      <li><b>Salenger R, et al.</b> Cardiac surgical bleeding, transfusion, and quality metrics. <span class="j">Ann Thorac Surg. 2025.</span><br><a href="https://www.annalsthoracicsurgery.org/article/S0003-4975(24)00695-7/fulltext" target="_blank" rel="noopener">Texto completo</a></li>
+      <li><b>Natalini D, Xhemalaj R, Carelli S.</b> Viscoelastic hemostatic assays in the management of trauma-induced coagulopathy: a clinical update. <span class="j">J Clin Med. 2025.</span><br><a href="https://pubmed.ncbi.nlm.nih.gov/41517266/" target="_blank" rel="noopener">PubMed 41517266</a></li>
+      <li><b>Xu ZL, Cao H, Sun DW, et al.</b> Critical trigger thresholds for hemostatic management: a narrative review of viscoelastic hemostatic assay applications. <span class="j">Front Med (Lausanne). 2025.</span><br><a href="https://pubmed.ncbi.nlm.nih.gov/41169412/" target="_blank" rel="noopener">PubMed 41169412</a></li>
+      <li><b>Levy JH, et al.</b> Reversal of direct oral anticoagulants: guidance from the SSC of the ISTH. <span class="j">J Thromb Haemost. 2024.</span><br><a href="https://www.sciencedirect.com/science/article/pii/S1538783624004264" target="_blank" rel="noopener">Texto completo</a></li>
+      <li><b>Budd AN, et al.</b> Management of direct oral anticoagulants in adult patients undergoing cardiac surgery. <span class="j">Ann Thorac Surg. 2026.</span><br><a href="https://www.annalsthoracicsurgery.org/article/S0003-4975(26)00082-2/pdf" target="_blank" rel="noopener">PDF</a></li>
+      <li><b>Yan S, Zhou L, Chen C, et al.</b> 2024 Guidelines on patient blood management for adult cardiac surgery under cardiopulmonary bypass in China. <span class="j">Rev Cardiovasc Med. 2025;26(6).</span><br><a href="https://www.imrpress.com/journal/RCM/26/6/10.31083/RCM31384" target="_blank" rel="noopener">Texto completo</a></li>
+      <li><b>Surgical Critical Care.net.</b> Massive transfusion protocol for coagulopathy and hemorrhagic shock. 2020.<br><a href="http://www.surgicalcriticalcare.net/Guidelines/Massive%20Transfusion%20Protocol%202020.pdf" target="_blank" rel="noopener">PDF</a></li>
+      <li><b>Internet Book of Critical Care (IBCC).</b> Massive transfusion protocol; Postoperative cardiac surgical patients. <span class="j">Emcrit.</span><br><a href="https://emcrit.org/ibcc/mtp/" target="_blank" rel="noopener">MTP</a> · <a href="https://emcrit.org/ibcc/cts/" target="_blank" rel="noopener">CTS</a></li>
+      <li><b>Drotarova M, et al.</b> Basic principles of rotational thromboelastometry (ROTEM). <span class="j">2023.</span><br><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10606358/" target="_blank" rel="noopener">Texto completo PMC</a></li>
+    </ol>
+
+    <div class="callout" style="margin-top:18px">
+      <p><b>Nota metodológica:</b> este documento sintetiza las guías y revisiones citadas y las adapta a la práctica de una UCI de cirugía cardiaca. Los umbrales marcados como locales son criterios operativos de consenso, no recomendaciones universales. Antes de su implantación deben validarse con el banco de sangre, hematología y cirugía del centro.</p>
+    </div>
+
+    <div class="callout warn">
+      <p><b>Campos pendientes de completar:</b> nombre del hospital, extensiones telefónicas, fecha de aprobación y responsable del documento.</p>
+    </div>
+  </section>
+
+  <div class="page-foot">
+    <span>Protocolo de transfusión masiva · UCI de Cirugía Cardiaca · v1.0 · 2026</span>
+    <span>Documento de apoyo clínico. No sustituye el juicio individual ni el protocolo aprobado del centro.</span>
+  </div>
+</main>
+</div>
+
+<script>
+(function(){
+  var btns = Array.prototype.slice.call(document.querySelectorAll('.nav-btn'));
+  var panels = Array.prototype.slice.call(document.querySelectorAll('.panel'));
+  var crumb = document.getElementById('crumb-here');
+
+  function show(id, push){
+    var found = false;
+    panels.forEach(function(p){
+      var on = p.id === id;
+      p.classList.toggle('is-active', on);
+      if(on) found = true;
+    });
+    if(!found) return;
+    btns.forEach(function(b){
+      b.setAttribute('aria-current', b.dataset.tab === id ? 'true' : 'false');
+    });
+    var active = document.querySelector('.nav-btn[data-tab="'+id+'"]');
+    if(active && crumb) crumb.textContent = active.querySelector('span:last-child').textContent;
+    if(push !== false){ history.replaceState(null,'','#'+id); }
+    window.scrollTo({top:0,behavior:'instant'});
+  }
+
+  btns.forEach(function(b){
+    b.addEventListener('click', function(){ show(b.dataset.tab); });
+  });
+
+  var hash = (location.search.indexOf('tab=') > -1)
+    ? new URLSearchParams(location.search).get('tab')
+    : location.hash.replace('#','');
+  if(hash){ show(hash, false); }
+
+  function wireChecklist(listId, countId){
+    var list = document.getElementById(listId);
+    var out = document.getElementById(countId);
+    if(!list || !out) return;
+    var boxes = list.querySelectorAll('input[type="checkbox"]');
+    function upd(){
+      var n = 0;
+      boxes.forEach(function(b){ if(b.checked) n++; });
+      out.textContent = n + ' / ' + boxes.length;
+      out.style.color = (n === boxes.length) ? '#2F6B4F' : '';
+    }
+    boxes.forEach(function(b){ b.addEventListener('change', upd); });
+    upd();
+  }
+  wireChecklist('chk','chk-count');
+  wireChecklist('chk2','chk2-count');
+
+  document.addEventListener('keydown', function(e){
+    if(e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    var i = btns.findIndex(function(b){ return b.getAttribute('aria-current') === 'true'; });
+    if(i < 0) return;
+    var n = e.key === 'ArrowRight' ? i+1 : i-1;
+    if(btns[n]){ btns[n].click(); btns[n].focus(); }
+  });
+})();
+</script>
+</body>
+</html>

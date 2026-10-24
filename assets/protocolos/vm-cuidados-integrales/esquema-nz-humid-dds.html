@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Principales cuidados</title>
+<style>
+:root{
+  --bg:#f5f7f8; --surface:#fff; --line:#d6dee3; --text:#14232c; --muted:#56656f;
+  --navy:#0b4f6c; --nz:#1d7a4f; --nz-bg:#e5f4ec; --hum:#0f7f88; --hum-bg:#e2f4f5;
+  --alert:#b3261e; --alert-bg:#fbe9e7;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.4}
+body{padding:14px}
+h1,h2,h3,p{margin:0}
+h1{font-size:1.35rem;line-height:1.2}
+h2{font-size:1.05rem}
+h3{font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px}
+.hero{background:linear-gradient(135deg,#0b4f6c,#0e6688);color:#fff;border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.hero .kicker{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:#cfe3ec;font-weight:700;margin-bottom:4px}
+.hero .sub{margin-top:4px;color:#d3e6ee;font-size:.86rem}
+.block{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px 14px;margin-bottom:12px}
+.block:last-child{margin-bottom:0}
+.head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.num{font-size:.72rem;font-weight:800;color:#fff;background:var(--navy);border-radius:6px;padding:2px 7px}
+.tag{margin-left:auto;font-size:.72rem;font-weight:700;border:1px solid currentColor;border-radius:99px;padding:2px 8px;white-space:nowrap}
+.nz .tag,.nz h3{color:var(--nz)}
+.hum .tag,.hum h3{color:var(--hum)}
+.dds .tag{color:var(--nz)}
+.cols{display:grid;gap:10px}
+.cols.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.cols.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.card{border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0}
+.nz .card{border-top:4px solid var(--nz);background:linear-gradient(#f4fbf7,#fff 42%)}
+.hum .card{border-top:4px solid var(--hum);background:linear-gradient(#f3fbfb,#fff 42%)}
+ul{margin:0;padding:0;list-style:none}
+li{position:relative;padding-left:12px;margin:4px 0}
+li::before{content:"";position:absolute;left:0;top:.55em;width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.4}
+.note{margin-top:10px;background:#eef2f4;border-radius:8px;padding:8px 10px;font-size:.86rem;color:#24343d}
+.hum .note{background:#e7f6f6}
+.flow{display:grid;grid-template-columns:minmax(0,1fr) 22px minmax(0,1fr) 22px minmax(0,1fr);gap:6px;align-items:stretch}
+.box{border-radius:10px;padding:10px 12px;min-width:0}
+.box.in{background:var(--nz-bg);border:2px solid var(--nz)}
+.box.mid{background:#fff;border:2px solid var(--navy)}
+.box h3{text-align:center;margin-bottom:8px}
+.box.in h3{color:var(--nz)}
+.box.mid h3{color:var(--navy)}
+.box.mid li{text-align:center;padding-left:0}
+.box.mid li::before{display:none}
+.box .opt{color:var(--muted)}
+.arrow{display:flex;align-items:center;justify-content:center;color:#8a979f;font-size:1.2rem;font-weight:700}
+.apply{margin-top:10px;font-size:.86rem;color:var(--muted)}
+@media (max-width:760px){
+  .cols.g3,.cols.g2,.flow{grid-template-columns:1fr}
+  .tag{margin-left:0}
+  .arrow{transform:rotate(90deg);height:16px}
+}
+</style>
+</head>
+<body>
+  <header class="hero">
+    <p class="kicker">Cuidados integrales en VM</p>
+    <h1>Principales cuidados</h1>
+    <p class="sub">Neumonía Zero, humidificación y DDS.</p>
+  </header>
+
+  <section class="block nz">
+    <div class="head">
+      <span class="num">08</span>
+      <h2>Paquete Neumonía Zero</h2>
+      <span class="tag">Objetivo &lt; 7 NAVM / 1000 días de VM</span>
+    </div>
+    <div class="cols g3">
+      <article class="card">
+        <h3>Funcionales</h3>
+        <ul>
+          <li>Posición semisentada &gt; 30°</li>
+          <li>Higiene estricta de manos</li>
+          <li>Guantes estériles de un solo uso</li>
+          <li>Formación y entrenamiento en manipulación de la vía aérea</li>
+          <li>Retirada de sedación y valoración diaria de extubación</li>
+          <li>Destete protocolizado</li>
+          <li>Traqueostomía precoz (7–10 días)</li>
+          <li>Favorecer la VNI</li>
+          <li>No cambiar las tubuladuras de forma sistemática</li>
+          <li>Humidificación activa</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>Mecánicas</h3>
+        <ul>
+          <li>Neumotaponamiento 20–30 cmH₂O</li>
+          <li>Aspiración subglótica continua</li>
+          <li>Aspiración con circuito cerrado</li>
+          <li>Cepillado dental</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>Farmacológicas</h3>
+        <ul>
+          <li>Higiene bucal con clorhexidina 0,12–0,2 % por turno</li>
+          <li>Descontaminación selectiva digestiva (DDS)</li>
+        </ul>
+      </article>
+    </div>
+    <p class="note">La higiene bucal se hace siempre después de comprobar el neumotaponamiento.</p>
+  </section>
+
+  <section class="block hum">
+    <div class="head">
+      <span class="num">09</span>
+      <h2>Humidificación</h2>
+      <span class="tag">Pasiva o activa</span>
+    </div>
+    <div class="cols g2">
+      <article class="card">
+        <h3>Pasiva · HME</h3>
+        <ul>
+          <li>Recambio cada 24 h como máximo, o antes si está sucio o aumenta la resistencia</li>
+          <li>Vigilar secreciones espesas, tapones y aumento del espacio muerto</li>
+          <li>No usarla junto con humidificación activa</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>Activa · calentada</h3>
+        <ul>
+          <li>Mantener la temperatura programada en la cámara y en la pieza en Y</li>
+          <li>Mantiene la vía aérea hidratada</li>
+          <li>Reduce tapones mucosos y atelectasias</li>
+          <li>Vaciar los condensados hacia la trampa, nunca hacia el paciente</li>
+        </ul>
+      </article>
+    </div>
+    <p class="note">Pasar a humidificación activa si hay secreciones espesas, VM prolongada, tapones o hipotermia.</p>
+  </section>
+
+  <section class="block dds">
+    <div class="head">
+      <span class="num">10</span>
+      <h2>Descontaminación selectiva digestiva</h2>
+      <span class="tag">Prescripción médica</span>
+    </div>
+    <div class="flow">
+      <article class="box in">
+        <h3>Indicaciones</h3>
+        <ul>
+          <li>VM prevista prolongada &gt; 72 h</li>
+          <li>Alto riesgo de colonización</li>
+          <li>Con vigilancia microbiológica activa</li>
+        </ul>
+      </article>
+      <div class="arrow" aria-hidden="true">→</div>
+      <article class="box mid">
+        <h3>Composición</h3>
+        <ul>
+          <li>Polimixina E</li>
+          <li>Tobramicina</li>
+          <li>Anfotericina B</li>
+          <li class="opt">± Vancomicina</li>
+        </ul>
+      </article>
+      <div class="arrow" aria-hidden="true">→</div>
+      <article class="box in">
+        <h3>Beneficio</h3>
+        <ul>
+          <li>Menos sobrecrecimiento de flora</li>
+          <li>Menos colonización respiratoria</li>
+          <li>Menos bacteriemias</li>
+          <li>Menos mortalidad</li>
+        </ul>
+      </article>
+    </div>
+    <p class="apply">Aplicación: pasta orofaríngea + suspensión por SNG + pauta sistémica según el protocolo de la unidad.</p>
+  </section>
+</body>
+</html>
