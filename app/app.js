@@ -156,12 +156,20 @@ const SECTIONS = [
   {
     id: 'sedoanalgesia',
     title: 'Sedoanalgesia',
-    poster: {
-      title: 'Sedación ligera',
-      path: '../assets/protocolos/analgosedacion-vm/sedacion-ligera.html?v=20261020ac',
-      width: 718,
-      height: 1139
-    },
+    posters: [
+      {
+        title: 'Sedación ligera',
+        path: '../assets/protocolos/analgosedacion-vm/sedacion-ligera.html?v=20261020ac',
+        width: 718,
+        height: 1139
+      },
+      {
+        title: 'Sedación profunda',
+        path: '../assets/protocolos/analgosedacion-vm/sedacion-profunda.html?v=20261024a',
+        width: 718,
+        height: 890
+      }
+    ],
     items: [
       {
         id: 'analgosedacion-vm',
@@ -395,14 +403,17 @@ function openSection(sectionId) {
     '</button>'
   ).join('');
 
-  const poster = section.poster
-    ? '<div class="poster-card">' +
-        '<div class="poster-stage" style="--pw:' + section.poster.width + ';--ph:' + section.poster.height + '">' +
-          '<iframe title="' + escapeHtml(section.poster.title) + '" src="' + escapeHtml(section.poster.path) + '" tabindex="-1"></iframe>' +
-          '<button type="button" class="poster-open" id="posterOpen" aria-label="Ampliar ' + escapeHtml(section.poster.title) + '"><span>Ampliar</span></button>' +
-        '</div>' +
-        '<p class="poster-name">' + escapeHtml(section.poster.title) + '</p>' +
-      '</div>'
+  const posters = section.posters || (section.poster ? [section.poster] : []);
+  const poster = posters.length
+    ? '<div class="poster-row">' + posters.map((item) =>
+        '<div class="poster-card">' +
+          '<div class="poster-stage" style="--pw:' + item.width + ';--ph:' + item.height + '">' +
+            '<iframe title="' + escapeHtml(item.title) + '" src="' + escapeHtml(item.path) + '" tabindex="-1"></iframe>' +
+            '<button type="button" class="poster-open" data-poster="' + escapeHtml(item.title) + '" aria-label="Ampliar ' + escapeHtml(item.title) + '"><span>Ampliar</span></button>' +
+          '</div>' +
+          '<p class="poster-name">' + escapeHtml(item.title) + '</p>' +
+        '</div>'
+      ).join('') + '</div>'
     : '';
 
   els.viewer.innerHTML =
@@ -415,10 +426,10 @@ function openSection(sectionId) {
   els.viewer.querySelectorAll('[data-item-id]').forEach((btn) => {
     btn.addEventListener('click', () => openItem(section.id, btn.dataset.itemId));
   });
-  const posterBtn = document.getElementById('posterOpen');
-  if (posterBtn && section.poster) {
-    posterBtn.addEventListener('click', () => openPoster(section.poster));
-  }
+  els.viewer.querySelectorAll('.poster-open').forEach((posterBtn) => {
+    const item = posters.find((entry) => entry.title === posterBtn.dataset.poster);
+    if (item) posterBtn.addEventListener('click', () => openPoster(item));
+  });
 }
 
 function openPoster(poster) {

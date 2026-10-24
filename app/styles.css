@@ -191,10 +191,16 @@ button { border: 0; background: none; color: inherit; }
   color: #7dffd0;
 }
 
-.poster-card {
+.poster-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 28px;
   margin-top: 22px;
   padding-top: 18px;
   border-top: 1px solid var(--line);
+}
+.poster-card {
   width: 230px;
 }
 .poster-name {
