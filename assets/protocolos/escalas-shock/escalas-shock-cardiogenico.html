@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Escalas en shock cardiogénico · Calculadora UCI</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23123047'/%3E%3Cpath d='M4 17h6l3-7 5 13 3-6h7' fill='none' stroke='%23e2574c' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#f3f5f7; --surface:#ffffff; --surface-2:#f8fafb; --border:#d9e0e6; --border-strong:#b9c4ce;
+  --text:#14212b; --muted:#5b6b78; --faint:#8794a0;
+  --primary:#123047; --primary-2:#1d4a6b; --accent:#c7362d; --accent-soft:#fbeceb;
+  --sel:#123047; --sel-text:#fff;
+  --ok:#2f7d4f; --ok-bg:#e7f3ec; --mid:#a86a0c; --mid-bg:#fbf1de; --hi:#b3261e; --hi-bg:#fbe7e5; --vhi:#6e1410; --vhi-bg:#f3d6d3;
+  --radius:10px; --shadow:0 1px 2px rgba(16,32,48,.06),0 2px 8px rgba(16,32,48,.05);
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+[data-theme="dark"]{
+  --bg:#0e161d; --surface:#151f28; --surface-2:#1a2631; --border:#2a3a47; --border-strong:#3b4f60;
+  --text:#e4ebf0; --muted:#9fb0bd; --faint:#71838f;
+  --primary:#8fc1e3; --primary-2:#b5d6ec; --accent:#ef7b72; --accent-soft:#3a1f1d;
+  --sel:#8fc1e3; --sel-text:#0e161d;
+  --ok:#7fd3a0; --ok-bg:#163223; --mid:#f0c069; --mid-bg:#3a2d12; --hi:#f28b82; --hi-bg:#3d1c1a; --vhi:#ffb4ab; --vhi-bg:#4d1512;
+  --shadow:none;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--font);font-size:15px;line-height:1.45;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+.tnum{font-variant-numeric:tabular-nums}
+
+/* Header */
+header{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;padding:10px 20px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;color:var(--primary)}
+.brand h1{font-size:16px;margin:0;line-height:1.15;color:var(--text)}
+.brand small{display:block;font-size:12px;color:var(--muted);font-weight:400}
+.ref{display:flex;gap:8px;align-items:center;margin-left:auto;flex-wrap:wrap;justify-content:flex-end}
+.ref label{font-size:12px;color:var(--muted)}
+.ref input{width:160px;padding:6px 8px;border:1px solid var(--border-strong);border-radius:7px;background:var(--surface-2);font-family:var(--mono);font-size:13px}
+.ref input[type=datetime-local]{width:auto;font-family:var(--font)}
+.btn{border:1px solid var(--border-strong);background:var(--surface);padding:7px 12px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;display:inline-flex;gap:6px;align-items:center}
+.btn:hover{background:var(--surface-2)}
+.btn.primary{background:var(--primary);color:var(--surface);border-color:var(--primary)}
+[data-theme="dark"] .btn.primary{color:#0e161d}
+.btn.ghost{border-color:transparent}
+
+/* Layout */
+.wrap{display:grid;grid-template-columns:250px 1fr;gap:20px;max-width:1280px;margin:0 auto;padding:20px}
+nav{position:sticky;top:76px;align-self:start;display:flex;flex-direction:column;gap:4px}
+nav .group{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--faint);margin:12px 8px 4px;font-weight:700}
+nav .group:first-child{margin-top:0}
+nav button{all:unset;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 10px;border-radius:8px;font-size:14px;font-weight:600;color:var(--text)}
+nav button:hover{background:var(--surface)}
+nav button[aria-current="true"]{background:var(--surface);box-shadow:inset 3px 0 0 var(--accent),var(--shadow)}
+nav button:focus-visible{outline:2px solid var(--primary)}
+.badge{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--surface-2);border:1px solid var(--border);color:var(--muted);white-space:nowrap}
+.lv-ok{background:var(--ok-bg);color:var(--ok);border-color:transparent}
+.lv-mid{background:var(--mid-bg);color:var(--mid);border-color:transparent}
+.lv-hi{background:var(--hi-bg);color:var(--hi);border-color:transparent}
+.lv-vhi{background:var(--vhi-bg);color:var(--vhi);border-color:transparent}
+
+main{min-width:0}
+section.scale{display:none}
+section.scale.active{display:block}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+.scale-head{display:grid;grid-template-columns:1fr auto;gap:16px;padding:18px 20px;border-bottom:1px solid var(--border);align-items:start}
+.scale-head h2{margin:0 0 2px;font-size:20px;line-height:1.2}
+.scale-head p{margin:0;color:var(--muted);font-size:13.5px;max-width:62ch}
+.result{min-width:220px;text-align:right}
+.result .num{font-size:34px;font-weight:800;line-height:1;letter-spacing:-.02em}
+.result .num small{font-size:14px;color:var(--muted);font-weight:600}
+.result .lvl{display:inline-block;margin-top:6px;font-size:12.5px;font-weight:700;padding:3px 10px;border-radius:999px}
+.result .txt{font-size:12.5px;color:var(--muted);margin-top:4px;max-width:260px;margin-left:auto}
+
+/* Items */
+.items{padding:6px 20px 14px}
+.item{display:grid;grid-template-columns:minmax(200px,280px) 1fr 54px;gap:14px;align-items:center;padding:12px 0;border-bottom:1px dashed var(--border)}
+.item:last-child{border-bottom:0}
+.item .lab{font-weight:600;font-size:14px}
+.item .lab .hint{display:block;font-weight:400;font-size:12px;color:var(--muted);margin-top:2px}
+.item .pts{text-align:right;font-weight:800;font-size:16px}
+.item .pts.zero{color:var(--faint);font-weight:600}
+.item .pts.neg{color:var(--accent)}
+.ctrl{display:flex;flex-direction:column;gap:8px;min-width:0}
+.fields{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.field{display:flex;align-items:center;border:1px solid var(--border-strong);border-radius:7px;background:var(--surface-2);overflow:hidden}
+.field span{font-size:12px;color:var(--muted);padding:0 8px;white-space:nowrap}
+.field span.pre{border-right:1px solid var(--border);align-self:stretch;display:flex;align-items:center;background:var(--surface)}
+.field input,.field select{border:0;background:transparent;padding:6px 6px;width:78px;outline:none;font-variant-numeric:tabular-nums}
+.field select{width:auto;padding-right:4px}
+.field:focus-within{border-color:var(--primary);box-shadow:0 0 0 2px color-mix(in srgb,var(--primary) 22%,transparent)}
+.chk{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer}
+.calc{font-size:12.5px;color:var(--primary-2);font-weight:600}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.opt{border:1px solid var(--border-strong);background:var(--surface);border-radius:7px;padding:5px 10px;font-size:13px;cursor:pointer;display:inline-flex;gap:8px;align-items:center;text-align:left}
+.opt b{font-size:12px;color:var(--muted);font-weight:700}
+.opt:hover{border-color:var(--primary)}
+.opt[aria-pressed="true"]{background:var(--sel);color:var(--sel-text);border-color:var(--sel)}
+.opt[aria-pressed="true"] b{color:var(--sel-text);opacity:.85}
+.opt:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.opt.auto::after{content:"auto";font-size:10px;text-transform:uppercase;letter-spacing:.05em;opacity:.7}
+
+.note{margin:0 20px 18px;padding:10px 12px;border-radius:8px;background:var(--surface-2);border:1px solid var(--border);font-size:12.5px;color:var(--muted)}
+.note.warn{background:var(--accent-soft);border-color:transparent;color:var(--text)}
+.note strong{color:var(--text)}
+.risk-table{width:100%;border-collapse:collapse;font-size:13px}
+.risk-table td,.risk-table th{padding:5px 8px;border-bottom:1px solid var(--border);text-align:left}
+.risk-table th{font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.risk-table tr.on td{background:color-mix(in srgb,var(--primary) 10%,transparent);font-weight:700}
+.legend{padding:0 20px 18px}
+
+/* SCAI */
+.stages{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;padding:16px 20px}
+.stage{border:1px solid var(--border);border-radius:9px;padding:10px;background:var(--surface-2);display:flex;flex-direction:column;gap:6px;min-width:0}
+.stage h3{margin:0;font-size:14px;display:flex;align-items:center;gap:8px}
+.stage h3 .L{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;color:#fff;font-size:14px;font-weight:800;flex:none}
+.stage .sub{font-size:11.5px;color:var(--muted);margin-top:-2px}
+.stage label{display:flex;gap:7px;align-items:flex-start;font-size:12.5px;line-height:1.3;cursor:pointer;padding:3px 0}
+.stage label input{margin-top:2px;flex:none}
+.stage.hit{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.stage.sel{background:var(--surface);border-color:var(--primary);box-shadow:0 0 0 2px var(--primary)}
+.sA .L{background:#3d7f5a}.sB .L{background:#b08415}.sC .L{background:#cc6a1f}.sD .L{background:#c7362d}.sE .L{background:#6e1410}
+.pickrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:0 20px 16px}
+.pickrow .lab{font-size:13px;font-weight:600}
+
+/* INTERMACS */
+.profiles{display:grid;gap:8px;padding:16px 20px}
+.prof{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;border:1px solid var(--border);border-radius:9px;padding:10px 12px;cursor:pointer;background:var(--surface-2);text-align:left;width:100%}
+.prof:hover{border-color:var(--primary)}
+.prof[aria-pressed="true"]{border-color:var(--primary);box-shadow:0 0 0 2px var(--primary);background:var(--surface)}
+.prof .n{font-size:22px;font-weight:800;color:var(--primary);text-align:center}
+.prof .t{font-weight:700;font-size:14px}
+.prof .t em{font-style:normal;color:var(--muted);font-weight:500;font-size:12.5px;margin-left:6px}
+.prof .d{font-size:12.5px;color:var(--muted)}
+.mods{display:flex;flex-wrap:wrap;gap:14px;padding:0 20px 16px}
+
+/* Summary */
+.sum-table{width:100%;border-collapse:collapse}
+.sum-table th,.sum-table td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top;font-size:14px}
+.sum-table th{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.sum-table td.sc{font-weight:800;font-size:16px;white-space:nowrap}
+.pad{padding:16px 20px}
+textarea.out{width:100%;min-height:180px;font-family:var(--mono);font-size:12.5px;border:1px solid var(--border-strong);border-radius:8px;background:var(--surface-2);padding:10px;resize:vertical}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:8px 14px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
+footer{max-width:1280px;margin:0 auto;padding:0 20px 30px;font-size:12px;color:var(--muted)}
+
+
+/* Grupos por finalidad */
+.ngroup{display:flex;flex-direction:column;gap:2px;padding:6px 0 8px;border-left:3px solid var(--gc);padding-left:6px;margin-bottom:6px}
+nav .ngroup .group{margin:2px 6px 0;display:flex;align-items:center;gap:6px;color:var(--gc);font-size:11px}
+.ngroup .gq{font-size:11.5px;color:var(--muted);margin:0 6px 4px;line-height:1.3}
+nav .ngroup button[aria-current="true"]{box-shadow:inset 3px 0 0 var(--gc),var(--shadow)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--gc);display:inline-block;flex:none}
+section.scale{border-top:4px solid var(--gc)}
+.purpose{padding:12px 20px;border-bottom:1px solid var(--border);background:color-mix(in srgb,var(--gc) 7%,var(--surface))}
+.purpose .pg{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--gc);flex-wrap:wrap}
+.purpose .pg .q{text-transform:none;letter-spacing:0;font-weight:600;color:var(--text);font-size:13px}
+.purpose dl{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0 0}
+.purpose dl div{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 10px}
+.purpose dt{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.purpose dd{margin:2px 0 0;font-size:13px;font-weight:600;line-height:1.3}
+.flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:16px 20px 0}
+.fstep{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;border:1px solid var(--gc);color:var(--gc);font-weight:700;font-size:13px;background:color-mix(in srgb,var(--gc) 8%,var(--surface))}
+.fn{width:20px;height:20px;border-radius:50%;background:var(--gc);color:#fff;display:grid;place-items:center;font-size:11px}
+.farrow{color:var(--faint)}
+.map{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;padding:16px 20px 20px}
+.mcard{border:1px solid var(--border);border-top:4px solid var(--gc);border-radius:10px;padding:14px;background:var(--surface-2);display:flex;flex-direction:column;gap:8px}
+.mh{display:flex;align-items:center;gap:8px}.mh h3{margin:0;font-size:16px;color:var(--gc)}
+.mq{font-weight:700;font-size:14px}
+.mcard p{margin:0;font-size:12.5px;color:var(--muted)}
+.mitem{all:unset;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 11px;border:1px solid var(--border);border-radius:8px;background:var(--surface)}
+.mitem:hover{border-color:var(--gc)}
+.mitem small{display:block;font-size:12px;color:var(--muted);font-weight:400;margin-top:1px}
+.mitem:focus-visible{outline:2px solid var(--gc)}
+@media (max-width:980px){.purpose dl{grid-template-columns:1fr 1fr}.ngroup{flex-direction:row;border-left:0;border-bottom:3px solid var(--gc);padding:0;align-items:center;flex:none}.ngroup .gq{display:none}nav .ngroup .group{display:none}}
+@media (max-width:640px){.map{grid-template-columns:1fr}.purpose dl{grid-template-columns:1fr 1fr;gap:6px}.purpose dd{font-size:12px}}
+@media print{#s-mapa{display:none!important}.purpose dl{grid-template-columns:repeat(4,1fr)}}
+
+@media (max-width:980px){
+  .wrap{grid-template-columns:1fr}
+  nav{position:static;flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:4px}
+  nav .group{display:none}
+  nav button{flex:none;background:var(--surface);border:1px solid var(--border)}
+  .stages{grid-template-columns:1fr 1fr}
+}
+@media (max-width:640px){
+  .item{grid-template-columns:1fr 44px}
+  .item .ctrl{grid-column:1/-1;grid-row:2}
+  .scale-head{grid-template-columns:1fr}
+  .result{text-align:left}.result .txt{margin-left:0}
+  .stages{grid-template-columns:1fr}
+  .ref{margin-left:0}
+}
+@media print{
+  @page{size:A4;margin:12mm}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:#fff;font-size:11px}
+  header{position:static;border:0;padding:0 0 6px}
+  header .btn,nav,.noprint{display:none!important}
+  .wrap{display:block;padding:0}
+  section.scale{display:block!important;break-inside:avoid;margin-bottom:8px}
+  section.scale[data-empty="true"]{display:none!important}
+  .card{box-shadow:none;border-color:#bbb}
+  .opt:not([aria-pressed="true"]){display:none}
+  .opt.auto::after{content:""}
+  .item{padding:5px 0}
+  .stage label:not(.on){display:none}
+  .prof:not([aria-pressed="true"]){display:none}
+  textarea.out{display:none}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <svg width="34" height="34" viewBox="0 0 32 32" aria-label="Escalas shock cardiogénico" role="img"><rect width="32" height="32" rx="7" fill="currentColor"/><path d="M4 17h6l3-7 5 13 3-6h7" fill="none" stroke="#e2574c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <h1>Escalas en shock cardiogénico<small>Calculadora UCI · 7 escalas · offline</small></h1>
+  </div>
+  <div class="ref">
+    <label for="ref">Ref.</label><input id="ref" placeholder="REF-AAAAMMDD-XXXX" autocomplete="off">
+    <input id="fecha" type="datetime-local" aria-label="Fecha y hora de la valoración">
+    <button class="btn" id="btnTheme" title="Cambiar tema claro/oscuro">Tema claro/oscuro</button>
+    <button class="btn" id="btnReset" title="Borrar todos los datos">Reiniciar</button>
+    <button class="btn primary" id="btnPrint">Imprimir / PDF</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav id="nav" aria-label="Escalas"></nav>
+  <main id="main"></main>
+</div>
+<footer>
+  Herramienta de apoyo a la decisión. No sustituye el juicio clínico. Los valores numéricos asignan la categoría automáticamente (marcada «auto»); pulsa otra opción para corregirla manualmente. Las variables compartidas (edad, sexo, peso, talla, lactato, creatinina, GCS, presiones) se sincronizan entre escalas. Ningún dato sale del navegador.
+</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===================== Utilidades ===================== */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const num = v => { if (v === undefined || v === null || v === '') return null; const n = parseFloat(String(v).replace(',', '.')); return isNaN(n) ? null : n; };
+const fmt = (n, d = 1) => n === null || n === undefined || isNaN(n) ? '—' : (Math.round(n * 10 ** d) / 10 ** d).toLocaleString('es-ES');
+const signed = n => (n > 0 ? '+' : '') + n;
+
+/* Estado: S = valores compartidos; SEL = selecciones; MAN = overrides manuales */
+let S = {}, SEL = {}, MAN = {};
+
+/* Valores derivados */
+const D = {
+  imc: () => { const p = num(S.peso), t = num(S.talla); return p && t ? p / ((t / 100) ** 2) : null; },
+  fg: () => {
+    const m = num(S.fg_manual); if (m !== null) return m;
+    const cr = num(S.creat), e = num(S.edad), sx = S.sexo; if (cr === null || e === null || !sx) return null;
+    const f = sx === 'F', k = f ? 0.7 : 0.9, a = f ? -0.241 : -0.302;
+    return 142 * Math.min(cr / k, 1) ** a * Math.max(cr / k, 1) ** -1.2 * 0.9938 ** e * (f ? 1.012 : 1);
+  },
+  pp: () => { const s = num(S.pas), d = num(S.pad); return s !== null && d !== null ? s - d : null; },
+  pf: () => { const p = num(S.pao2), f = num(S.fio2); return p !== null && f ? p / (f > 1 ? f / 100 : f) : null; }
+};
+
+/* Helpers de definición */
+const F = (k, label, unit, extra = {}) => ({ k, label, unit, ...extra });
+const bandBy = (fn) => fn; // devuelve índice o null
+
+/* ===================== Definición de escalas puntuadas ===================== */
+const SCALES = [
+{
+  id: 'iabp', group: 'pron', name: 'IABP-SHOCK II',
+  sub: 'Mortalidad a 30 días en shock cardiogénico post-infarto tratado con ICP (Pöss et al., JACC 2017). Rango 0–9.',
+  items: [
+    { id: 'edad', label: 'Edad', type: 'band', fields: [F('edad', 'Edad', 'años')],
+      opts: [['≤ 73 años', 0], ['> 73 años', 1]], level: () => { const v = num(S.edad); return v === null ? null : v > 73 ? 1 : 0; } },
+    { id: 'ictus', label: 'Ictus previo', hint: 'Antecedente de accidente cerebrovascular', type: 'bin', pts: 2 },
+    { id: 'gluc', label: 'Glucosa al ingreso', type: 'band', fields: [F('gluc', 'Glucosa', 'mg/dL')],
+      opts: [['≤ 191 mg/dL', 0], ['> 191 mg/dL (> 10,6 mmol/L)', 1]], level: () => { const v = num(S.gluc); return v === null ? null : v > 191 ? 1 : 0; },
+      show: () => num(S.gluc) !== null ? fmt(num(S.gluc) / 18.016, 1) + ' mmol/L' : '' },
+    { id: 'creat', label: 'Creatinina al ingreso', type: 'band', fields: [F('creat', 'Creat.', 'mg/dL')],
+      opts: [['≤ 1,5 mg/dL', 0], ['> 1,5 mg/dL (> 132,6 µmol/L)', 1]], level: () => { const v = num(S.creat); return v === null ? null : v > 1.5 ? 1 : 0; },
+      show: () => num(S.creat) !== null ? fmt(num(S.creat) * 88.4, 0) + ' µmol/L' : '' },
+    { id: 'lact', label: 'Lactato arterial al ingreso', type: 'band', fields: [F('lact', 'Lactato', 'mmol/L')],
+      opts: [['≤ 5 mmol/L', 0], ['> 5 mmol/L', 2]], level: () => { const v = num(S.lact); return v === null ? null : v > 5 ? 1 : 0; } },
+    { id: 'timi', label: 'Flujo TIMI < 3 tras ICP', hint: 'Tras la intervención coronaria percutánea', type: 'bin', pts: 2 }
+  ],
+  risk: [[0, 2, 'Riesgo bajo', 'Mortalidad 30 d ≈ 23,8 %', 'ok'], [3, 4, 'Riesgo intermedio', 'Mortalidad 30 d ≈ 49,2 %', 'mid'], [5, 9, 'Riesgo alto', 'Mortalidad 30 d ≈ 76,6 %', 'hi']],
+  riskHead: ['Puntos', 'Categoría', 'Mortalidad 30 días'],
+  note: '<strong>Corrección respecto al listado original:</strong> la variable de antecedentes de la escala es el <strong>ictus previo (2 puntos)</strong>, no «infarto o shock previo (1 punto)». Con ello el máximo es 9 puntos, coherente con los rangos de riesgo.',
+  warn: true
+},
+{
+  id: 'cardshock', group: 'pron', name: 'CardShock',
+  sub: 'Mortalidad intrahospitalaria en shock cardiogénico de cualquier etiología (Harjola et al., Eur J Heart Fail 2015). Rango 0–9.',
+  items: [
+    { id: 'edad', label: 'Edad', type: 'band', fields: [F('edad', 'Edad', 'años')],
+      opts: [['≤ 75 años', 0], ['> 75 años', 1]], level: () => { const v = num(S.edad); return v === null ? null : v > 75 ? 1 : 0; } },
+    { id: 'conf', label: 'Confusión al ingreso', hint: 'Alteración del estado mental en la presentación', type: 'bin', pts: 1 },
+    { id: 'iam', label: 'IAM o cirugía coronaria previos', hint: 'Infarto previo o CABG', type: 'bin', pts: 1 },
+    { id: 'sca', label: 'Etiología SCA', hint: 'Síndrome coronario agudo como causa del shock', type: 'bin', pts: 1 },
+    { id: 'fevi', label: 'FEVI < 40 %', type: 'band', fields: [F('fevi', 'FEVI', '%')],
+      opts: [['≥ 40 %', 0], ['< 40 %', 1]], level: () => { const v = num(S.fevi); return v === null ? null : v < 40 ? 1 : 0; } },
+    { id: 'lact', label: 'Lactato', type: 'band', fields: [F('lact', 'Lactato', 'mmol/L')],
+      opts: [['< 2 mmol/L', 0], ['2–4 mmol/L', 1], ['> 4 mmol/L', 2]], level: () => { const v = num(S.lact); return v === null ? null : v > 4 ? 2 : v >= 2 ? 1 : 0; } },
+    { id: 'fg', label: 'FG estimado (CKD-EPI)', hint: 'Se calcula con creatinina, edad y sexo, o introdúcelo manualmente',
+      type: 'band', fields: [F('creat', 'Creat.', 'mg/dL'), F('sexo', 'Sexo', '', { sel: [['', '—'], ['M', 'Varón'], ['F', 'Mujer']] }), F('fg_manual', 'FG manual', 'mL/min/1,73m²')],
+      opts: [['> 60', 0], ['30–60', 1], ['< 30', 2]], level: () => { const v = D.fg(); return v === null ? null : v < 30 ? 2 : v <= 60 ? 1 : 0; },
+      show: () => D.fg() !== null ? 'FG ' + fmt(D.fg(), 0) + ' mL/min/1,73 m²' + (num(S.fg_manual) !== null ? ' (manual)' : ' (CKD-EPI 2021)') : '' }
+  ],
+  risk: [[0, 3, 'Riesgo bajo', 'Mortalidad hospitalaria ≈ 8,7 %', 'ok'], [4, 5, 'Riesgo intermedio', 'Mortalidad hospitalaria ≈ 36 %', 'mid'], [6, 9, 'Riesgo alto', 'Mortalidad hospitalaria ≈ 77 %', 'hi']],
+  riskHead: ['Puntos', 'Categoría', 'Mortalidad hospitalaria'],
+  note: 'Puntos de corte originales: lactato &lt;2 / 2–4 / &gt;4 mmol/L y FG &gt;60 / 30–60 / &lt;30 mL/min/1,73 m². La cohorte original usó CKD-EPI 2009; aquí se calcula con CKD-EPI 2021 (sin raza).'
+},
+{
+  id: 'save', group: 'ecmo', name: 'SAVE score',
+  sub: 'Supervivencia al alta hospitalaria en shock cardiogénico refractario tratado con ECMO-VA; variables pre-implante (Schmidt et al., Eur Heart J 2015). Incluye constante −6.',
+  constant: -6,
+  items: [
+    { id: 'edad', label: 'Edad', type: 'band', fields: [F('edad', 'Edad', 'años')],
+      opts: [['18–38', 7], ['39–52', 4], ['53–62', 3], ['≥ 63', 0]], level: () => { const v = num(S.edad); return v === null ? null : v <= 38 ? 0 : v <= 52 ? 1 : v <= 62 ? 2 : 3; } },
+    { id: 'peso', label: 'Peso', type: 'band', fields: [F('peso', 'Peso', 'kg')],
+      opts: [['≤ 65 kg', 1], ['65–89 kg', 2], ['≥ 90 kg', 0]], level: () => { const v = num(S.peso); return v === null ? null : v <= 65 ? 0 : v < 90 ? 1 : 2; } },
+    { id: 'dx', label: 'Diagnóstico del shock', hint: 'Marca todos los que apliquen; «otro» = 0', type: 'multi',
+      opts: [['Miocarditis', 3], ['TV/FV refractaria', 2], ['Post-trasplante cardíaco o pulmonar', 3], ['Cardiopatía congénita', -3]] },
+    { id: 'org', label: 'Fallo orgánico agudo pre-ECMO', type: 'multi',
+      opts: [['Fallo hepático', -3], ['Disfunción del SNC', -3], ['Insuficiencia renal aguda', -3]] },
+    { id: 'irc', label: 'Insuficiencia renal crónica', type: 'bin', pts: -6 },
+    { id: 'iot', label: 'Duración de la intubación pre-ECMO', type: 'band', fields: [F('iot_h', 'Horas', 'h')],
+      opts: [['No intubado / ≤ 10 h', 0], ['11–29 h', -2], ['≥ 30 h', -4]], level: () => { const v = num(S.iot_h); return v === null ? null : v <= 10 ? 0 : v < 30 ? 1 : 2; } },
+    { id: 'pip', label: 'Presión inspiratoria pico ≤ 20 cmH₂O', type: 'band', fields: [F('pip', 'Ppico', 'cmH₂O')],
+      opts: [['> 20 o no medida', 0], ['≤ 20 cmH₂O', 3]], level: () => { const v = num(S.pip); return v === null ? null : v <= 20 ? 1 : 0; } },
+    { id: 'pcr', label: 'Parada cardíaca pre-ECMO', type: 'bin', pts: -2 },
+    { id: 'pad', label: 'Presión diastólica pre-ECMO', type: 'band', fields: [F('pas', 'PAS', 'mmHg'), F('pad', 'PAD', 'mmHg')],
+      opts: [['< 40 mmHg', 0], ['≥ 40 mmHg', 3]], level: () => { const v = num(S.pad); return v === null ? null : v >= 40 ? 1 : 0; } },
+    { id: 'pp', label: 'Presión de pulso pre-ECMO', hint: 'PAS − PAD (calculada)', type: 'band', fields: [],
+      opts: [['> 20 mmHg', 0], ['≤ 20 mmHg', -2]], level: () => { const v = D.pp(); return v === null ? null : v <= 20 ? 1 : 0; },
+      show: () => D.pp() !== null ? 'PP ' + fmt(D.pp(), 0) + ' mmHg' : 'Introduce PAS y PAD arriba' },
+    { id: 'hco3', label: 'Bicarbonato pre-ECMO', type: 'band', fields: [F('hco3', 'HCO₃⁻', 'mmol/L')],
+      opts: [['> 15 mmol/L', 0], ['≤ 15 mmol/L', -3]], level: () => { const v = num(S.hco3); return v === null ? null : v <= 15 ? 1 : 0; } }
+  ],
+  range: [-35, 17],
+  risk: [[6, 17, 'Clase I', 'Supervivencia ≈ 75 %', 'ok'], [1, 5, 'Clase II', 'Supervivencia ≈ 58 %', 'ok'], [-4, 0, 'Clase III', 'Supervivencia ≈ 42 %', 'mid'], [-9, -5, 'Clase IV', 'Supervivencia ≈ 30 %', 'hi'], [-35, -10, 'Clase V', 'Supervivencia ≈ 18 %', 'vhi']],
+  riskHead: ['Puntos', 'Clase', 'Supervivencia al alta'],
+  note: '<strong>Corrección respecto al listado original:</strong> el SAVE score <strong>no incluye lactato</strong> (la línea «lactato &lt; 75 mg/dL: +15» no pertenece a la escala) y sí incluye una <strong>constante de −6</strong>. Rango real −35 a +17.',
+  warn: true
+},
+{
+  id: 'enc', group: 'ecmo', name: 'ENCOURAGE',
+  sub: 'Supervivencia a 6 meses en shock cardiogénico post-IAM con ECMO-VA; variables pre-implante (Muller et al., Intensive Care Med 2016). Rango 0–45.',
+  items: [
+    { id: 'edad', label: 'Edad > 60 años', type: 'band', fields: [F('edad', 'Edad', 'años')],
+      opts: [['≤ 60', 0], ['> 60', 5]], level: () => { const v = num(S.edad); return v === null ? null : v > 60 ? 1 : 0; } },
+    { id: 'sexo', label: 'Sexo femenino', type: 'band', fields: [F('sexo', 'Sexo', '', { sel: [['', '—'], ['M', 'Varón'], ['F', 'Mujer']] })],
+      opts: [['Varón', 0], ['Mujer', 7]], level: () => S.sexo === 'F' ? 1 : S.sexo === 'M' ? 0 : null },
+    { id: 'imc', label: 'IMC > 25 kg/m²', type: 'band', fields: [F('peso', 'Peso', 'kg'), F('talla', 'Talla', 'cm')],
+      opts: [['≤ 25', 0], ['> 25', 6]], level: () => { const v = D.imc(); return v === null ? null : v > 25 ? 1 : 0; },
+      show: () => D.imc() !== null ? 'IMC ' + fmt(D.imc(), 1) + ' kg/m²' : '' },
+    { id: 'gcs', label: 'Glasgow < 6', type: 'band', fields: [F('gcs', 'GCS', '/15')],
+      opts: [['≥ 6', 0], ['< 6', 6]], level: () => { const v = num(S.gcs); return v === null ? null : v < 6 ? 1 : 0; } },
+    { id: 'creat', label: 'Creatinina > 150 µmol/L', type: 'band', fields: [F('creat', 'Creat.', 'mg/dL')],
+      opts: [['≤ 150 µmol/L', 0], ['> 150 µmol/L (> 1,70 mg/dL)', 5]], level: () => { const v = num(S.creat); return v === null ? null : v * 88.4 > 150 ? 1 : 0; },
+      show: () => num(S.creat) !== null ? fmt(num(S.creat) * 88.4, 0) + ' µmol/L' : '' },
+    { id: 'lact', label: 'Lactato arterial', type: 'band', fields: [F('lact', 'Lactato', 'mmol/L')],
+      opts: [['< 2', 0], ['2–8', 8], ['> 8', 11]], level: () => { const v = num(S.lact); return v === null ? null : v > 8 ? 2 : v >= 2 ? 1 : 0; } },
+    { id: 'tp', label: 'Actividad de protrombina < 50 %', hint: 'Equivalencia aproximada: INR > 1,5', type: 'band', fields: [F('tp', 'Act. TP', '%')],
+      opts: [['≥ 50 %', 0], ['< 50 %', 5]], level: () => { const v = num(S.tp); return v === null ? null : v < 50 ? 1 : 0; } }
+  ],
+  risk: [[0, 12, 'Clase 0–12', 'Supervivencia 6 m ≈ 80 %', 'ok'], [13, 18, 'Clase 13–18', 'Supervivencia 6 m ≈ 58 %', 'mid'], [19, 22, 'Clase 19–22', 'Supervivencia 6 m ≈ 25 %', 'hi'], [23, 27, 'Clase 23–27', 'Supervivencia 6 m ≈ 20 %', 'hi'], [28, 45, 'Clase ≥ 28', 'Supervivencia 6 m ≈ 7 %', 'vhi']],
+  riskHead: ['Puntos', 'Clase', 'Supervivencia a 6 meses'],
+  note: 'Ponderación original: edad &gt;60 (5), mujer (7), IMC &gt;25 (6), GCS &lt;6 (6), creatinina &gt;150 µmol/L (5), lactato 2–8 (8) o &gt;8 (11), actividad de protrombina &lt;50 % (5).'
+},
+{
+  id: 'sofa', group: 'org', name: 'SOFA / SOFA-RV',
+  sub: 'SOFA clásico (Vincent 1996) con componente ecocardiográfico de ventrículo derecho (SOFA-RV, Akin et al.) para pacientes en ECMO-VA o asistencia mecánica.',
+  items: [
+    { id: 'resp', label: 'Respiratorio', hint: 'PaO₂/FiO₂; 3–4 puntos solo con soporte ventilatorio', type: 'band',
+      fields: [F('pao2', 'PaO₂', 'mmHg'), F('fio2', 'FiO₂', '%'), F('vm', 'Soporte ventilatorio', '', { check: true })],
+      opts: [['≥ 400', 0], ['< 400', 1], ['< 300', 2], ['< 200 + VM', 3], ['< 100 + VM', 4]],
+      level: () => { const r = D.pf(); if (r === null) return null; if (r >= 400) return 0; if (r >= 300) return 1; if (r >= 200 || !S.vm) return 2; return r < 100 ? 4 : 3; },
+      show: () => D.pf() !== null ? 'PaO₂/FiO₂ ' + fmt(D.pf(), 0) : '' },
+    { id: 'coag', label: 'Coagulación', hint: 'Plaquetas ×10³/µL', type: 'band', fields: [F('plaq', 'Plaquetas', '×10³/µL')],
+      opts: [['≥ 150', 0], ['< 150', 1], ['< 100', 2], ['< 50', 3], ['< 20', 4]],
+      level: () => { const v = num(S.plaq); return v === null ? null : v >= 150 ? 0 : v >= 100 ? 1 : v >= 50 ? 2 : v >= 20 ? 3 : 4; } },
+    { id: 'hep', label: 'Hepático', hint: 'Bilirrubina total', type: 'band', fields: [F('bili', 'Bilirrubina', 'mg/dL')],
+      opts: [['< 1,2', 0], ['1,2–1,9', 1], ['2,0–5,9', 2], ['6,0–11,9', 3], ['≥ 12', 4]],
+      level: () => { const v = num(S.bili); return v === null ? null : v < 1.2 ? 0 : v < 2 ? 1 : v < 6 ? 2 : v < 12 ? 3 : 4; } },
+    { id: 'cv', label: 'Cardiovascular', hint: 'PAM y fármacos en µg/kg/min', type: 'band',
+      fields: [F('pam', 'PAM', 'mmHg'), F('na', 'Noradrenalina', 'µg/kg/min'), F('adr', 'Adrenalina', 'µg/kg/min'), F('dopa', 'Dopamina', 'µg/kg/min'), F('dobu', 'Dobutamina', 'µg/kg/min')],
+      opts: [['PAM ≥ 70', 0], ['PAM < 70', 1], ['Dopa ≤ 5 o dobutamina', 2], ['Dopa > 5, NA o Adr ≤ 0,1', 3], ['Dopa > 15, NA o Adr > 0,1', 4]],
+      level: () => {
+        const na = num(S.na) || 0, ad = num(S.adr) || 0, dp = num(S.dopa) || 0, db = num(S.dobu) || 0, pam = num(S.pam);
+        if (na > 0.1 || ad > 0.1 || dp > 15) return 4; if (dp > 5 || na > 0 || ad > 0) return 3; if (dp > 0 || db > 0) return 2;
+        if (pam === null) return null; return pam < 70 ? 1 : 0; } },
+    { id: 'snc', label: 'Neurológico', hint: 'Escala de Glasgow', type: 'band', fields: [F('gcs', 'GCS', '/15')],
+      opts: [['15', 0], ['13–14', 1], ['10–12', 2], ['6–9', 3], ['< 6', 4]],
+      level: () => { const v = num(S.gcs); return v === null ? null : v >= 15 ? 0 : v >= 13 ? 1 : v >= 10 ? 2 : v >= 6 ? 3 : 4; } },
+    { id: 'ren', label: 'Renal', hint: 'Creatinina o diuresis (se toma la peor)', type: 'band', fields: [F('creat', 'Creat.', 'mg/dL'), F('diur', 'Diuresis', 'mL/día')],
+      opts: [['< 1,2', 0], ['1,2–1,9', 1], ['2,0–3,4', 2], ['3,5–4,9 o < 500 mL/d', 3], ['≥ 5,0 o < 200 mL/d', 4]],
+      level: () => { const c = num(S.creat), u = num(S.diur); if (c === null && u === null) return null;
+        let a = c === null ? 0 : c < 1.2 ? 0 : c < 2 ? 1 : c < 3.5 ? 2 : c < 5 ? 3 : 4; let b = u === null ? 0 : u < 200 ? 4 : u < 500 ? 3 : 0; return Math.max(a, b); } },
+    { id: 'rv', label: 'Ventrículo derecho (SOFA-RV)', hint: 'Ecocardiografía; no suma al SOFA clásico', type: 'band', fields: [], rv: true,
+      opts: [['Fallo VI aislado (VD normal)', 0], ['Fallo VD leve (biventricular)', 1], ['Fallo VD aislado', 2], ['Fallo VD moderado (biventricular)', 3], ['Fallo VD grave (biventricular)', 4]], level: () => null }
+  ],
+  custom: 'sofa',
+  note: 'SOFA-RV en ECMO-VA: puntuación <strong>≤ 14</strong> asociada a mortalidad a 30 días ≈ 26 %; <strong>&gt; 14</strong> ≈ 56 % (Akin et al.). Puntos de corte cardiovasculares en µg/kg/min administrados ≥ 1 h.'
+}
+];
+
+/* ===================== SCAI ===================== */
+const SCAI = [
+  { L: 'A', name: 'En riesgo', sub: 'At risk', c: [
+    'Factor de riesgo de SC (IAM extenso, IC aguda/crónica descompensada)',
+    'Exploración normal: perfusión caliente, sin congestión',
+    'Lactato normal (< 2 mmol/L)'] },
+  { L: 'B', name: 'Inicio / preshock', sub: 'Beginning', c: [
+    'Hipotensión relativa: PAS < 90 / PAM < 60 o caída > 30 mmHg',
+    'Taquicardia ≥ 100 lpm',
+    'PVY elevada o crepitantes, perfusión conservada',
+    'Lactato < 2 mmol/L, sin hipoperfusión'] },
+  { L: 'C', name: 'Clásico', sub: 'Classic', c: [
+    'Hipoperfusión que requiere fármacos vasoactivos o ACM',
+    'Lactato ≥ 2 mmol/L',
+    'Frialdad / livideces, alteración mental',
+    'Oliguria < 30 mL/h o creatinina ≥ 1,5× basal',
+    'IC < 2,2 L/min/m² y/o PCP > 15 mmHg'] },
+  { L: 'D', name: 'Deterioro', sub: 'Deteriorating', c: [
+    'Ausencia de respuesta a la intervención inicial',
+    'Escalada de dosis o número de vasoactivos',
+    'Necesidad de añadir asistencia mecánica',
+    'Lactato persistente/ascendente, empeoramiento renal o hepático'] },
+  { L: 'E', name: 'Extremo', sub: 'Extremis', c: [
+    'PCR en curso / RCP o desfibrilaciones repetidas',
+    'Colapso circulatorio refractario a soporte máximo',
+    'Lactato ≥ 8 mmol/L o pH < 7,2',
+    'ECMO-VA o bolos de vasopresor para mantener PA'] }
+];
+const SCAI_TXT = { A: 'En riesgo: sin signos de shock.', B: 'Preshock: hipotensión/taquicardia sin hipoperfusión.', C: 'Shock clásico: hipoperfusión que requiere intervención.', D: 'Deterioro: fracaso de la estabilización inicial.', E: 'Extremis: colapso circulatorio refractario.' };
+const SCAI_LV = { A: 'ok', B: 'mid', C: 'hi', D: 'hi', E: 'vhi' };
+
+/* ===================== INTERMACS ===================== */
+const INTERMACS = [
+  [1, 'Shock cardiogénico crítico', 'Crash and burn', 'Hipotensión con riesgo vital pese a escalada de inótropos o ACM temporal; hipoperfusión orgánica, acidosis y lactato en ascenso.', 'vhi'],
+  [2, 'Deterioro progresivo con inótropos', 'Sliding on inotropes', 'Dependiente de inótropos IV con deterioro progresivo de función renal, hepática, nutricional o de la diuresis.', 'hi'],
+  [3, 'Estable dependiente de inótropos', 'Stable but dependent', 'Estabilidad clínica y hemodinámica conseguida, pero imposible retirar el soporte inotrópico continuo.', 'hi'],
+  [4, 'Síntomas en reposo', 'Resting symptoms', 'Congestión o síntomas en reposo (NYHA IV) con tratamiento oral; sin inótropos IV.', 'mid'],
+  [5, 'Intolerancia al esfuerzo', 'Exertion intolerant', 'Cómodo en reposo; confinado en domicilio, síntomas con actividades mínimas.', 'mid'],
+  [6, 'Limitación al esfuerzo', 'Exertion limited', 'Realiza actividades ligeras de la vida diaria; fatiga con esfuerzos moderados.', 'ok'],
+  [7, 'NYHA III avanzado', 'Advanced NYHA III', 'Clase funcional III estable, sin congestión significativa ni hipoperfusión.', 'ok']
+];
+const IM_MODS = [['tcs', 'TCS · soporte circulatorio temporal (perfiles 1–3)'], ['a', 'A · arritmias ventriculares recurrentes / descargas DAI'], ['ff', 'FF · «frequent flyer», reingresos frecuentes (perfiles 3–6)']];
+let SCAI_SEL = { checks: {}, manual: null, pcr: false, coma: false }, IM = { p: null, mods: {} };
+
+/* ===================== Render ===================== */
+const nav = $('#nav'), main = $('#main');
+const NAVS = [
+  { id: 'mapa', group: 'inicio', name: 'Mapa de escalas', nobadge: true },
+  { id: 'scai', group: 'clas', name: 'SCAI' },
+  { id: 'intermacs', group: 'clas', name: 'INTERMACS' },
+  ...SCALES.map(s => ({ id: s.id, group: s.group, name: s.name })),
+  { id: 'resumen', group: 'inf', name: 'Resumen' }
+];
+
+
+/* ===================== Finalidad de las escalas ===================== */
+const GROUPS = {
+  inicio: { n: 'Inicio', q: '', c: 'var(--muted)' },
+  clas: { n: 'Clasificación de gravedad', q: '¿Cuán grave está el paciente ahora?', c: '#2f6f9f', d: 'Describen la situación clínica actual y orientan la escalada terapéutica. No dan un porcentaje de mortalidad: asignan un estadio o perfil que debe reevaluarse de forma seriada.' },
+  pron: { n: 'Pronóstico del shock', q: '¿Qué mortalidad cabe esperar?', c: '#b07a12', d: 'Estiman la mortalidad a corto plazo con datos del ingreso. Útiles para estratificar el riesgo, informar a la familia y comparar cohortes; no deciden por sí solas la indicación de asistencia.' },
+  ecmo: { n: 'Selección para ECMO-VA', q: '¿Qué supervivencia cabe esperar si se implanta ECMO-VA?', c: '#c7362d', d: 'Se calculan con datos previos al implante. Ayudan en la decisión de candidatura y en la conversación con el equipo y la familia; deben interpretarse junto a la reversibilidad y el proyecto terapéutico.' },
+  org: { n: 'Disfunción orgánica y evolución', q: '¿Cuánto fallo multiorgánico hay y cómo evoluciona?', c: '#6b4fa0', d: 'Cuantifica el fallo de órganos de forma diaria. Su tendencia (Δ SOFA) en las primeras 48 h tiene más valor que un valor aislado; SOFA-RV añade la función del VD en ECMO-VA.' },
+  inf: { n: 'Informe', q: 'Resultados para la historia clínica', c: 'var(--primary)' }
+};
+const META = {
+  scai: { fin: 'Estadificar la gravedad del shock y guiar la escalada', mom: 'Al ingreso y en cada reevaluación', pob: 'Todo shock cardiogénico o riesgo de padecerlo', res: 'Estadio A–E (+ modificador PCR)' },
+  intermacs: { fin: 'Graduar la urgencia para asistencia de larga duración o trasplante', mom: 'Al plantear LVAD o trasplante cardíaco', pob: 'Insuficiencia cardíaca avanzada', res: 'Perfil 1–7 (+ TCS, A, FF)' },
+  iabp: { fin: 'Estimar la mortalidad a 30 días', mom: 'Tras la ICP primaria', pob: 'Shock cardiogénico post-infarto', res: 'Riesgo bajo / intermedio / alto' },
+  cardshock: { fin: 'Estimar la mortalidad hospitalaria', mom: 'Al ingreso (primeras horas)', pob: 'Shock cardiogénico de cualquier etiología', res: 'Riesgo bajo / intermedio / alto' },
+  save: { fin: 'Estimar la supervivencia al alta con ECMO-VA', mom: 'Antes del implante', pob: 'Shock refractario candidato a ECMO-VA, cualquier etiología', res: 'Clase I–V' },
+  enc: { fin: 'Estimar la supervivencia a 6 meses con ECMO-VA', mom: 'Antes del implante', pob: 'Shock post-infarto candidato a ECMO-VA', res: '5 clases de supervivencia' },
+  sofa: { fin: 'Cuantificar la disfunción multiorgánica y su evolución', mom: 'Diario; SOFA-RV al implante de ECMO-VA', pob: 'Paciente crítico; ECMO-VA para SOFA-RV', res: 'SOFA 0–24 · SOFA-RV 0–28' },
+  resumen: null
+};
+const groupOf = id => (NAVS.find(n => n.id === id) || {}).group;
+function bannerHTML(id) {
+  const m = META[id]; if (!m) return '';
+  const g = GROUPS[groupOf(id)];
+  return `<div class="purpose" style="--gc:${g.c}"><div class="pg"><span class="dot"></span>${g.n}<span class="q">${g.q}</span></div>
+    <dl><div><dt>Para qué</dt><dd>${m.fin}</dd></div><div><dt>Cuándo</dt><dd>${m.mom}</dd></div><div><dt>En quién</dt><dd>${m.pob}</dd></div><div><dt>Resultado</dt><dd>${m.res}</dd></div></dl></div>`;
+}
+function renderMapa() {
+  const gs = ['clas', 'pron', 'ecmo', 'org'];
+  return `<section class="scale card" id="s-mapa" data-empty="true">
+    <div class="scale-head"><div><h2>Mapa de escalas</h2><p>Las escalas están agrupadas según la pregunta clínica que responden. Elige el grupo según el momento del paciente y pulsa una escala para rellenarla.</p></div><div></div></div>
+    <div class="flow">${gs.map((k, i) => `<div class="fstep" style="--gc:${GROUPS[k].c}"><span class="fn">${i + 1}</span><span>${GROUPS[k].n}</span></div>`).join('<span class="farrow">→</span>')}</div>
+    <div class="map">${gs.map(k => { const g = GROUPS[k];
+      return `<div class="mcard" style="--gc:${g.c}"><div class="mh"><span class="dot"></span><h3>${g.n}</h3></div><div class="mq">${g.q}</div><p>${g.d}</p>
+      ${NAVS.filter(n => n.group === k).map(n => `<button class="mitem" data-go="${n.id}"><span><strong>${n.name}</strong><small>${META[n.id].pob} · ${META[n.id].mom}</small></span><span class="badge" id="mb-${n.id}">—</span></button>`).join('')}</div>`; }).join('')}</div>
+  </section>`;
+}
+
+function renderNav() {
+  let g = '', h = '';
+  NAVS.forEach(n => { if (n.group !== g) { g = n.group; const G = GROUPS[g]; h += `${g === 'inicio' ? '' : '</div>'}<div class="ngroup" style="--gc:${G.c}"><div class="group"><span class="dot"></span>${G.n}</div>${G.q && g !== 'inf' ? `<div class="gq">${G.q}</div>` : ''}`; }
+    h += `<button data-go="${n.id}"><span>${n.name}</span>${n.nobadge ? '' : `<span class="badge" id="b-${n.id}">—</span>`}</button>`; });
+  h += '</div>';
+  nav.innerHTML = h;
+  
+}
+
+function fieldHTML(f) {
+  if (f.check) return `<label class="chk"><input type="checkbox" data-k="${f.k}"> ${f.label}</label>`;
+  if (f.sel) return `<label class="field"><span class="pre">${f.label}</span><select data-k="${f.k}">${f.sel.map(o => `<option value="${o[0]}">${o[1]}</option>`).join('')}</select></label>`;
+  return `<label class="field"><span class="pre">${f.label}</span><input inputmode="decimal" data-k="${f.k}" aria-label="${f.label}"><span>${f.unit || ''}</span></label>`;
+}
+
+function renderScale(s) {
+  let items = s.items.map(it => {
+    let ctrl = '';
+    if (it.type === 'bin') ctrl = `<div class="seg"><button class="opt" data-s="${s.id}" data-i="${it.id}" data-v="0">No <b>0</b></button><button class="opt" data-s="${s.id}" data-i="${it.id}" data-v="1">Sí <b>${signed(it.pts)}</b></button></div>`;
+    else if (it.type === 'multi') ctrl = `<div class="seg">${it.opts.map((o, j) => `<button class="opt" data-s="${s.id}" data-i="${it.id}" data-m="${j}">${o[0]} <b>${signed(o[1])}</b></button>`).join('')}</div>`;
+    else ctrl = (it.fields.length ? `<div class="fields">${it.fields.map(fieldHTML).join('')}${it.show ? `<span class="calc" id="c-${s.id}-${it.id}"></span>` : ''}</div>` : (it.show ? `<div class="fields"><span class="calc" id="c-${s.id}-${it.id}"></span></div>` : ''))
+      + `<div class="seg">${it.opts.map((o, j) => `<button class="opt" data-s="${s.id}" data-i="${it.id}" data-v="${j}">${o[0]} <b>${signed(o[1])}</b></button>`).join('')}</div>`;
+    return `<div class="item"><div class="lab">${it.label}${it.hint ? `<span class="hint">${it.hint}</span>` : ''}</div><div class="ctrl">${ctrl}</div><div class="pts tnum" id="p-${s.id}-${it.id}">—</div></div>`;
+  }).join('');
+  let legend = s.risk ? `<div class="legend"><table class="risk-table"><thead><tr>${s.riskHead.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${s.risk.map((r, j) => `<tr data-r="${j}"><td class="tnum">${r[0] === r[1] ? r[0] : r[0] + ' a ' + r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('')}</tbody></table></div>` : '';
+  if (s.custom === 'sofa') legend = `<div class="legend"><table class="risk-table"><thead><tr><th>Escala</th><th>Componentes</th><th>Total</th></tr></thead><tbody><tr><td>SOFA clásico</td><td>6 sistemas (0–24)</td><td class="tnum" id="sofa-classic">—</td></tr><tr><td>SOFA-RV</td><td>SOFA + VD (0–28)</td><td class="tnum" id="sofa-rv">—</td></tr></tbody></table></div>`;
+  return `<section class="scale card" id="s-${s.id}">
+    <div class="scale-head"><div><h2>${s.name}</h2><p>${s.sub}</p></div>
+    <div class="result" id="r-${s.id}"><div class="num tnum">—</div></div></div>
+    <div class="items">${items}</div>${legend}
+    ${s.note ? `<div class="note ${s.warn ? 'warn' : ''}">${s.note}</div>` : ''}</section>`;
+}
+
+function renderSCAI() {
+  return `<section class="scale card" id="s-scai">
+    <div class="scale-head"><div><h2>Clasificación SCAI</h2><p>Estadios de severidad del shock cardiogénico (SCAI 2019, actualización 2022). Marca los hallazgos presentes: se sugiere el estadio más grave con criterios. Confirma o corrige el estadio final.</p></div>
+    <div class="result" id="r-scai"><div class="num">—</div></div></div>
+    <div class="stages">${SCAI.map((st, i) => `<div class="stage s${st.L}" id="st-${st.L}"><h3><span class="L">${st.L}</span>${st.name}</h3><div class="sub">${st.sub}</div>
+      ${st.c.map((c, j) => `<label><input type="checkbox" data-scai="${st.L}${j}"> <span>${c}</span></label>`).join('')}</div>`).join('')}</div>
+    <div class="pickrow"><span class="lab">Estadio confirmado:</span>
+      <div class="seg">${SCAI.map(st => `<button class="opt" data-scaipick="${st.L}">${st.L} · ${st.name}</button>`).join('')}</div></div>
+    <div class="pickrow"><span class="lab">Modificadores:</span>
+      <label class="chk"><input type="checkbox" id="scai-pcr"> A · parada cardíaca</label>
+      <label class="chk"><input type="checkbox" id="scai-coma"> Coma tras PCR (riesgo de lesión anóxica)</label></div>
+    <div class="note">La clasificación SCAI es dinámica: reevalúa tras cada intervención y en las primeras horas. La PCR con riesgo de daño anóxico empeora el pronóstico en todos los estadios.</div>
+  </section>`;
+}
+
+function renderIM() {
+  return `<section class="scale card" id="s-intermacs">
+    <div class="scale-head"><div><h2>Perfiles INTERMACS</h2><p>Gravedad de la insuficiencia cardíaca avanzada y urgencia para asistencia ventricular de larga duración o trasplante. Selecciona el perfil y los modificadores.</p></div>
+    <div class="result" id="r-intermacs"><div class="num">—</div></div></div>
+    <div class="profiles">${INTERMACS.map(p => `<button class="prof" data-im="${p[0]}"><span class="n">${p[0]}</span><span><span class="t">${p[1]}<em>${p[2]}</em></span><br><span class="d">${p[3]}</span></span></button>`).join('')}</div>
+    <div class="mods">${IM_MODS.map(m => `<label class="chk"><input type="checkbox" data-immod="${m[0]}"> ${m[1]}</label>`).join('')}</div>
+  </section>`;
+}
+
+function renderSummary() {
+  return `<section class="scale card" id="s-resumen">
+    <div class="scale-head"><div><h2>Resumen de escalas</h2><p>Resultados de todas las escalas cumplimentadas, listo para copiar en la historia clínica o imprimir.</p></div><div></div></div>
+    <div class="pad"><table class="sum-table"><thead><tr><th>Escala</th><th>Resultado</th><th>Interpretación</th><th>Datos</th></tr></thead><tbody id="sumBody"></tbody></table></div>
+    <div class="pad noprint" style="padding-top:0"><textarea class="out" id="sumTxt" readonly aria-label="Texto del resumen"></textarea>
+    <div style="display:flex;gap:8px;margin-top:8px"><button class="btn primary" id="btnCopy">Copiar texto</button><button class="btn" id="btnPrint2">Imprimir / PDF</button></div></div>
+  </section>`;
+}
+
+main.innerHTML = renderMapa() + renderSCAI() + renderIM() + SCALES.map(renderScale).join('') + renderSummary();
+renderNav();
+$$('section.scale').forEach(sec => { const id = sec.id.slice(2), g = GROUPS[groupOf(id)]; sec.style.setProperty('--gc', g.c);
+  const h = $('.scale-head', sec); if (META[id]) h.insertAdjacentHTML('afterend', bannerHTML(id)); });
+document.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) go(b.dataset.go); });
+
+/* ===================== Cálculo ===================== */
+function scoreScale(s) {
+  const sel = SEL[s.id] || (SEL[s.id] = {}), man = MAN[s.id] || (MAN[s.id] = {});
+  let total = s.constant || 0, filled = 0, rv = null, parts = [];
+  s.items.forEach(it => {
+    let p = null;
+    if (it.type === 'bin') { const v = sel[it.id]; if (v !== undefined) { p = v ? it.pts : 0; filled++; } }
+    else if (it.type === 'multi') { const m = sel[it.id] || {}; const ks = Object.keys(m).filter(k => m[k]); p = ks.reduce((a, k) => a + it.opts[k][1], 0); if (ks.length) filled++; }
+    else {
+      const auto = it.level();
+      if (man[it.id] === undefined && auto !== null) sel[it.id] = auto;
+      if (man[it.id] === undefined && auto === null) delete sel[it.id];
+      const v = sel[it.id];
+      $$(`.opt[data-s="${s.id}"][data-i="${it.id}"]`).forEach(b => b.classList.toggle('auto', man[it.id] === undefined && auto !== null && +b.dataset.v === auto));
+      if (v !== undefined) { p = it.opts[v][1]; filled++; }
+      if (it.show) { const c = $(`#c-${s.id}-${it.id}`); if (c) c.textContent = it.show(); }
+    }
+    const pe = $(`#p-${s.id}-${it.id}`);
+    pe.textContent = p === null ? '—' : signed(p); pe.className = 'pts tnum' + (p === null || p === 0 ? ' zero' : p < 0 ? ' neg' : '');
+    if (it.rv) { rv = p; } else if (p !== null) total += p;
+    if (p !== null && p !== 0) parts.push(`${it.label.replace(/ \(.*\)/, '')} ${signed(p)}`);
+    // marcar opciones
+    if (it.type === 'multi') { const m = sel[it.id] || {}; $$(`.opt[data-s="${s.id}"][data-i="${it.id}"]`).forEach(b => b.setAttribute('aria-pressed', !!m[b.dataset.m])); }
+    else $$(`.opt[data-s="${s.id}"][data-i="${it.id}"]`).forEach(b => b.setAttribute('aria-pressed', sel[it.id] !== undefined && +b.dataset.v === +sel[it.id]));
+  });
+  return { total, filled, n: s.items.filter(x => x.type !== 'multi').length + s.items.filter(x => x.type === 'multi' && Object.values(sel[x.id] || {}).some(Boolean)).length, rv, parts };
+}
+
+function interp(s, r) {
+  if (s.custom === 'sofa') {
+    const sr = r.rv === null ? null : r.total + r.rv;
+    return sr === null ? { cat: 'SOFA ' + r.total, txt: 'Añade el componente VD para SOFA-RV', lv: r.total >= 12 ? 'hi' : r.total >= 7 ? 'mid' : 'ok', sofaRV: null }
+      : { cat: sr > 14 ? 'SOFA-RV > 14' : 'SOFA-RV ≤ 14', txt: sr > 14 ? 'Mortalidad 30 d ≈ 56 % (ECMO-VA)' : 'Mortalidad 30 d ≈ 26 % (ECMO-VA)', lv: sr > 14 ? 'hi' : 'ok', sofaRV: sr };
+  }
+  const k = s.risk.findIndex(x => r.total >= x[0] && r.total <= x[1]);
+  return k < 0 ? { cat: '', txt: '', lv: '' } : { cat: s.risk[k][2], txt: s.risk[k][3], lv: s.risk[k][4], k };
+}
+
+const RES = {};
+function recalc() {
+  SCALES.forEach(s => {
+    const r = scoreScale(s), I = interp(s, r), box = $(`#r-${s.id}`), b = $(`#b-${s.id}`);
+    RES[s.id] = { ...r, ...I };
+    const partial = r.filled < r.n - (s.custom === 'sofa' ? 1 : 0);
+    if (!r.filled) { box.innerHTML = `<div class="num tnum">—</div><div class="txt">Sin datos</div>`; b.textContent = '—'; b.className = 'badge'; }
+    else {
+      const shown = s.custom === 'sofa' ? (I.sofaRV !== null ? I.sofaRV : r.total) : r.total;
+      const lbl = s.custom === 'sofa' ? (I.sofaRV !== null ? 'SOFA-RV' : 'SOFA') : 'puntos';
+      box.innerHTML = `<div class="num tnum">${shown} <small>${lbl}</small></div><span class="lvl lv-${I.lv}">${I.cat}</span><div class="txt">${I.txt}${partial ? `<br>Incompleta: ${r.filled}/${r.n - (s.custom === 'sofa' ? 1 : 0)} ítems` : ''}</div>`;
+      b.textContent = shown; b.className = 'badge lv-' + I.lv;
+    }
+    if (s.custom === 'sofa') { $('#sofa-classic').textContent = r.filled ? r.total : '—'; $('#sofa-rv').textContent = I.sofaRV ?? '—'; }
+    $$(`#s-${s.id} tr[data-r]`).forEach(tr => tr.classList.toggle('on', r.filled && +tr.dataset.r === I.k));
+    $(`#s-${s.id}`).dataset.empty = !r.filled;
+  });
+  // SCAI
+  const hits = SCAI.map(st => st.c.some((_, j) => SCAI_SEL.checks[st.L + j]));
+  let sug = null; for (let i = 4; i >= 0; i--) if (hits[i]) { sug = SCAI[i].L; break; }
+  const fin = SCAI_SEL.manual || sug;
+  SCAI.forEach((st, i) => { const el = $('#st-' + st.L); el.classList.toggle('hit', hits[i]); el.classList.toggle('sel', fin === st.L); });
+  $$('[data-scai]').forEach(c => c.closest('label').classList.toggle('on', c.checked));
+  $$('[data-scaipick]').forEach(b => { b.setAttribute('aria-pressed', fin === b.dataset.scaipick); b.classList.toggle('auto', !SCAI_SEL.manual && sug === b.dataset.scaipick); });
+  const mod = (SCAI_SEL.pcr ? 'A' : '') + (SCAI_SEL.coma ? ' + coma' : '');
+  RES.scai = { fin, sug, mod };
+  $('#r-scai').innerHTML = fin ? `<div class="num">${fin}${SCAI_SEL.pcr ? '<small> A</small>' : ''}</div><span class="lvl lv-${SCAI_LV[fin]}">Estadio ${fin} · ${SCAI.find(x => x.L === fin).name}</span><div class="txt">${SCAI_TXT[fin]}${SCAI_SEL.manual && sug && sug !== fin ? `<br>Sugerido por criterios: ${sug}` : ''}${SCAI_SEL.coma ? '<br>Modificador: coma tras PCR' : ''}</div>` : `<div class="num">—</div><div class="txt">Marca criterios o selecciona estadio</div>`;
+  const bs = $('#b-scai'); bs.textContent = fin ? fin + (SCAI_SEL.pcr ? ' · A' : '') : '—'; bs.className = 'badge' + (fin ? ' lv-' + SCAI_LV[fin] : '');
+  $('#s-scai').dataset.empty = !fin;
+  // INTERMACS
+  $$('[data-im]').forEach(b => b.setAttribute('aria-pressed', IM.p === +b.dataset.im));
+  const mods = IM_MODS.filter(m => IM.mods[m[0]]).map(m => m[0].toUpperCase());
+  const ip = IM.p ? INTERMACS[IM.p - 1] : null;
+  RES.intermacs = { p: IM.p, mods };
+  $('#r-intermacs').innerHTML = ip ? `<div class="num">${ip[0]}${mods.length ? `<small> ${mods.join(' · ')}</small>` : ''}</div><span class="lvl lv-${ip[4]}">${ip[1]}</span><div class="txt">${ip[2]}</div>` : `<div class="num">—</div><div class="txt">Selecciona un perfil</div>`;
+  const bi = $('#b-intermacs'); bi.textContent = ip ? ip[0] + (mods.length ? '·' + mods.join('') : '') : '—'; bi.className = 'badge' + (ip ? ' lv-' + ip[4] : '');
+  $('#s-intermacs').dataset.empty = !ip;
+  summary();
+}
+
+function mirror() { NAVS.forEach(n => { const a = $('#b-' + n.id), m = $('#mb-' + n.id); if (a && m) { m.textContent = a.textContent; m.className = a.className; } }); }
+function summary() {
+  const rows = [], lines = [];
+  const ref = $('#ref').value.trim(), f = $('#fecha').value;
+  lines.push('ESCALAS EN SHOCK CARDIOGÉNICO' + (ref ? ' · ' + ref : '') + (f ? ' · ' + new Date(f).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) : ''));
+  const sc = RES.scai; if (sc.fin) { const t = `Estadio ${sc.fin}${sc.mod ? ' (mod. ' + sc.mod + ')' : ''}`; rows.push(['SCAI', t, SCAI_TXT[sc.fin], '']); lines.push(`- SCAI: ${t}. ${SCAI_TXT[sc.fin]}`); }
+  const im = RES.intermacs; if (im.p) { const p = INTERMACS[im.p - 1]; const t = `Perfil ${p[0]}${im.mods.length ? ' ' + im.mods.join('/') : ''}`; rows.push(['INTERMACS', t, p[1], '']); lines.push(`- INTERMACS: ${t} (${p[1]}).`); }
+  SCALES.forEach(s => { const r = RES[s.id]; if (!r.filled) return;
+    const inc = r.filled < r.n - (s.custom === 'sofa' ? 1 : 0) ? ' [incompleta]' : '';
+    let t = s.custom === 'sofa' ? `SOFA ${r.total}${r.sofaRV !== null ? ' · SOFA-RV ' + r.sofaRV : ''}` : `${r.total} pts`;
+    rows.push([s.name, t + inc, `${r.cat}${r.txt ? ' — ' + r.txt : ''}`, r.parts.join(', ')]);
+    lines.push(`- ${s.name}: ${t}${inc}. ${r.cat}${r.txt ? ' (' + r.txt + ')' : ''}.${r.parts.length ? ' Puntúan: ' + r.parts.join(', ') + '.' : ''}`);
+  });
+  $('#sumBody').innerHTML = rows.length ? rows.map(r => `<tr><td><strong>${r[0]}</strong></td><td class="sc tnum">${r[1]}</td><td>${r[2]}</td><td style="font-size:12.5px;color:var(--muted)">${r[3]}</td></tr>`).join('') : `<tr><td colspan="4" style="color:var(--muted)">Aún no hay escalas cumplimentadas. Empieza por SCAI o introduce datos en cualquier escala.</td></tr>`;
+  $('#sumTxt').value = lines.join('\n');
+  $('#b-resumen').textContent = rows.length; $('#b-resumen').className = 'badge';
+  mirror();
+}
+
+/* ===================== Eventos ===================== */
+main.addEventListener('input', e => {
+  const k = e.target.dataset.k; if (!k) return;
+  const v = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+  S[k] = v;
+  $$(`[data-k="${k}"]`).forEach(o => { if (o !== e.target) { if (o.type === 'checkbox') o.checked = v; else o.value = v; } });
+  // un cambio de valor numérico reactiva el modo automático de los ítems que dependen de él
+  SCALES.forEach(s => s.items.forEach(it => { if (it.fields && (it.fields.some(f => f.k === k) || (it.id === 'pp' && (k === 'pas' || k === 'pad')) || (it.id === 'fg' && (k === 'edad' || k === 'sexo')) || (it.id === 'resp' && k === 'vm'))) delete (MAN[s.id] || {})[it.id]; }));
+  recalc();
+});
+main.addEventListener('click', e => {
+  const b = e.target.closest('.opt[data-s]');
+  if (b) { const s = b.dataset.s, i = b.dataset.i; SEL[s] = SEL[s] || {}; MAN[s] = MAN[s] || {};
+    if (b.dataset.m !== undefined) { const m = SEL[s][i] = SEL[s][i] || {}; m[b.dataset.m] = !m[b.dataset.m]; }
+    else { const v = +b.dataset.v; const sc = SCALES.find(x => x.id === s), it = sc.items.find(x => x.id === i);
+      if (SEL[s][i] === v && (it.type === 'bin' || MAN[s][i] !== undefined)) { delete SEL[s][i]; delete MAN[s][i]; }
+      else { SEL[s][i] = v; if (it.type !== 'bin') MAN[s][i] = true; } }
+    recalc(); return; }
+  const p = e.target.closest('[data-scaipick]'); if (p) { SCAI_SEL.manual = SCAI_SEL.manual === p.dataset.scaipick ? null : p.dataset.scaipick; recalc(); return; }
+  const im = e.target.closest('[data-im]'); if (im) { IM.p = IM.p === +im.dataset.im ? null : +im.dataset.im; recalc(); return; }
+  if (e.target.id === 'btnCopy') { const t = $('#sumTxt'); navigator.clipboard?.writeText(t.value).then(() => toast('Resumen copiado'), () => { t.select(); document.execCommand('copy'); toast('Resumen copiado'); }); }
+  if (e.target.id === 'btnPrint2') window.print();
+});
+main.addEventListener('change', e => {
+  if (e.target.dataset.scai) { SCAI_SEL.checks[e.target.dataset.scai] = e.target.checked; recalc(); }
+  if (e.target.id === 'scai-pcr') { SCAI_SEL.pcr = e.target.checked; recalc(); }
+  if (e.target.id === 'scai-coma') { SCAI_SEL.coma = e.target.checked; recalc(); }
+  if (e.target.dataset.immod) { IM.mods[e.target.dataset.immod] = e.target.checked; recalc(); }
+});
+// select: propagar como input
+$$('select[data-k]').forEach(sl => sl.addEventListener('change', () => sl.dispatchEvent(new Event('input', { bubbles: true }))));
+
+function go(id) {
+  $$('section.scale').forEach(s => s.classList.toggle('active', s.id === 's-' + id));
+  $$('[data-go]').forEach(b => b.setAttribute('aria-current', b.dataset.go === id));
+  history.replaceState(null, '', '#' + id); window.scrollTo({ top: 0 });
+}
+function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add('on'); setTimeout(() => el.classList.remove('on'), 1600); }
+
+$('#btnPrint').onclick = () => window.print();
+$('#btnReset').onclick = () => { if (!confirm('¿Borrar todos los datos introducidos?')) return;
+  S = {}; SEL = {}; MAN = {}; SCAI_SEL = { checks: {}, manual: null, pcr: false, coma: false }; IM = { p: null, mods: {} };
+  $$('input,select', document).forEach(i => { if (i.type === 'checkbox') i.checked = false; else if (i.id !== 'fecha') i.value = ''; });
+  setNow(); recalc(); toast('Datos borrados'); };
+$('#btnTheme').onclick = () => { const r = document.documentElement; r.dataset.theme = r.dataset.theme === 'dark' ? '' : 'dark'; };
+$('#ref').oninput = summary; $('#fecha').oninput = summary;
+function setNow() { const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); $('#fecha').value = d.toISOString().slice(0, 16); }
+if (matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.dataset.theme = 'dark';
+setNow(); recalc();
+go(NAVS.some(n => n.id === location.hash.slice(1)) ? location.hash.slice(1) : 'mapa');
+</script>
+<script data-pplx-inline-edit>
+(function () {
+  if (window === window.top) return;
+
+  const allowedParentOrigins = ["https://www.perplexity.ai","https://perplexity.ai","https://testing.perplexity.ai","https://staging.perplexity.ai","https://*.preview.i.perplexity.ai","http://perplexity.localhost","http://localhost:1420","http://127.0.0.1:1420","http://localhost:3000","http://127.0.0.1:3000","http://localhost:5173","http://127.0.0.1:5173"];
+  const MAX_FONT_BYTES = 500 * 1024;
+  const MAX_TOTAL_FONT_BYTES = 2 * 1024 * 1024;
+  const DEFAULT_LINE_HEIGHT = 16;
+  let scrollForwarding = false;
+  let scrollRaf = 0;
+  let trustedTopOrigin = null;
+
+  // Allow entries like "https://*.preview.i.perplexity.ai" — the wildcard
+  // matches a single DNS label (no dots), so "https://*.foo" cannot stretch
+  // across multiple labels.
+  function matchesAllowedOrigin(origin) {
+    if (!origin) return false;
+    for (const entry of allowedParentOrigins) {
+      if (!entry.includes("*")) {
+        if (entry === origin) return true;
+        continue;
+      }
+      const pattern = new RegExp(
+        "^" +
+          entry.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, "[^.]+") +
+          "$",
+      );
+      if (pattern.test(origin)) return true;
+    }
+    return false;
+  }
+
+  // Trust decision: when the sender is same-origin-visible (event.origin is a
+  // real origin like https://www.perplexity.ai) we trust event.origin directly.
+  // When event.origin is "null" (opaque broker srcdoc), we fall back to the
+  // broker's stamped `parentOrigin` to identify the top window. The fallback
+  // is claim-only — we rely on the browser's native `targetOrigin` enforcement
+  // on the response path (see postToTrustedTop) to ensure replies can't be
+  // delivered to anyone but the actual top window of that claimed origin.
+  function getTrustedParentOrigin(event) {
+    const forwardedParentOrigin =
+      typeof event.data.parentOrigin === "string" ? event.data.parentOrigin : null;
+    const parentOrigin = event.origin === "null" ? forwardedParentOrigin : event.origin;
+    return matchesAllowedOrigin(parentOrigin) ? parentOrigin : null;
+  }
+
+  // All responses go to window.top with targetOrigin = the allowlisted origin.
+  // An attacker that iframes us inside their own null-origin broker can claim
+  // any parentOrigin they like, but the browser will drop the reply whenever
+  // the real top's origin doesn't match — so the screenshot never leaves.
+  function postToTrustedTop(message) {
+    if (!trustedTopOrigin) return;
+    try {
+      window.top.postMessage(message, trustedTopOrigin);
+    } catch (_error) {}
+  }
+
+  const PICK_CAPABILITIES = ["pick"];
+  const PICK_CHAIN_LENGTH = 4;
+  const PICK_MAX_TEXT_CHARS = 120;
+  const PICK_MAX_HTML_CHARS = 300;
+
+  function truncate(value, maxChars) {
+    return value.length > maxChars ? value.slice(0, maxChars - 1) + "…" : value;
+  }
+
+  function isPickableElement(element) {
+    return (
+      element instanceof Element &&
+      element !== document.documentElement &&
+      element !== document.body
+    );
+  }
+
+  function resolvePickTarget(x, y) {
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+    const element = document.elementFromPoint(x, y);
+    return isPickableElement(element) ? element.closest("svg") || element : null;
+  }
+
+  function pickLabel(element) {
+    if (element.id) return element.localName + "#" + element.id;
+    return [element.localName].concat(Array.from(element.classList).slice(0, 2)).join(".");
+  }
+
+  // Only attributes that help find the element in source. data-* values and URL
+  // query strings or fragments can carry tokens.
+  const PICK_ATTRIBUTES = new Set([
+    "id",
+    "class",
+    "name",
+    "type",
+    "role",
+    "alt",
+    "aria-label",
+    "href",
+    "src",
+  ]);
+
+  function pickAttributeValue(attribute) {
+    return attribute.name === "href" || attribute.name === "src"
+      ? attribute.value.split(/[?#]/)[0]
+      : attribute.value;
+  }
+
+  function describePickElement(element) {
+    const chain = [];
+    for (
+      let current = element;
+      isPickableElement(current) && chain.length < PICK_CHAIN_LENGTH;
+      current = current.parentElement
+    ) {
+      chain.unshift(current);
+    }
+    const attributes = Array.from(element.attributes)
+      .filter((attribute) => PICK_ATTRIBUTES.has(attribute.name))
+      .map((attribute) => ` ${attribute.name}="${pickAttributeValue(attribute).replace(/"/g, "&quot;")}"`)
+      .join("");
+    const text = (element.innerText || element.textContent || "").replace(/\s+/g, " ").trim();
+    return {
+      chain: chain.map(pickLabel),
+      html: truncate(`<${element.localName}${attributes}>`, PICK_MAX_HTML_CHARS),
+      text: text ? truncate(text, PICK_MAX_TEXT_CHARS) : undefined,
+    };
+  }
+
+  // Hover asks once per frame, and innerText on a large section forces layout,
+  // so only the rect is re-read while the pointer stays on the same element.
+  // Clicks ask for fresh details since the page may have changed the element.
+  let lastPick = null;
+
+  function describePickTarget(element, fresh) {
+    if (fresh || lastPick?.element !== element) {
+      lastPick = { element, details: describePickElement(element) };
+    }
+    const rect = element.getBoundingClientRect();
+    return {
+      rect: { x: rect.left, y: rect.top, width: rect.width, height: rect.height },
+      ...lastPick.details,
+    };
+  }
+
+  function inlineAll(original, clone) {
+    if (original.nodeType !== 1 || clone.nodeType !== 1) return;
+
+    try {
+      const computedStyle = getComputedStyle(original);
+      // cssText on a computed style is the serialized declaration in modern
+      // Chromium/Safari — a single read beats enumerating ~400 longhand
+      // properties. Firefox returns "" here, so we fall back on empty.
+      const serialized = computedStyle.cssText;
+      if (serialized) {
+        clone.style.cssText = serialized;
+      } else {
+        const parts = new Array(computedStyle.length);
+        for (let index = 0; index < computedStyle.length; index += 1) {
+          const property = computedStyle[index];
+          parts[index] = `${property}:${computedStyle.getPropertyValue(property)};`;
+        }
+        clone.style.cssText = parts.join("");
+      }
+    } catch (_error) {}
+
+    const originalChildren = original.children;
+    const clonedChildren = clone.children;
+    for (
+      let index = 0;
+      index < originalChildren.length && index < clonedChildren.length;
+      index += 1
+    ) {
+      inlineAll(originalChildren[index], clonedChildren[index]);
+    }
+  }
+
+  function extractFontUrl(srcValue) {
+    const matches = [
+      ...srcValue.matchAll(
+        /url\(["']?([^"')]+)["']?\)(?:\s*format\(["']?([^"')]+)["']?\))?/gi,
+      ),
+    ];
+    if (matches.length === 0) return null;
+    const woff2 = matches.find((m) => m[2] && m[2].toLowerCase().includes("woff2"));
+    if (woff2) return woff2[1];
+    const woff = matches.find((m) => m[2] && m[2].toLowerCase().includes("woff"));
+    if (woff) return woff[1];
+    return matches[0][1];
+  }
+
+  // Cache resolved font URL -> data URI across captures. Fonts on a page
+  // essentially never change, and a batch run emits multiple captures back to
+  // back — without this we'd refetch + re-base64 every time.
+  const fontDataUriCache = new Map();
+  const SRC_DECLARATION_RE = /src\s*:\s*[^;}]+/i;
+
+  async function fetchAsDataUri(url) {
+    if (fontDataUriCache.has(url)) return fontDataUriCache.get(url);
+    let dataUri = null;
+    try {
+      const response = await fetch(url, { mode: "cors", credentials: "omit" });
+      if (response.ok) {
+        const blob = await response.blob();
+        if (blob.size <= MAX_FONT_BYTES) {
+          dataUri = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () =>
+              resolve(typeof reader.result === "string" ? reader.result : null);
+            reader.onerror = () => resolve(null);
+            reader.readAsDataURL(blob);
+          });
+        }
+      }
+    } catch (_error) {
+      dataUri = null;
+    }
+    fontDataUriCache.set(url, dataUri);
+    return dataUri;
+  }
+
+  function collectFontFaceRuleTexts() {
+    const rules = [];
+    for (const sheet of document.styleSheets) {
+      let cssRules;
+      try {
+        cssRules = sheet.cssRules;
+      } catch (_error) {
+        continue;
+      }
+      if (!cssRules) continue;
+      for (const rule of cssRules) {
+        const cssText = rule.cssText || "";
+        if (cssText.startsWith("@font-face")) rules.push(cssText);
+      }
+    }
+    return rules;
+  }
+
+  async function buildInlinedFontCss() {
+    const ruleTexts = collectFontFaceRuleTexts();
+    if (ruleTexts.length === 0) return null;
+
+    const resolved = ruleTexts.map((cssText) => {
+      if (!SRC_DECLARATION_RE.test(cssText)) return null;
+      const srcMatch = cssText.match(/src\s*:\s*([^;}]+)[;}]/i);
+      if (!srcMatch) return null;
+      const url = extractFontUrl(srcMatch[1]);
+      if (!url) return null;
+      try {
+        return { cssText, url: new URL(url, document.baseURI).href };
+      } catch (_error) {
+        return null;
+      }
+    });
+
+    const dataUris = await Promise.all(
+      resolved.map((entry) => (entry ? fetchAsDataUri(entry.url) : Promise.resolve(null))),
+    );
+
+    const inlined = [];
+    let totalBytes = 0;
+    for (let index = 0; index < resolved.length; index += 1) {
+      const entry = resolved[index];
+      const dataUri = dataUris[index];
+      if (!entry || !dataUri) continue;
+      const approxBytes = dataUri.length * 0.75;
+      if (totalBytes + approxBytes > MAX_TOTAL_FONT_BYTES) break;
+      totalBytes += approxBytes;
+      inlined.push(entry.cssText.replace(SRC_DECLARATION_RE, `src: url("${dataUri}")`));
+    }
+    return inlined.length > 0 ? inlined.join("\n") : null;
+  }
+
+  function stripExternal(clone) {
+    const images = clone.querySelectorAll("img");
+    for (let index = 0; index < images.length; index += 1) {
+      const src = images[index].getAttribute("src");
+      if (src && !src.startsWith("data:")) images[index].removeAttribute("src");
+    }
+
+    const elements = clone.querySelectorAll("*");
+    for (let index = 0; index < elements.length; index += 1) {
+      const style = elements[index].style.cssText;
+      if (style && style.includes("url(")) {
+        elements[index].style.cssText = style.replace(
+          /url\(["']?(?!data:)[^)"']*["']?\)/gi,
+          "none",
+        );
+      }
+    }
+  }
+
+  function emitScroll() {
+    scrollRaf = 0;
+    if (!scrollForwarding) return;
+    postToTrustedTop({
+      type: "INLINE_EDIT_SCROLL",
+      scrollX: window.scrollX,
+      scrollY: window.scrollY,
+      capabilities: PICK_CAPABILITIES,
+    });
+  }
+
+  window.addEventListener(
+    "scroll",
+    function () {
+      if (!scrollForwarding || scrollRaf) return;
+      scrollRaf = requestAnimationFrame(emitScroll);
+    },
+    { passive: true, capture: true },
+  );
+
+  async function handleCaptureRequest(event) {
+    const requestId = event.data.requestId;
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    function postResult(dataUrl) {
+      postToTrustedTop({
+        type: "INLINE_EDIT_SCREENSHOT_RESULT",
+        requestId,
+        dataUrl,
+        scrollX,
+        scrollY,
+      });
+    }
+
+    try {
+      // Wait for any pending web fonts to resolve so both inline metrics and
+      // the @font-face inlining below see the same loaded faces.
+      if (document.fonts && document.fonts.ready) {
+        try {
+          await document.fonts.ready;
+        } catch (_error) {}
+      }
+
+      const clone = document.documentElement.cloneNode(true);
+      inlineAll(document.documentElement, clone);
+
+      const removedNodes = clone.querySelectorAll("script,link[rel=\"stylesheet\"],style");
+      for (let index = 0; index < removedNodes.length; index += 1) {
+        removedNodes[index].remove();
+      }
+
+      stripExternal(clone);
+
+      // Re-embed web fonts as data-URI @font-face rules so the SVG rasterizer
+      // can resolve them — external font URLs aren't fetched during
+      // foreignObject rendering, which would otherwise force a fallback face
+      // and change text metrics.
+      const inlinedFontCss = await buildInlinedFontCss();
+      if (inlinedFontCss) {
+        const styleEl = document.createElement("style");
+        styleEl.textContent = inlinedFontCss;
+        const head = clone.querySelector("head");
+        if (head) head.appendChild(styleEl);
+        else clone.insertBefore(styleEl, clone.firstChild);
+      }
+
+      const html = new XMLSerializer().serializeToString(clone);
+      const svg =
+        `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">` +
+        '<foreignObject width="100%" height="100%">' +
+        `<div xmlns="http://www.w3.org/1999/xhtml" style="width:${width}px;height:${height}px;overflow:hidden">` +
+        `<div style="position:relative;left:-${scrollX}px;top:-${scrollY}px">` +
+        html +
+        "</div></div></foreignObject></svg>";
+      const svgUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+      const image = new Image();
+      image.onload = function () {
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(image, 0, 0);
+        postResult(canvas.toDataURL("image/png"));
+      };
+      image.onerror = function () {
+        postResult(null);
+      };
+      image.src = svgUrl;
+    } catch (_error) {
+      postResult(null);
+    }
+  }
+
+  window.addEventListener("message", function (event) {
+    if (!event.data) return;
+    // Only accept messages from the direct parent frame. Blocks sibling /
+    // unrelated-window postMessage senders that could otherwise reach us.
+    if (event.source !== window.parent) return;
+
+    const trustedParentOrigin = getTrustedParentOrigin(event);
+    if (!trustedParentOrigin) return;
+    trustedTopOrigin = trustedParentOrigin;
+
+    if (event.data.type === "INLINE_EDIT_PICK") {
+      const element = resolvePickTarget(event.data.x, event.data.y);
+      postToTrustedTop({
+        type: "INLINE_EDIT_PICK_RESULT",
+        seq: event.data.seq,
+        target: element ? describePickTarget(element, event.data.fresh === true) : null,
+      });
+      return;
+    }
+
+    if (event.data.type === "INLINE_EDIT_SCROLL_START") {
+      scrollForwarding = true;
+      emitScroll();
+      return;
+    }
+
+    if (event.data.type === "INLINE_EDIT_SCROLL_STOP") {
+      scrollForwarding = false;
+      if (scrollRaf) cancelAnimationFrame(scrollRaf);
+      scrollRaf = 0;
+      return;
+    }
+
+    if (event.data.type === "INLINE_EDIT_SCROLL_BY") {
+      const { deltaX, deltaY, deltaMode } = event.data;
+      if (!scrollForwarding || !Number.isFinite(deltaX) || !Number.isFinite(deltaY)) return;
+      if (deltaMode !== 0 && deltaMode !== 1 && deltaMode !== 2) return;
+      const lineHeight =
+        parseFloat(getComputedStyle(document.documentElement).lineHeight) || DEFAULT_LINE_HEIGHT;
+      const scaleX = deltaMode === 1 ? lineHeight : deltaMode === 2 ? window.innerWidth : 1;
+      const scaleY = deltaMode === 1 ? lineHeight : deltaMode === 2 ? window.innerHeight : 1;
+      // The selection overlay receives the wheel event instead of this iframe.
+      // Instant scrolling preserves trackpad deltas even on smooth-scroll sites.
+      window.scrollBy({ left: deltaX * scaleX, top: deltaY * scaleY, behavior: "instant" });
+      emitScroll();
+      return;
+    }
+
+    if (event.data.type !== "INLINE_EDIT_CAPTURE_REQUEST") return;
+
+    handleCaptureRequest(event);
+  });
+})();
+
+
+</script></body>
+</html>

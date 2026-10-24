@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fármacos</title>
+<style>
+:root{
+  --bg:#f6f7f9; --paper:#fff; --ink:#1b2430; --muted:#5b6675; --line:#d9dee5;
+  --blue:#1d4e89; --side:#121a2a; --side-line:#2a3550;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.5}
+.layout{display:grid;grid-template-columns:240px minmax(0,1fr);height:100%;min-height:0}
+nav.side{background:var(--side);color:#e8f0fc;display:flex;flex-direction:column;min-height:0;border-right:1px solid var(--side-line)}
+.side-head{padding:16px 14px 12px;border-bottom:1px solid var(--side-line)}
+.side-kicker{margin:0 0 4px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#4fb3e8;font-weight:800}
+.side-head h1{margin:0;font-size:18px;color:#e8f7ff}
+.tabs{display:flex;flex-direction:column;gap:4px;padding:10px;overflow:auto}
+.tabs button{text-align:left;border:1px solid transparent;background:transparent;color:#9fb0c8;font:600 13.5px/1.35 var(--font);border-radius:8px;padding:10px 12px;cursor:pointer}
+.tabs button:hover{background:#1c2638;color:#e8f0fc}
+.tabs button.on{background:rgba(79,179,232,.16);color:#dff4ff;border-color:rgba(79,179,232,.35)}
+.doc{min-height:0;overflow:auto;padding:18px 16px 28px}
+.panel{display:none;max-width:1100px;margin:0 auto}
+.panel.on{display:block}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px}
+.pharma{border-color:#fde68a;background:#fffbeb}
+h2,h3,h4{line-height:1.25;margin:0 0 12px}
+h2{font-size:1.25rem}
+h3{font-size:1.05rem;color:var(--blue)}
+.lead{color:var(--muted);margin:0 0 14px}
+ol{margin:0;padding-left:1.2rem}
+li{margin:8px 0}
+.tbl-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px;background:#fff}
+table{border-collapse:collapse;width:100%;min-width:920px;font-size:13px}
+th,td{padding:8px 10px;text-align:left;vertical-align:top;border-bottom:1px solid #e8edf2}
+th{font-size:10px;letter-spacing:.04em;text-transform:uppercase;background:#f8fafc;color:#475569}
+.badge{display:inline-block;border-radius:999px;color:#fff;font-size:10px;font-weight:800;padding:2px 7px;margin-right:4px}
+.b-rose{background:#f43f5e}.b-amber{background:#f59e0b}.b-indigo{background:#4f46e5}.b-teal{background:#14b8a6}
+tr.rose td{background:#fff1f2}tr.green td{background:#ecfdf5}tr.violet td{background:#f5f3ff}tr.teal td{background:#f0fdfa}
+.note{border-top:1px solid var(--line);padding:12px 14px;font-size:13px;color:#475569}
+.algo .step{border-left:6px solid #e2e8f0;background:#fff;border-radius:8px;padding:12px 14px;margin:0 0 10px;font-size:14px}
+.pill{display:inline-block;border-radius:999px;color:#fff;font-size:11px;font-weight:800;padding:2px 8px}
+.mini{display:grid;grid-template-columns:1fr 1fr;gap:12px;border-top:1px solid var(--line);padding-top:12px;font-size:13px;margin-top:6px}
+.vaso-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}
+.btn{display:inline-flex;align-items:center;border:1px solid #93c5fd;background:#fff;color:#1e3a8a;font-weight:700;font-size:12px;border-radius:10px;padding:8px 12px;text-decoration:none;white-space:nowrap}
+iframe.vaso-frame{width:100%;height:min(75vh,760px);border:1px solid var(--line);border-radius:10px;background:#fff}
+.foot{text-align:center;font-size:12px;color:var(--muted);margin:14px 0 0}
+.weight-bar{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:8px}
+.weight-bar label{font-size:12px;font-weight:800;color:#334155;display:block;margin-bottom:4px}
+.weight-bar input{width:7rem;font:600 18px var(--font);padding:8px 10px;border:1px solid #94a3b8;border-radius:8px}
+.group{margin:18px 0 8px}
+.bags{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px}
+.prep{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%}
+.prep:hover,.prep:focus-visible{border-color:#1d4e89;box-shadow:0 0 0 3px rgba(29,78,137,.15)}
+.bag{width:136px;margin:0 auto}
+.bag-hook{height:8px;display:flex;justify-content:center}
+.bag-hook span{width:16px;height:8px;border:2px solid #64748b;border-bottom:0;border-radius:6px 6px 0 0}
+.bag-body{border:2px solid #64748b;border-radius:16px 16px 26px 26px;min-height:158px;padding:10px 8px 14px;text-align:center;background:linear-gradient(#fff 20%,#dbeafe 100%)}
+.bag.vaso .bag-body{background:linear-gradient(#fff 20%,#ffe4e6 100%)}
+.bag.adj .bag-body{background:linear-gradient(#fff 20%,#fef3c7 100%)}
+.bag.ino .bag-body{background:linear-gradient(#fff 20%,#e0e7ff 100%)}
+.bag.inodil .bag-body{background:linear-gradient(#fff 20%,#ccfbf1 100%)}
+.bag.otro .bag-body{background:linear-gradient(#fff 20%,#f0fdfa 100%)}
+.bag-name{font-weight:800;font-size:13px;line-height:1.2}
+.bag-brand{font-size:11px;color:var(--muted)}
+.bag-amt{font-size:22px;font-weight:800;margin:8px 0 2px;letter-spacing:-.02em}
+.bag-dil{font-size:12px;font-weight:700;color:#0f172a}
+.bag-how{font-size:11px;color:#475569;margin-top:4px}
+.bag-port{width:12px;height:7px;margin:0 auto;background:#64748b;border-radius:0 0 3px 3px}
+.dose-k{margin:0 0 4px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#64748b;font-weight:800}
+.dose-rate{font-weight:700}
+.dose-ml{font-size:1.7rem;font-weight:800;color:var(--blue);line-height:1.1;margin:4px 0}
+.dose-ml span{font-variant-numeric:tabular-nums}
+.dose-note{font-size:12px;color:var(--muted);margin:0}
+.ficha{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;padding:18px;z-index:30}
+.ficha.open{display:flex}
+.ficha-card{background:#fff;width:min(820px,100%);max-height:min(92vh,900px);overflow:auto;border-radius:16px;padding:22px 22px 26px;position:relative;box-shadow:0 16px 50px rgba(0,0,0,.25)}
+.ficha-card h2{margin:0 36px 8px 0}
+.ficha-close{position:absolute;top:10px;right:10px;border:0;background:#f1f5f9;width:36px;height:36px;border-radius:999px;font-size:22px;cursor:pointer}
+.ficha-card h3{margin:16px 0 6px}
+.ficha-card p,.ficha-card li{font-size:14px}
+.ficha-card table{min-width:0;font-size:13px}
+.ficha-card .tbl-wrap{margin:8px 0 4px}
+.call{border-left:4px solid #b45309;background:#fffbeb;padding:10px 12px;border-radius:0 8px 8px 0;margin:12px 0 0}
+.flow{display:grid;grid-template-columns:1fr 108px 1fr;gap:8px;align-items:stretch;margin:8px 0 10px}
+.flow-step{border:2px solid #1d4e89;border-radius:14px;padding:12px;background:#f8fbff}
+.flow-step.man{border-color:#0f766e;background:#f0fdfa}
+.flow-k{display:block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#64748b}
+.flow-step .big{display:block;font-size:1.35rem;font-weight:800;color:#1d4e89;margin:4px 0 0;line-height:1.15}
+.flow-step.man .big{color:#0f766e}
+.flow-step .ml{display:block;font-size:1.05rem;font-weight:800;margin-top:2px}
+.flow-step .sub{display:block;font-size:12.5px;color:#475569;margin-top:6px}
+.flow-arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:12px;font-weight:800;color:#1d4e89;line-height:1.25}
+.flow-arrow b{font-size:26px;line-height:1}
+.branches{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.branch{border-radius:12px;padding:10px 12px;font-size:13px}
+.branch strong{display:block;margin-bottom:4px}
+.branch p{margin:0 0 6px}
+.branch p:last-child{margin:0}
+.branch.up{background:#ecfdf5;border:1px solid #6ee7b7}
+.branch.down{background:#fff7ed;border:1px solid #fdba74}
+@media(max-width:760px){
+  .layout{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
+  .tabs{flex-direction:row;overflow:auto}
+  .tabs button{white-space:nowrap}
+  .mini,.vaso-head,.flow,.branches{display:block}
+  .flow-arrow{padding:4px 0}
+  .vaso-head .btn{margin-top:10px}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+  <nav class="side" aria-label="Secciones de fármacos">
+    <div class="side-head">
+      <p class="side-kicker">Hemodinámica</p>
+      <h1>Fármacos</h1>
+    </div>
+    <div class="tabs">
+      <button type="button" class="on" data-panel="inicio">Página inicio</button>
+      <button type="button" data-panel="algoritmo">Algoritmo esquemático</button>
+      <button type="button" data-panel="esquema">Esquema rápido</button>
+      <button type="button" data-panel="perfusiones">Perfusiones</button>
+      <button type="button" data-panel="nora">Nora y vasopresina</button>
+    </div>
+  </nav>
+  <div class="doc">
+    <section class="panel on" id="inicio">
+      <div class="card pharma">
+        <h2>Tratamiento — líneas generales</h2>
+        <ol>
+          <li><strong>Reanimación y monitorización:</strong> acceso vascular, ECG continuo, balance estricto, gasometrías y lactato seriados.</li>
+          <li><strong>Corregir causa reversible:</strong> revascularización percutánea/cirugía según IAM, drenaje de taponamiento, cardioversión si taquiarritmia, etc.</li>
+          <li><strong>Optimizar precarga:</strong> volumen cauteloso solo si hay criterios de respondedor; evitar sobrecarga en congestión franca.</li>
+          <li><strong>Inotrópicos y vasopresores</strong> según tensión arterial, perfusión y congestión (noradrenalina ± dobutamina/milrinona según protocolo).</li>
+          <li><strong>Soporte mecánico</strong> (BIAC, Impella, ECMO VA/VV) en shock refractario o como puente a procedimiento/recuperación, según equipos y guías.</li>
+        </ol>
+      </div>
+      <p class="foot">Contenido educativo; las decisiones terapéuticas deben seguir los algoritmos y recursos de reanimación cardíaca y unidad de cuidados intensivos de tu hospital.</p>
+    </section>
+
+    <section class="panel" id="algoritmo">
+      <div class="card algo">
+        <h2>Algoritmo esquemático</h2>
+        <div class="step"><strong>1.</strong> <strong>Si hipotensión con perfusión pobre:</strong> iniciar <span class="pill" style="background:#f43f5e">Noradrenalina</span> y optimizar volumen.</div>
+        <div class="step"><strong>2.</strong> <strong>Si bajo gasto cardíaco pese a PAM objetivo:</strong> añadir <span class="pill" style="background:#4f46e5">Dobutamina</span> o <span class="pill" style="background:#14b8a6">Milrinona</span> según RVS y riesgo arritmia.</div>
+        <div class="step"><strong>3.</strong> <strong>Shock refractario:</strong> considerar <span class="pill" style="background:#f43f5e">Adrenalina</span>, <span class="pill" style="background:#f59e0b">Vasopresina</span> como adyuvantes y evaluación urgente de soporte mecánico (IABP/ECMO/VAD).</div>
+        <div class="step"><strong>4.</strong> <strong>Si necesidad de reducir catecolaminas:</strong> valorar <span class="pill" style="background:#14b8a6">Levosimendán</span> (según protocolo local).</div>
+        <div class="mini">
+          <div><strong>Monitorización</strong><br>PAM, gasto urinario, lactato, ECG, gases arteriales, perfusión periférica.</div>
+          <div><strong>Precauciones</strong><br>Arritmias, isquemia miocárdica, aumento consumo O₂, hipotensión con inodilatadores.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="esquema">
+      <div class="card">
+        <h2>Esquema rápido</h2>
+        <p class="lead">Preparación, mezcla, dosis «mesa» de la hoja y <strong>ml/h a 70 kg</strong> según la tabla UCI <strong>vasopresores e inotrópicos</strong> (proyecto FARMACOSUCI). Titulación real según PAM, lactato, función renal y guía local. Consultar siempre con cardiología / UCI.</p>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Tipo / MoA</th>
+                <th>Fármaco</th>
+                <th>Preparación y dilución</th>
+                <th>Dosis perfusión</th>
+                <th>ml/h 70 kg</th>
+                <th>PVC · Luz · 24h · Vía</th>
+                <th>Shock</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="rose">
+                <td><span class="badge b-rose">VASO</span> α₁+ · β₁+</td>
+                <td><strong>Noradrenalina</strong> (Norages)</td>
+                <td>Amp. 1 mg/ml, 4 ml · 16 mg en 4 amp.<br>Diluir en 100 ml SG 5 % → mezcla 0,16 mg/ml.</td>
+                <td>0,25–0,5 µg/Kg/min (dosis objetivo hoja); titular según PAM y guía.</td>
+                <td><strong>7–13 ml/h</strong></td>
+                <td>PVC OK · Luz NO · &gt;24 h OK · Pref. CVC</td>
+                <td>Hipotensión; primera línea de soporte perfusor.</td>
+              </tr>
+              <tr class="rose">
+                <td><span class="badge b-amber">ADJ</span> V₁+</td>
+                <td><strong>Vasopresina</strong> (Empressin)</td>
+                <td>Amp. 20 UI/ml (1 y 2 ml) · 40 UI en 2 amp.<br>Diluir en 50 ml SSF 0,9 % → mezcla 0,8 UI/ml.</td>
+                <td>0,03–0,04 UI/min (hoja); otras guías inician 0,01–0,04 UI/min.</td>
+                <td><strong>2,3–3 ml/h</strong> (igual en todos los pesos)</td>
+                <td>PVC OK · Luz NO · &gt;24 h OK · Pref. CVC</td>
+                <td>Shock catecolamina-refractario; reducir catecolaminas.</td>
+              </tr>
+              <tr class="rose">
+                <td><span class="badge b-rose">VASO</span> AT₁+</td>
+                <td><strong>Angiotensina II</strong> (Giapreza)</td>
+                <td>Vial 2,5 mg/ml, 1 ml · 2,5 mg (1 vial).<br>Diluir en 250 ml SG 5 % o SSF 0,9 % → mezcla 10 µg/ml.</td>
+                <td>0,02–0,04 µg/Kg/min (hoja).</td>
+                <td><strong>8–17 ml/h</strong></td>
+                <td>PVC OK · Luz NO · &gt;24 h OK · CVC</td>
+                <td>Hipotensión refractaria a catecolaminas; agonista AT₁ (RAAS). Vía central según FT.</td>
+              </tr>
+              <tr class="rose">
+                <td><span class="badge b-rose">VASO</span> α₁+ · β₁+ · β₂+</td>
+                <td><strong>Adrenalina</strong> (epinefrina)</td>
+                <td>Amp. 1 mg/ml, 1 ml · 10 mg en 10 amp.<br>Diluir en 100 ml SG 5 % → mezcla 0,1 mg/ml.</td>
+                <td>0,05–0,3 µg/Kg/min (hoja).</td>
+                <td><strong>2–13 ml/h</strong></td>
+                <td>PVC OK · Luz NO · &gt;24 h OK · Pref. CVC</td>
+                <td>Shock refractario / paro; arritmia y consumo O₂.</td>
+              </tr>
+              <tr class="green">
+                <td><span class="badge b-indigo">INO</span> β₁+ &gt; β₂+</td>
+                <td><strong>Dobutamina</strong></td>
+                <td>Amp. 250 mg / 20 ml (12,5 mg/ml) · 500 mg en 2 amp.<br>Diluir en 250 ml SG 5 % → mezcla 2 mg/ml.</td>
+                <td>2–20 µg/Kg/min (hoja).</td>
+                <td><strong>4–42 ml/h</strong></td>
+                <td>PVC OK · Luz NO · &gt;24 h OK · Perif. OK</td>
+                <td>Bajo gasto con TA aceptable; inotropía.</td>
+              </tr>
+              <tr class="green">
+                <td><span class="badge b-teal">INODIL</span> PDE3−</td>
+                <td><strong>Milrinona</strong> (Corotrope)</td>
+                <td>20 mg (2 amp) + 80 ml de diluyente = 100 ml, o 50 mg (5 amp) + 200 ml = 250 ml.<br>Mezcla 0,2 mg/ml. SG 5 %, SSF 0,9 % o NaCl 0,45 %. No bicarbonato.</td>
+                <td>Mínima 0,375; estándar 0,50; máxima 0,75 µg/Kg/min. Bolo 50 µg/kg opcional; suele omitirse.</td>
+                <td><strong>7,9 / 10,5 / 15,8</strong></td>
+                <td>No mezclar con furosemida ni bumetanida.</td>
+                <td>Ajustar por función renal. Efecto corto al suspender si el riñón es normal.</td>
+              </tr>
+              <tr class="violet">
+                <td><span class="badge b-teal">INODIL</span> Sensibilizador Ca²⁺ · apertura K-ATP</td>
+                <td><strong>Levosimendán</strong></td>
+                <td>1 vial 12,5 mg/5 ml.<br>Diluir en 250 ml SG 5 % → mezcla 0,05 mg/ml. Sin bolo de carga.</td>
+                <td>Inicio 0,05; mantenimiento 0,1; máxima 0,2 µg/Kg/min.</td>
+                <td><strong>4,2 / 8,4 / 16,8</strong></td>
+                <td>Solo SG 5 %. Estable 24 h. No congelar.</td>
+                <td>Titulación gradual, sin dosis de carga.</td>
+              </tr>
+              <tr class="teal">
+                <td><span class="badge b-amber">OTRO</span> D₁+ · β₁+ · α₁+</td>
+                <td><strong>Dopamina</strong></td>
+                <td>Amp. 200 mg / 5 ml (40 mg/ml) · 400 mg en 2 amp.<br>Diluir en 250 ml SG 5 % → mezcla 1,6 mg/ml (400 mg/250 ml).</td>
+                <td>2–20 µg/Kg/min (hoja; dosis altas efecto α según FT).</td>
+                <td><strong>5,3–52,5 ml/h</strong></td>
+                <td>PVC OK · Luz NO · &gt;24 h OK · Perif. OK</td>
+                <td>Uso limitado; bradicardia con hipotensión u otros criterios locales.</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="note"><strong>Notas:</strong> los rangos de ml/h corresponden a la columna <strong>70 kg</strong> de la hoja; interpolar según peso. Ajustar por función renal/hepática; monitorizar ECG, lactato y perfusión. Si la mezcla o presentación no coincide con su servicio, seguir siempre FT y farmacia clínica.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="perfusiones">
+      <div class="card">
+        <h2>Perfusiones</h2>
+        <p class="lead">Cada bolsa indica la cantidad de fármaco y el diluyente para prepararla. A la derecha, la dosis de inicio en ml/h según el peso. Pulsa un fármaco para abrir su ficha.</p>
+        <div class="weight-bar">
+          <div>
+            <label for="peso">Peso del paciente (kg)</label>
+            <input id="peso" type="number" min="1" max="300" step="0.1" value="70" inputmode="decimal">
+          </div>
+          <p class="dose-note">La dosis de inicio es el extremo bajo del rango de la hoja. La vasopresina no cambia con el peso.</p>
+        </div>
+
+        <h3 class="group">Vasopresores</h3>
+        <div class="bags">
+          <article class="prep" data-mode="kg" data-dose="0.25" data-conc="160" data-info="noradrenalina" tabindex="0">
+            <div class="bag vaso">
+              <div class="bag-hook"><span></span></div>
+              <div class="bag-body">
+                <div class="bag-name">Noradrenalina</div>
+                <div class="bag-brand">Norages</div>
+                <div class="bag-amt">16 mg</div>
+                <div class="bag-dil">SG 5 % · 100 ml</div>
+                <div class="bag-how">4 amp de 4 ml (1 mg/ml)</div>
+              </div>
+              <div class="bag-port"></div>
+            </div>
+            <div class="dose-box">
+              <p class="dose-k">Dosis de inicio</p>
+              <div class="dose-rate">0,25 µg/kg/min</div>
+              <div class="dose-ml"><span data-ml>0</span> ml/h</div>
+              <p class="dose-note">Mezcla 0,16 mg/ml · preferible por CVC</p>
+            </div>
+          </article>
+          <article class="prep" data-mode="kg" data-dose="0.02" data-conc="10" data-info="angiotensina" tabindex="0">
+            <div class="bag vaso">
+              <div class="bag-hook"><span></span></div>
+              <div class="bag-body">
+                <div class="bag-name">Angiotensina II</div>
+                <div class="bag-brand">Giapreza</div>
+                <div class="bag-amt">2,5 mg</div>
+                <div class="bag-dil">SG 5 % o SSF · 250 ml</div>
+                <div class="bag-how">1 vial de 1 ml (2,5 mg/ml)</div>
+              </div>
+              <div class="bag-port"></div>
+            </div>
+            <div class="dose-box">
+              <p class="dose-k">Dosis de inicio</p>
+              <div class="dose-rate">0,02 µg/kg/min</div>
+              <div class="dose-ml"><span data-ml>0</span> ml/h</div>
+              <p class="dose-note">Mezcla 10 µg/ml · vía central</p>
+            </div>
+          </article>
+          <article class="prep" data-mode="kg" data-dose="0.05" data-conc="100" data-info="adrenalina" tabindex="0">
+            <div class="bag vaso">
+              <div class="bag-hook"><span></span></div>
+              <div class="bag-body">
+                <div class="bag-name">Adrenalina</div>
+                <div class="bag-brand">Epinefrina</div>
+                <div class="bag-amt">10 mg</div>
+                <div class="bag-dil">SG 5 % · 100 ml</div>
+                <div class="bag-how">10 amp de 1 ml (1 mg/ml)</div>
+              </div>
+              <div class="bag-port"></div>
+            </div>
+            <div class="dose-box">
+              <p class="dose-k">Dosis de inicio</p>
+              <div class="dose-rate">0,05 µg/kg/min</div>
+              <div class="dose-ml"><span data-ml>0</span> ml/h</div>
+              <p class="dose-note">Mezcla 0,1 mg/ml · preferible por CVC</p>
+            </div>
+          </article>
+        </div>
+
+        <h3 class="group">Adyuvante</h3>
+        <div class="bags">
+          <article class="prep" data-mode="fixed" data-dose="0.03" data-conc="0.8" data-info="vasopresina" tabindex="0">
+            <div class="bag adj">
+              <div class="bag-hook"><span></span></div>
+              <div class="bag-body">
+                <div class="bag-name">Vasopresina</div>
+                <div class="bag-brand">Empressin</div>
+                <div class="bag-amt">40 UI</div>
+                <div class="bag-dil">SSF 0,9 % · 50 ml</div>
+                <div class="bag-how">2 amp de 1 ml (20 UI/ml)</div>
+              </div>
+              <div class="bag-port"></div>
+            </div>
+            <div class="dose-box">
+              <p class="dose-k">Dosis de inicio</p>
+              <div class="dose-rate">0,03 UI/min</div>
+              <div class="dose-ml"><span data-ml>0</span> ml/h</div>
+              <p class="dose-note">Mezcla 0,8 UI/ml · igual en todos los pesos</p>
+            </div>
+          </article>
+        </div>
+
+        <h3 class="group">Inotrópicos</h3>
+        <div class="bags">
+          <article class="prep" data-mode="kg" data-dose="2" data-conc="2000" data-info="dobutamina" tabindex="0">
+            <div class="bag ino">
+              <div class="bag-hook"><span></span></div>
+              <div class="bag-body">
+                <div class="bag-name">Dobutamina</div>
+                <div class="bag-amt">500 mg</div>
+                <div class="bag-dil">SG 5 % · 250 ml</div>
+                <div class="bag-how">2 amp de 20 ml (250 mg)</div>
+              </div>
+              <div class="bag-port"></div>
+            </div>
+            <div class="dose-box">
+              <p class="dose-k">Dosis de inicio</p>
+              <div class="dose-rate">2 µg/kg/min</div>
+              <div class="dose-ml"><span data-ml>0</span> ml/h</div>
+              <p class="dose-note">Mezcla 2 mg/ml · vía periférica posible</p>
+            </div>
+          </article>
+        </div>
+
+        <h3 class="group">Inodilatadores</h3>
+        <div class="bags">
+          <article class="prep" data-mode="kg" data-dose="0.375" data-conc="200" data-info="milrinona" tabindex="0">
+            <div class="bag inodil">
+              <div class="bag-hook"><span></span></div>
+              <div class="bag-body">
+                <div class="bag-name">Milrinona</div>
+                <div class="bag-brand">Corotrope</div>
+                <div class="bag-amt">20 mg</div>
+                <div class="bag-dil">SG 5 % o SSF · 80 ml</div>
+                <div class="bag-how">2 amp de 10 ml (10 mg)</div>
+              </div>
+              <div class="bag-port"></div>
+            </div>
+            <div class="dose-box">
+              <p class="dose-k">Dosis de inicio</p>
+              <div class="dose-rate">0,375 µg/kg/min</div>
+              <div class="dose-ml"><span data-ml>0</span> ml/h</div>
+              <p class="dose-note">Mezcla 0,2 mg/ml · bolo habitualmente omitido</p>
+            </div>
+          </article>
+          <article class="prep" data-mode="kg" data-dose="0.05" data-conc="50" data-info="levosimendan" tabindex="0">
+            <div class="bag inodil">
+              <div class="bag-hook"><span></span></div>
+              <div class="bag-body">
+                <div class="bag-name">Levosimendán</div>
+                <div class="bag-amt">12,5 mg</div>
+                <div class="bag-dil">SG 5 % · 250 ml</div>
+                <div class="bag-how">1 vial de 5 ml (2,5 mg/ml)</div>
+              </div>
+              <div class="bag-port"></div>
+            </div>
+            <div class="dose-box">
+              <p class="dose-k">Dosis de inicio</p>
+              <div class="dose-rate">0,05 µg/kg/min</div>
+              <div class="dose-ml"><span data-ml>0</span> ml/h</div>
+              <p class="dose-note">Mezcla 0,05 mg/ml · sin bolo de carga</p>
+            </div>
+          </article>
+        </div>
+
+        <h3 class="group">Otros</h3>
+        <div class="bags">
+          <article class="prep" data-mode="kg" data-dose="2" data-conc="1600" data-info="dopamina" tabindex="0">
+            <div class="bag otro">
+              <div class="bag-hook"><span></span></div>
+              <div class="bag-body">
+                <div class="bag-name">Dopamina</div>
+                <div class="bag-amt">400 mg</div>
+                <div class="bag-dil">SG 5 % · 250 ml</div>
+                <div class="bag-how">2 amp de 5 ml (200 mg)</div>
+              </div>
+              <div class="bag-port"></div>
+            </div>
+            <div class="dose-box">
+              <p class="dose-k">Dosis de inicio</p>
+              <div class="dose-rate">2 µg/kg/min</div>
+              <div class="dose-ml"><span data-ml>0</span> ml/h</div>
+              <p class="dose-note">Mezcla 1,6 mg/ml · vía periférica posible</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="nora">
+      <div class="card">
+        <div class="vaso-head">
+          <div>
+            <h2>Nora y vasopresina</h2>
+            <p class="lead">Inicio, titulación, preparaciones y desescalado. Si la hoja no carga, ábrala en una pestaña nueva.</p>
+          </div>
+          <a class="btn" href="vasopresores.html" target="_blank" rel="noopener noreferrer">Abrir en nueva pestaña</a>
+        </div>
+        <iframe class="vaso-frame" title="Noradrenalina y vasopresina — esquema práctico en línea de tiempo" src="vasopresores.html?v=20261020r"></iframe>
+      </div>
+    </section>
+  </div>
+</div>
+<div id="ficha" class="ficha" hidden>
+  <div class="ficha-card" role="dialog" aria-modal="true" aria-labelledby="fichaTitle">
+    <button type="button" class="ficha-close" id="fichaClose" aria-label="Cerrar">×</button>
+    <h2 id="fichaTitle"></h2>
+    <div id="fichaBody"></div>
+  </div>
+</div>
+<script>
+(function () {
+  var buttons = document.querySelectorAll('.tabs button');
+  buttons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var id = btn.getAttribute('data-panel');
+      buttons.forEach(function (b) { b.classList.toggle('on', b === btn); });
+      document.querySelectorAll('.panel').forEach(function (panel) {
+        panel.classList.toggle('on', panel.id === id);
+      });
+      document.querySelector('.doc').scrollTop = 0;
+    });
+  });
+
+  var peso = document.getElementById('peso');
+  function formatMl(value) {
+    var rounded = Math.round((value + 1e-8) * 10) / 10;
+    return rounded.toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  }
+  function updateDoses() {
+    var kg = parseFloat(String(peso.value).replace(',', '.'));
+    if (!isFinite(kg) || kg <= 0) kg = 70;
+    document.querySelectorAll('#perfusiones .prep').forEach(function (card) {
+      var out = card.querySelector('[data-ml]');
+      if (!out) return;
+      var mode = card.getAttribute('data-mode');
+      var dose = parseFloat(card.getAttribute('data-dose'));
+      var conc = parseFloat(card.getAttribute('data-conc'));
+      var ml = mode === 'fixed' ? (dose * 60 / conc) : (dose * kg * 60 / conc);
+      out.textContent = formatMl(ml);
+    });
+  }
+  function currentKg() {
+    var kg = parseFloat(String(peso.value).replace(',', '.'));
+    return isFinite(kg) && kg > 0 ? kg : 70;
+  }
+  function levoHtml(kg) {
+    var ini = formatMl(0.05 * kg * 60 / 50);
+    var man = formatMl(0.1 * kg * 60 / 50);
+    var max = formatMl(0.2 * kg * 60 / 50);
+    return ''
+      + '<p>Preparación y administración en régimen de restricción de volumen (250 ml) y titulación gradual, sin dosis de carga, priorizando la estabilidad hemodinámica.</p>'
+      + '<h3>1. Preparación de la solución</h3>'
+      + '<p>Para respetar el límite de solubilidad y evitar la precipitación, usar exclusivamente suero glucosado al 5 %.</p>'
+      + '<ul>'
+      + '<li><strong>Composición:</strong> 1 vial de levosimendán (12,5 mg / 5 ml) + 250 ml de glucosa al 5 %.</li>'
+      + '<li><strong>Concentración final:</strong> 0,05 mg/ml (límite máximo de seguridad).</li>'
+      + '<li><strong>Estabilidad:</strong> 24 horas a temperatura ambiente. No congelar.</li>'
+      + '</ul>'
+      + '<h3>Esquema de administración</h3>'
+      + '<div class="flow">'
+      + '<div class="flow-step"><span class="flow-k">Inicio</span><span class="big">0,05 µg/kg/min</span><span class="ml">' + ini + ' ml/h</span><span class="sub">Sin bolo. Valorar tolerancia 30–60 min.</span></div>'
+      + '<div class="flow-arrow"><b>→</b>A la 1 h, si tolera bien</div>'
+      + '<div class="flow-step man"><span class="flow-k">Mantenimiento</span><span class="big">0,1 µg/kg/min</span><span class="ml">' + man + ' ml/h</span><span class="sub">Seguir hasta completar 24 h.</span></div>'
+      + '</div>'
+      + '<div class="branches">'
+      + '<div class="branch up"><strong>Cuándo subir</strong><p>A la hora, de 0,05 a 0,1 si la PAS es &gt; 100 mmHg y la FC &lt; 100 lpm.</p><p>A 0,2 µg/kg/min (' + max + ' ml/h) solo si el bajo gasto sigue tras 60 min en la dosis anterior y la tolerancia se mantiene.</p></div>'
+      + '<div class="branch down"><strong>Cuándo bajar o añadir noradrenalina</strong><p>Bajar a 0,05 µg/kg/min (' + ini + ' ml/h) si la PAS cae por debajo de 90 mmHg o más de 20 mmHg, si la FC supera 110–120 lpm, o si hay cefalea intensa o náuseas.</p><p>Añadir noradrenalina si la caída de tensión se debe a la vasodilatación y se quiere mantener el levosimendán.</p><p>Suspender si la PAS queda &lt; 85 mmHg pese a reducir la dosis.</p></div>'
+      + '</div>'
+      + '<h3>2. Administración y dosificación</h3>'
+      + '<p>De acuerdo con las guías de la ESC (2021), se omite el bolo de carga para reducir el riesgo de hipotensión grave y arritmias.</p>'
+      + '<div class="tbl-wrap"><table><thead><tr><th>Fase</th><th>Dosis</th><th>Duración</th><th>Objetivo</th></tr></thead><tbody>'
+      + '<tr><td>Inicio</td><td>0,05 µg/kg/min</td><td>30–60 min</td><td>Evaluar tolerancia y respuesta vasodilatadora.</td></tr>'
+      + '<tr><td>Mantenimiento</td><td>0,1 µg/kg/min</td><td>Hasta completar 24 h</td><td>Dosis estándar para optimizar la contractilidad.</td></tr>'
+      + '<tr><td>Optimización</td><td>0,2 µg/kg/min</td><td>Según criterio</td><td>Si no hay respuesta clínica y la tolerancia es buena.</td></tr>'
+      + '</tbody></table></div>'
+      + '<p><strong>Para ' + formatMl(kg).replace(',0', '') + ' kg ahora:</strong> inicio ' + ini + ' ml/h · mantenimiento ' + man + ' ml/h · máxima ' + max + ' ml/h.</p>'
+      + '<div class="tbl-wrap"><table><thead><tr><th>Peso</th><th>Inicio 0,05</th><th>Mantenimiento 0,1</th><th>Máxima 0,2</th></tr></thead><tbody>'
+      + '<tr><td>50 kg</td><td>3 ml/h</td><td>6 ml/h</td><td>12 ml/h</td></tr>'
+      + '<tr><td>60 kg</td><td>3,6 ml/h</td><td>7,2 ml/h</td><td>14,4 ml/h</td></tr>'
+      + '<tr><td>70 kg</td><td>4,2 ml/h</td><td>8,4 ml/h</td><td>16,8 ml/h</td></tr>'
+      + '<tr><td>80 kg</td><td>4,8 ml/h</td><td>9,6 ml/h</td><td>19,2 ml/h</td></tr>'
+      + '<tr><td>90 kg</td><td>5,4 ml/h</td><td>10,8 ml/h</td><td>21,6 ml/h</td></tr>'
+      + '<tr><td>100 kg</td><td>6 ml/h</td><td>12 ml/h</td><td>24 ml/h</td></tr>'
+      + '</tbody></table></div>'
+      + '<h3>3. Criterios de ajuste</h3>'
+      + '<p><strong>Subir la dosis</strong> si persisten signos de bajo gasto tras 60 minutos en la dosis anterior, con PAS &gt; 100 mmHg y FC &lt; 100 lpm.</p>'
+      + '<p><strong>Bajar a 0,05 µg/kg/min</strong> si la PAS cae por debajo de 90 mmHg o más de 20 mmHg respecto a la basal, si hay taquicardia compensatoria (&gt; 110–120 lpm) o si aparecen cefalea intensa o náuseas.</p>'
+      + '<p><strong>Suspender</strong> si la hipotensión es refractaria (PAS &lt; 85 mmHg pese a reducir la dosis), si aparecen arritmias graves (taquicardia ventricular, fibrilación auricular con respuesta ventricular rápida o extrasistolia ventricular frecuente) o si hay reacción de hipersensibilidad.</p>'
+      + '<h3>4. Efectos secundarios y monitorización</h3>'
+      + '<p>El metabolito activo OR-1896 tiene una semivida de 75–80 horas, así que el efecto y los riesgos pueden prolongarse 7–10 días tras acabar la infusión.</p>'
+      + '<ul>'
+      + '<li><strong>Cardiovasculares, muy frecuentes:</strong> hipotensión, taquicardia ventricular, fibrilación auricular, extrasístoles.</li>'
+      + '<li><strong>Neurológicos:</strong> cefalea por vasodilatación craneal y mareos.</li>'
+      + '<li><strong>Metabólicos:</strong> hipopotasemia. Ionograma diario y reponer si el potasio es inferior a 3,5 mEq/L.</li>'
+      + '<li><strong>Hematológicos:</strong> posible descenso de hemoglobina y hematocrito.</li>'
+      + '</ul>'
+      + '<h3>5. Contraindicaciones absolutas</h3>'
+      + '<ul>'
+      + '<li>Insuficiencia renal grave (aclaramiento de creatinina &lt; 30 ml/min).</li>'
+      + '<li>Insuficiencia hepática grave.</li>'
+      + '<li>Obstrucción mecánica grave del llenado o del vaciado ventricular, por ejemplo estenosis aórtica crítica.</li>'
+      + '<li>Hipotensión grave y taquicardia basal no tratadas.</li>'
+      + '</ul>'
+      + '<p class="call"><strong>Precaución.</strong> Por su efecto vasodilatador venoso y arterial, el paciente debe estar normovolémico antes de iniciar la perfusión.</p>';
+  }
+  function milriMl(dose, kg) {
+    return formatMl(dose * kg * 60 / 200);
+  }
+  function milriHtml(kg) {
+    var etiqueta = formatMl(kg).replace(',0', '');
+    var pesos = [50, 60, 70, 80, 90, 100];
+    var filas = pesos.map(function (p) {
+      return '<tr><td>' + p + ' kg</td><td>' + milriMl(0.375, p) + '</td><td>' + milriMl(0.5, p) + '</td><td>' + milriMl(0.75, p) + '</td></tr>';
+    }).join('');
+    return ''
+      + '<p>Inhibidor de la fosfodiesterasa III. A diferencia del levosimendán, la dosis depende de la función renal y admite varios diluyentes. Puede mantenerse 48–72 horas o más, según la respuesta.</p>'
+      + '<p class="call"><strong>Para ' + etiqueta + ' kg ahora</strong> (mezcla 0,2 mg/ml): mínima ' + milriMl(0.375, kg) + ' ml/h · estándar ' + milriMl(0.5, kg) + ' ml/h · máxima ' + milriMl(0.75, kg) + ' ml/h.</p>'
+      + '<h3>1. Preparación y dilución</h3>'
+      + '<p>Ampollas de 10 ml a 1 mg/ml (10 mg). Concentración estándar de la mezcla: <strong>0,2 mg/ml</strong>.</p>'
+      + '<ul>'
+      + '<li>En 100 ml: 20 mg (2 ampollas) + 80 ml de diluyente.</li>'
+      + '<li>En 250 ml: 50 mg (5 ampollas) + 200 ml de diluyente.</li>'
+      + '<li>Diluyentes: suero fisiológico 0,9 %, suero glucosado al 5 % o NaCl al 0,45 %.</li>'
+      + '<li>No diluir en bicarbonato sódico: precipita. No administrar por la misma vía que furosemida o bumetanida.</li>'
+      + '</ul>'
+      + '<h3>2. Administración y dosis</h3>'
+      + '<p><strong>Carga, opcional:</strong> 50 µg/kg en 10 minutos. Suele omitirse si la presión arterial sistólica está en el límite, para evitar una hipotensión súbita.</p>'
+      + '<table><thead><tr><th>Situación</th><th>Infusión</th><th>Dosis del día con bolo</th><th>Dosis del día sin bolo</th></tr></thead><tbody>'
+      + '<tr><td>Mínima</td><td>0,375 µg/kg/min</td><td>0,59 mg/kg</td><td>0,54 mg/kg</td></tr>'
+      + '<tr><td>Estándar</td><td>0,50 µg/kg/min</td><td>0,77 mg/kg</td><td>0,72 mg/kg</td></tr>'
+      + '<tr><td>Máxima</td><td>0,75 µg/kg/min</td><td>1,13 mg/kg</td><td>1,08 mg/kg</td></tr>'
+      + '</tbody></table>'
+      + '<p>La columna «con bolo» suma la carga de 50 µg/kg (0,05 mg/kg) a las 24 horas de perfusión.</p>'
+      + '<h3>Velocidades (ml/h) para 0,2 mg/ml</h3>'
+      + '<table><thead><tr><th>Peso</th><th>Mínima 0,375</th><th>Estándar 0,50</th><th>Máxima 0,75</th></tr></thead><tbody>' + filas + '</tbody></table>'
+      + '<h3>3. Ajuste según función renal</h3>'
+      + '<p>Se elimina por el riñón. Si el aclaramiento baja, la semivida se alarga y hay que reducir la perfusión. A ' + etiqueta + ' kg: '
+      + '50 ml/min → 0,43 µg/kg/min (' + milriMl(0.43, kg) + ' ml/h); '
+      + '30 ml/min → 0,33 µg/kg/min (' + milriMl(0.33, kg) + ' ml/h); '
+      + '10 ml/min → 0,23 µg/kg/min (' + milriMl(0.23, kg) + ' ml/h).</p>'
+      + '<table><thead><tr><th>Aclaramiento</th><th>Dosis</th></tr></thead><tbody>'
+      + '<tr><td>50 ml/min</td><td>0,43 µg/kg/min</td></tr>'
+      + '<tr><td>30 ml/min</td><td>0,33 µg/kg/min</td></tr>'
+      + '<tr><td>10 ml/min</td><td>0,23 µg/kg/min</td></tr>'
+      + '</tbody></table>'
+      + '<h3>4. Monitorización y seguridad</h3>'
+      + '<ul>'
+      + '<li><strong>Hipotensión:</strong> es el efecto adverso más frecuente. Si la presión sistólica cae de forma clara, suspender hasta estabilizar y reanudar a dosis menor.</li>'
+      + '<li><strong>Arritmias:</strong> extrasístoles ventriculares, taquicardia ventricular y fibrilación auricular. ECG continuo.</li>'
+      + '<li><strong>Potasio:</strong> la hipopotasemia favorece las arritmias.</li>'
+      + '<li><strong>Plaquetas:</strong> se ha descrito trombocitopenia, más en pediatría que en adultos. Vigilar el recuento.</li>'
+      + '</ul>'
+      + '<h3>5. Cuándo subir, bajar o suspender</h3>'
+      + '<p><strong>Subir</strong> si persiste el bajo gasto (mala perfusión periférica, oliguria) tras 2–4 horas de infusión estable y la presión sistólica es superior a 90 mmHg.</p>'
+      + '<p><strong>Bajar</strong> ante descensos leves de la presión arterial o taquicardia moderada.</p>'
+      + '<p><strong>Suspender</strong> si hay hipotensión refractaria (PAS &lt; 80–85 mmHg), arritmias ventriculares complejas o sostenidas, o un deterioro renal rápido (revaluar el aclaramiento).</p>'
+      + '<p class="call"><strong>Comparativa.</strong> La milrinona no tiene metabolitos activos de vida larga. Si la función renal es normal, el efecto desaparece en unas pocas horas al suspender la perfusión.</p>';
+  }
+  var fichas = {
+    noradrenalina: {
+      title: 'Noradrenalina',
+      html: '<p><strong>Norages.</strong> Primera línea si hay hipotensión con mala perfusión.</p><h3>Preparación</h3><ul><li>4 ampollas de 4 ml (1 mg/ml) = 16 mg.</li><li>Diluir en 100 ml de SG 5 %.</li><li>Concentración: 0,16 mg/ml.</li></ul><h3>Dosis</h3><p>Inicio 0,25 µg/kg/min. Rango de la hoja: 0,25–0,5 µg/kg/min, titulado según PAM.</p><p>PVC compatible · no requiere protección de la luz · estable más de 24 h · preferible por vía central.</p>'
+    },
+    angiotensina: {
+      title: 'Angiotensina II',
+      html: '<p><strong>Giapreza.</strong> Hipotensión refractaria a catecolaminas. Agonista AT₁.</p><h3>Preparación</h3><ul><li>1 vial de 1 ml (2,5 mg/ml) = 2,5 mg.</li><li>Diluir en 250 ml de SG 5 % o SSF 0,9 %.</li><li>Concentración: 10 µg/ml.</li></ul><h3>Dosis</h3><p>Inicio 0,02 µg/kg/min. Rango de la hoja: 0,02–0,04 µg/kg/min.</p><p>Vía central. PVC compatible · no requiere protección de la luz · estable más de 24 h.</p>'
+    },
+    adrenalina: {
+      title: 'Adrenalina',
+      html: '<p>Shock refractario o paro. Vigilar arritmias y aumento del consumo de oxígeno.</p><h3>Preparación</h3><ul><li>10 ampollas de 1 ml (1 mg/ml) = 10 mg.</li><li>Diluir en 100 ml de SG 5 %.</li><li>Concentración: 0,1 mg/ml.</li></ul><h3>Dosis</h3><p>Inicio 0,05 µg/kg/min. Rango de la hoja: 0,05–0,3 µg/kg/min.</p><p>PVC compatible · no requiere protección de la luz · estable más de 24 h · preferible por vía central.</p>'
+    },
+    vasopresina: {
+      title: 'Vasopresina',
+      html: '<p><strong>Empressin.</strong> Adyuvante en shock refractario a catecolaminas, para poder reducirlas. La dosis no depende del peso.</p><h3>Preparación</h3><ul><li>2 ampollas de 1 ml (20 UI/ml) = 40 UI.</li><li>Diluir en 50 ml de SSF 0,9 %.</li><li>Concentración: 0,8 UI/ml.</li></ul><h3>Dosis</h3><p>Inicio 0,03 UI/min (2,3 ml/h). Rango de la hoja: 0,03–0,04 UI/min. Otras guías inician entre 0,01 y 0,04 UI/min.</p><p>PVC compatible · no requiere protección de la luz · estable más de 24 h · preferible por vía central.</p>'
+    },
+    dobutamina: {
+      title: 'Dobutamina',
+      html: '<p>Bajo gasto con tensión arterial aceptable.</p><h3>Preparación</h3><ul><li>2 ampollas de 20 ml (250 mg; 12,5 mg/ml) = 500 mg.</li><li>Diluir en 250 ml de SG 5 %.</li><li>Concentración: 2 mg/ml.</li></ul><h3>Dosis</h3><p>Inicio 2 µg/kg/min. Rango de la hoja: 2–20 µg/kg/min.</p><p>PVC compatible · no requiere protección de la luz · estable más de 24 h · puede ir por vía periférica.</p>'
+    },
+    dopamina: {
+      title: 'Dopamina',
+      html: '<p>Uso limitado: bradicardia con hipotensión u otros criterios locales. A dosis altas predomina el efecto alfa.</p><h3>Preparación</h3><ul><li>2 ampollas de 5 ml (200 mg; 40 mg/ml) = 400 mg.</li><li>Diluir en 250 ml de SG 5 %.</li><li>Concentración: 1,6 mg/ml.</li></ul><h3>Dosis</h3><p>Inicio 2 µg/kg/min. Rango de la hoja: 2–20 µg/kg/min.</p><p>PVC compatible · no requiere protección de la luz · estable más de 24 h · puede ir por vía periférica.</p>'
+    }
+  };
+  var ficha = document.getElementById('ficha');
+  var fichaTitle = document.getElementById('fichaTitle');
+  var fichaBody = document.getElementById('fichaBody');
+  function openFicha(id) {
+    var kg = currentKg();
+    if (id === 'levosimendan') {
+      fichaTitle.textContent = 'Levosimendán';
+      fichaBody.innerHTML = levoHtml(kg);
+    } else if (id === 'milrinona') {
+      fichaTitle.textContent = 'Milrinona';
+      fichaBody.innerHTML = milriHtml(kg);
+    } else if (fichas[id]) {
+      fichaTitle.textContent = fichas[id].title;
+      fichaBody.innerHTML = fichas[id].html;
+    } else {
+      return;
+    }
+    ficha.hidden = false;
+    ficha.classList.add('open');
+    document.getElementById('fichaClose').focus();
+  }
+  function closeFicha() {
+    ficha.classList.remove('open');
+    ficha.hidden = true;
+  }
+  document.querySelectorAll('#perfusiones .prep').forEach(function (card) {
+    card.addEventListener('click', function () { openFicha(card.getAttribute('data-info')); });
+    card.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openFicha(card.getAttribute('data-info'));
+      }
+    });
+  });
+  document.getElementById('fichaClose').addEventListener('click', closeFicha);
+  ficha.addEventListener('click', function (e) { if (e.target === ficha) closeFicha(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && ficha.classList.contains('open')) closeFicha();
+  });
+  peso.addEventListener('input', function () {
+    updateDoses();
+    if (ficha.classList.contains('open') && fichaTitle.textContent === 'Levosimendán') openFicha('levosimendan');
+    if (ficha.classList.contains('open') && fichaTitle.textContent === 'Milrinona') openFicha('milrinona');
+  });
+  updateDoses();
+})();
+</script>
+</body>
+</html>

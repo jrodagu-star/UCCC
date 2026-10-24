@@ -1,0 +1,10 @@
+{
+  "name": "Unidad Cuidados Críticos Cardiológicos HM",
+  "short_name": "UCC Cardiológicos HM",
+  "description": "Protocolos y herramientas de la Unidad de Cuidados Críticos Cardiológicos HM",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#0d1117",
+  "lang": "es"
+}

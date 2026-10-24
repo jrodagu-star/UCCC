@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Protocolo práctico: Noradrenalina y Vasopresina — Línea de tiempo</title>
+<style>
+  :root{
+    --bg:#f6f8fb; --card:#ffffff; --muted:#556; --accent:#0b5cff;
+    --vaso:#e74c3c; --vaso-2:#c0392b; --adj:#f59e0b; --ok:#10b981;
+    --font:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+  }
+  body{font-family:var(--font);background:var(--bg);color:#0b1220;margin:18px;padding-bottom:40px;}
+  header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  h1{font-size:20px;margin:0;color:var(--accent)}
+  p.lead{margin:6px 0 18px 0;color:var(--muted);font-size:14px}
+  .layout{display:grid;grid-template-columns:1fr 360px;gap:16px;align-items:start}
+  .card{background:var(--card);border:1px solid #e6eef6;padding:12px;border-radius:8px;box-shadow:0 1px 2px rgba(11,17,32,0.04)}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{padding:8px 10px;border-bottom:1px solid #eef3f8;text-align:left;vertical-align:middle}
+  th{background:#fbfdff;font-weight:700;color:#0b2b4a}
+  .badge{display:inline-block;padding:6px 8px;border-radius:999px;color:#fff;font-weight:700;font-size:12px}
+  .badge.nor{background:var(--vaso)}
+  .badge.vas{background:var(--adj)}
+  .timeline{margin-top:8px;border-left:3px solid #e6eef6;padding-left:12px}
+  .step{position:relative;padding:10px 12px;margin:10px 0;border-radius:6px;background:#fff;border:1px solid #f0f6fb}
+  .step:before{content:"";position:absolute;left:-28px;top:14px;width:14px;height:14px;border-radius:50%;background:var(--accent);border:3px solid #fff;box-shadow:0 1px 2px rgba(0,0,0,0.06)}
+  .small{font-size:13px;color:var(--muted)}
+  .key{font-weight:700;color:#0b2b4a}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px}
+  .calc{background:#fbfbff;border-left:4px solid var(--accent);padding:8px;border-radius:6px}
+  .table-compact th, .table-compact td{padding:6px 8px;font-size:13px}
+  .print-note{font-size:12px;color:#666;margin-top:10px}
+  .patient-panel{
+    background:linear-gradient(180deg,#fff,#f3f7ff);
+    border:1px solid #c7d9f5;border-radius:8px;padding:12px 14px;margin-bottom:14px;
+  }
+  .patient-panel h2{margin:0 0 10px;font-size:15px;color:#0b2b4a}
+  .patient-row{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:flex-end}
+  .field{display:flex;flex-direction:column;gap:4px}
+  .field label{font-size:12px;font-weight:700;color:#334155}
+  .field input[type="number"]{
+    width:7rem;padding:8px 10px;border:1px solid #cbd5e1;border-radius:6px;font-size:15px;
+  }
+  .field select{max-width:22rem;padding:8px 10px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px}
+  .check-row{display:flex;align-items:flex-start;gap:8px;max-width:42rem}
+  .check-row input{margin-top:3px;width:18px;height:18px;accent-color:var(--accent)}
+  .mlh-hint{font-size:12px;color:#0f766e;font-weight:700;margin-top:6px}
+  .mix-table{margin-top:10px}
+  .mix-table th:first-child,.mix-table td:first-child{width:36px;text-align:center}
+  .mix-table tbody tr{cursor:pointer}
+  .mix-table tbody tr.on td{background:#e8f1ff}
+  .mix-table input[type="number"]{width:5.5rem;padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:14px}
+  .mix-table input[type="radio"]{width:16px;height:16px;accent-color:var(--accent)}
+  .speed-box{margin-top:18px}
+  .slider-row{display:grid;grid-template-columns:7.2rem minmax(0,1fr) auto;gap:10px;align-items:center;margin:10px 0}
+  .slider-row label{font-size:12px;font-weight:800;color:#334155}
+  .range-wrap{position:relative;display:flex;align-items:center;height:28px}
+  .range-wrap::before{content:"";position:absolute;left:var(--cut,20%);right:8px;top:9px;bottom:9px;background:#ffedd5;border-radius:0 999px 999px 0;pointer-events:none}
+  .slider-row input[type="range"]{width:100%;accent-color:var(--accent);position:relative;z-index:1;margin:0}
+  .limit-mark,.knee-mark{position:absolute;top:2px;bottom:2px;width:2px;z-index:2;pointer-events:none;transform:translateX(-1px)}
+  .limit-mark{background:#c2410c}
+  .knee-mark{background:#64748b}
+  .limit-mark::after,.knee-mark::after{content:attr(data-label);position:absolute;top:-15px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:800;white-space:nowrap}
+  .limit-mark::after{color:#c2410c}
+  .knee-mark::after{color:#475569}
+  .slider-row output{min-width:8.5rem;font-weight:800;color:#0b2b4a;font-variant-numeric:tabular-nums;text-align:right}
+  .speed-box .out{font-size:14px;font-weight:700;color:#0f766e;margin:8px 0 0}
+  .aviso-vas{display:none;margin:8px 0 0;background:#fff7ed;border:1px solid #fdba74;color:#9a3412;border-radius:8px;padding:8px 10px;font-weight:800;font-size:13px}
+  .speed-box.warn .aviso-vas{display:block}
+  .speed-box.warn .out{color:#9a3412}
+  .vp-line{display:grid;grid-template-columns:1fr 18px 1fr 18px 1.15fr 18px 1fr;gap:4px;align-items:stretch;margin-top:14px}
+  .vp-step{border:1px solid #e2e8f0;border-radius:10px;padding:8px;background:#fff;font-size:12px;line-height:1.3}
+  .vp-step b{display:block;font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:#64748b;margin-bottom:3px}
+  .vp-step .n{display:block;font-weight:800;color:#1d4e89}
+  .vp-ml{display:block;margin-top:3px;font-weight:800;color:#0f766e}
+  .vp-step.gate{border-color:#fdba74;background:#fff7ed}
+  .vp-step.gate .n{color:#c2410c}
+  .vp-step.add{border-color:#f59e0b;background:#fffbeb}
+  .vp-step.add.on{box-shadow:0 0 0 3px rgba(194,65,12,.28);background:#ffedd5}
+  .vp-arrow{display:flex;align-items:center;justify-content:center;color:#94a3b8;font-weight:800}
+  @media (max-width:980px){.layout{grid-template-columns:1fr}}
+  @media (max-width:760px){.vp-line{grid-template-columns:1fr}.vp-arrow{transform:rotate(90deg);padding:2px 0}}
+  @media print{
+    body{margin:6mm}
+    .layout{grid-template-columns:1fr}
+    header h1{font-size:16px}
+    .patient-panel{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Noradrenalina y Vasopresina — Esquema práctico en línea de tiempo</h1>
+</header>
+
+<p class="lead">Hoja rápida para UCI/guardia: cuándo iniciar, cómo escalar y desescalar. Indique el <strong>peso</strong> y elija cómo mezcla la noradrenalina: la hoja calcula la <strong>concentración</strong> y los <strong>mL/h</strong>. Siempre optimizar volumen y monitorizar PAM invasiva, perfusión y efectos adversos.</p>
+
+<div class="layout">
+
+  <!-- Main column -->
+  <div class="card">
+
+    <div class="patient-panel">
+      <h2>Paciente y mezcla de referencia</h2>
+      <div class="patient-row">
+        <div class="field">
+          <label for="pesoPaciente">Peso (kg)</label>
+          <input type="number" id="pesoPaciente" min="1" max="300" step="0.1" value="70" inputmode="decimal"/>
+        </div>
+      </div>
+      <p class="small" style="margin:12px 0 0"><strong>Noradrenalina — elige cómo la mezclas.</strong> Concentración (µg/mL) = mg × 1000 / mL de diluyente. La última fila admite cualquier otra mezcla.</p>
+      <table class="table-compact mix-table" id="menuMezcla">
+        <thead>
+          <tr><th></th><th>Fármaco</th><th>Diluyente</th><th>Concentración</th><th>Inicio 0,05 µg/kg/min</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="radio" name="mezclaNor" value="4|50" aria-label="4 mg en 50 mL"></td>
+            <td>4 mg</td>
+            <td>50 mL</td>
+            <td>80 µg/mL</td>
+            <td class="mix-mlh" data-ugml="80"></td>
+          </tr>
+          <tr>
+            <td><input type="radio" name="mezclaNor" value="8|50" aria-label="8 mg en 50 mL"></td>
+            <td>8 mg</td>
+            <td>50 mL</td>
+            <td>160 µg/mL</td>
+            <td class="mix-mlh" data-ugml="160"></td>
+          </tr>
+          <tr class="on">
+            <td><input type="radio" name="mezclaNor" value="16|100" checked aria-label="16 mg en 100 mL"></td>
+            <td>16 mg</td>
+            <td>100 mL</td>
+            <td>160 µg/mL</td>
+            <td class="mix-mlh" data-ugml="160"></td>
+          </tr>
+          <tr>
+            <td><input type="radio" name="mezclaNor" value="32|250" aria-label="32 mg en 250 mL"></td>
+            <td>32 mg</td>
+            <td>250 mL</td>
+            <td>128 µg/mL</td>
+            <td class="mix-mlh" data-ugml="128"></td>
+          </tr>
+          <tr>
+            <td><input type="radio" name="mezclaNor" value="custom" aria-label="Otra mezcla"></td>
+            <td><input type="number" id="mgCustom" min="0" step="0.1" value="16" inputmode="decimal" aria-label="Miligramos de noradrenalina"> mg</td>
+            <td><input type="number" id="mlCustom" min="0" step="1" value="100" inputmode="decimal" aria-label="Mililitros de diluyente"> mL</td>
+            <td id="concCustom">160 µg/mL</td>
+            <td id="mixMlCustom"></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="speed-box">
+        <div class="slider-row">
+          <label for="velBomba">Velocidad</label>
+          <div class="range-wrap" id="velWrap">
+            <input type="range" id="velBomba" min="0" max="100" step="0.1" value="3.8"/>
+            <span class="limit-mark" id="velLimit" data-label=""></span>
+            <span class="knee-mark" id="velKnee" data-label="1"></span>
+          </div>
+          <output id="velOut" for="velBomba">1,3 mL/h</output>
+        </div>
+        <div class="slider-row">
+          <label for="dosisVel">Dosis</label>
+          <div class="range-wrap" id="dosisWrap">
+            <input type="range" id="dosisVel" min="0" max="100" step="0.1" value="3.8"/>
+            <span class="limit-mark" id="dosisLimit" data-label="0,2"></span>
+            <span class="knee-mark" id="dosisKnee" data-label="1"></span>
+          </div>
+          <output id="dosisOut" for="dosisVel">0,05 µg/kg/min</output>
+        </div>
+        <p id="concPorVel" class="out" role="status" aria-live="polite"></p>
+        <p id="avisoVas" class="aviso-vas">Añadir vasopresina 0,03 U/min. La noradrenalina ha pasado 0,2 µg/kg/min.</p>
+      </div>
+      <div class="vp-line" aria-label="Cuándo añadir vasopresina">
+        <div class="vp-step"><b>Inicio</b><span class="n">Noradrenalina</span>0,05 µg/kg/min<span class="vp-ml" id="vpIniMl"></span></div>
+        <div class="vp-arrow" aria-hidden="true">→</div>
+        <div class="vp-step"><b>Titular</b><span class="n">Cada 5–15 min</span>+0,02 a 0,05<span class="vp-ml" id="vpStepMl"></span></div>
+        <div class="vp-arrow" aria-hidden="true">→</div>
+        <div class="vp-step gate"><b>Límite</b><span class="n">&gt; 0,2 µg/kg/min</span>o sin respuesta<span class="vp-ml" id="vpLimMl"></span></div>
+        <div class="vp-arrow" aria-hidden="true">→</div>
+        <div class="vp-step add" id="vpAdd"><b>Ahí</b><span class="n">Vasopresina</span>0,03 U/min<span class="vp-ml" id="vpVasMl"></span></div>
+      </div>
+    </div>
+
+    <h2 style="margin-top:16px;font-size:16px">Resumen rápido</h2>
+    <p class="small"><span class="key">Inicio:</span> Noradrenalina primera línea si PAM <strong>&lt;65 mmHg</strong> tras optimizar volumen. <span class="key">Añadir vasopresina</span> (coadyuvante) si necesidad persistente de altas dosis de noradrenalina o para reducir catecolaminas.</p>
+
+    <h3 style="margin-bottom:6px">Línea de tiempo (0 → 24 h)</h3>
+    <div class="timeline" id="timeline">
+
+      <div class="step">
+        <div class="key">0–5 min — Rescate inicial</div>
+        <p class="small" id="tl-step1">Bolo de cristaloide si hipovolemia sospechada. Si PAM no recupera: <span class="badge nor">Noradrenalina</span> iniciar <strong>0,05 µg/kg/min</strong> (o 5–10 µg/min en adulto medio) y monitorizar.</p>
+      </div>
+
+      <div class="step">
+        <div class="key">5–30 min — Titración rápida</div>
+        <p class="small" id="tl-step2">Aumentar noradrenalina en incrementos de <strong>0,02–0,05 µg/kg/min</strong> cada 5–15 min hasta PAM objetivo. Si se requieren &gt;0,2–0,3 µg/kg/min o respuesta inadecuada, <span class="badge vas">añadir Vasopresina 0,03 U/min</span> como coadyuvante.</p>
+      </div>
+
+      <div class="step">
+        <div class="key">30–120 min — Estabilización</div>
+        <p class="small" id="tl-step3">Mantener PAM objetivo con la menor dosis efectiva. Si bajo gasto persistente, añadir inotrópico (dobutamina/milrinona) y valorar soporte mecánico si refractario.</p>
+      </div>
+
+      <div class="step">
+        <div class="key">2–24 h — Mantenimiento y reevaluación</div>
+        <p class="small" id="tl-step4">Reevaluar cada 1–2 h. Si estable, iniciar desescalado: <strong>reducir vasopresina primero</strong> (si presente), luego noradrenalina en decrementos del 10–20% cada 15–30 min según tolerancia.</p>
+      </div>
+
+    </div>
+
+    <h3 style="margin-top:12px">Protocolos de inicio, escalado y desescalado</h3>
+
+    <table class="table-compact" style="width:100%;margin-top:8px">
+      <thead>
+        <tr><th style="width:36%">Situación clínica</th><th style="width:32%">Acción inicial</th><th>Escalado / Desescalado</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="small">PAM &lt;65 mmHg tras bolo y sin respuesta</td>
+          <td class="small"><span class="badge nor">Noradrenalina</span> iniciar 0,05 µg/kg/min</td>
+          <td class="small">Aumentar 0,02–0,05 µg/kg/min cada 5–15 min hasta PAM objetivo</td>
+        </tr>
+        <tr>
+          <td class="small">Necesidad persistente de noradrenalina &gt;0,2–0,3 µg/kg/min</td>
+          <td class="small">Añadir <span class="badge vas">Vasopresina 0,03 U/min</span> (dosis fija)</td>
+          <td class="small">Mantener vasopresina; intentar reducir noradrenalina en 10–20% si PAM estable</td>
+        </tr>
+        <tr>
+          <td class="small">Shock refractario (hipotensión persistente)</td>
+          <td class="small">Considerar epinefrina o medidas avanzadas (ECMO/VAD) y consulta cardiología</td>
+          <td class="small">Si mejora, retirar vasopresina primero; luego disminuir catecolaminas</td>
+        </tr>
+        <tr>
+          <td class="small">Isquemia periférica o efectos adversos</td>
+          <td class="small">Reducir catecolaminas; valorar vasopresina retirada si contribuye a isquemia</td>
+          <td class="small">Desescalar lentamente y monitorizar perfusión</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="grid" style="margin-top:10px">
+      <div class="calc">
+        <div class="key">Ejemplo cálculo noradrenalina</div>
+        <p class="small" id="calc-na">Noradrenalina 0,05 µg/kg/min según el peso y la mezcla elegida.</p>
+      </div>
+      <div class="calc">
+        <div class="key">Vasopresina (0,03 U/min)</div>
+        <p class="small" id="calc-vas">Concentración 0,4 U/mL → 0,03/0,4 = 0,075 mL/min = 4,5 mL/h (independiente del peso).</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:12px">Cómo escalar y desescalar (reglas prácticas)</h3>
+    <ul class="small">
+      <li><span class="key">Escalado:</span> aumentar noradrenalina en pasos pequeños (0,02–0,05 µg/kg/min) cada 5–15 min; si &gt;0,2–0,3 µg/kg/min o efectos adversos, añadir vasopresina 0,03 U/min.</li>
+      <li><span class="key">Desescalado:</span> cuando PAM y perfusión estables, reducir vasopresina primero (ej. 0,01 U/min cada 15–30 min o retirar si estable), luego disminuir noradrenalina en decrementos del 10–20% cada 15–30 min.</li>
+      <li class="small">Si PAM cae tras reducción → volver al último nivel estable, revisar volumen, dolor, sedación, ritmo y causas reversibles.</li>
+    </ul>
+
+    <h3 style="margin-top:12px">Monitorización y señales de alarma</h3>
+    <div class="small">
+      <ul>
+        <li>PAM invasiva, frecuencia cardiaca, ECG continuo.</li>
+        <li>Diuresis, lactato, perfusión periférica (pulsos, llenado capilar).</li>
+        <li>Signos de isquemia periférica (palidez, dolor, acrocianosis) → reevaluar dosis.</li>
+        <li>Arritmias o aumento del consumo de O₂ → valorar reducción de catecolaminas.</li>
+      </ul>
+    </div>
+
+    <p class="print-note">Nota: las cifras son orientativas. Ajustar según protocolo local, peso real del paciente y función orgánica. Documentar cada cambio de dosis y respuesta.</p>
+
+  </div>
+
+  <!-- Sidebar -->
+  <aside class="card">
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+      <div style="width:44px;height:44px;border-radius:8px;background:linear-gradient(180deg,var(--vaso),var(--vaso-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">NA</div>
+      <div>
+        <div class="key">Noradrenalina</div>
+        <p class="small" id="side-na">Inicio 0,05–0,1 µg/kg/min. Titrar por PAM. Riesgo: arritmias, isquemia.</p>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+      <div style="width:44px;height:44px;border-radius:8px;background:linear-gradient(180deg,var(--adj),#d97706);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">VP</div>
+      <div>
+        <div class="key">Vasopresina</div>
+        <p class="small" id="side-vas">Dosis fija 0,01–0,04 U/min (0,03 U/min frecuente). Usar como coadyuvante.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:8px">
+      <div class="key">Checklist rápido antes de escalar</div>
+      <ul class="small">
+        <li>Optimizar volumen (eco/PAOP si disponible).</li>
+        <li>Confirmar sedación/analgesia y ritmo.</li>
+        <li>Revisar fármacos concomitantes y compatibilidades.</li>
+        <li>Documentar objetivo PAM y plan de desescalado.</li>
+      </ul>
+    </div>
+
+    <div style="margin-top:10px">
+      <div class="key">Conversión mL/h (fórmula)</div>
+      <p class="small"><strong>Noradrenalina (µg/kg/min):</strong> mL/h = (µg/kg/min × peso kg × 60) / (µg/mL de la mezcla).</p>
+      <p class="small"><strong>Vasopresina (U/min):</strong> mL/h = (U/min × 60) / (U/mL de la mezcla). Con 0,4 U/mL no depende del peso.</p>
+    </div>
+
+  </aside>
+
+</div>
+
+<script>
+(function () {
+  var VAS_U_PER_ML = 0.4
+  var VAS_DOSE_U_MIN = 0.03
+  var VAS_NA_LIMIT = 0.2
+  var VEL_MAX = 80
+  var DOSE_KNEE = 1
+  var TRACK_KNEE = 75
+  var linkSource = 'vel'
+  var heldVel = 1.3
+  var heldDose = 0.05
+
+  function parseWeight() {
+    var el = document.getElementById('pesoPaciente')
+    var v = parseFloat(el && el.value)
+    if (!isFinite(v) || v <= 0) return 70
+    return v
+  }
+
+  function naUgPerMl() {
+    var radio = document.querySelector('input[name="mezclaNor"]:checked')
+    if (!radio) return 160
+    var mg
+    var ml
+    if (radio.value === 'custom') {
+      mg = parseFloat(document.getElementById('mgCustom').value)
+      ml = parseFloat(document.getElementById('mlCustom').value)
+    } else {
+      var parts = radio.value.split('|')
+      mg = parseFloat(parts[0])
+      ml = parseFloat(parts[1])
+    }
+    if (!isFinite(mg) || !isFinite(ml) || mg <= 0 || ml <= 0) return NaN
+    return (mg * 1000) / ml
+  }
+
+  function fmtConc(ug) {
+    if (!isFinite(ug)) return '—'
+    var r = Math.round(ug * 10) / 10
+    if (Math.abs(r - Math.round(r)) < 1e-6) return String(Math.round(r))
+    return r.toFixed(1).replace('.', ',')
+  }
+
+  function fmtNum(x) {
+    if (!isFinite(x)) return '—'
+    var s = x.toFixed(1)
+    return s.replace('.', ',')
+  }
+
+  /** µg/kg/min → mL/h given concentration µg/mL */
+  function naMlH(ugKgMin, weightKg, ugPerMl) {
+    var ugMin = ugKgMin * weightKg
+    return (ugMin / ugPerMl) * 60
+  }
+
+  function vasMlH(uPerMin, uPerMl) {
+    return (uPerMin / uPerMl) * 60
+  }
+
+  function baseStep1Html(w, useMl, cUg) {
+    var s =
+      'Bolo de cristaloide si hipovolemia sospechada. Si PAM no recupera: <span class="badge nor">Noradrenalina</span> iniciar <strong>0,05 µg/kg/min</strong> (o 5–10 µg/min en adulto medio) y monitorizar.'
+    if (!useMl) return s
+    var ml = naMlH(0.05, w, cUg)
+    return (
+      s +
+      ' Equiv. a <strong>' +
+      fmtNum(ml) +
+      ' mL/h</strong> con mezcla <strong>' +
+      fmtConc(cUg) +
+      ' µg/mL</strong> (' +
+      fmtNum(w) +
+      ' kg).'
+    )
+  }
+
+  function baseStep2Html(w, useMl, cUg) {
+    var s =
+      'Aumentar noradrenalina en incrementos de <strong>0,02–0,05 µg/kg/min</strong> cada 5–15 min hasta PAM objetivo. Si se requieren &gt;0,2–0,3 µg/kg/min o respuesta inadecuada, <span class="badge vas">añadir Vasopresina 0,03 U/min</span> como coadyuvante.'
+    if (!useMl) return s
+    var lo = naMlH(0.2, w, cUg)
+    var hi = naMlH(0.3, w, cUg)
+    var vml = vasMlH(VAS_DOSE_U_MIN, VAS_U_PER_ML)
+    return (
+      'Aumentar noradrenalina en incrementos de <strong>0,02–0,05 µg/kg/min</strong> cada 5–15 min hasta PAM objetivo. A <strong>0,2–0,3 µg/kg/min</strong> el caudal sería aprox. <strong>' +
+      fmtNum(lo) +
+      '–' +
+      fmtNum(hi) +
+      ' mL/h</strong> (mezcla ' +
+      fmtConc(cUg) +
+      ' µg/mL; peso ' +
+      fmtNum(w) +
+      ' kg). Si se requieren esas tasas o respuesta inadecuada, <span class="badge vas">añadir Vasopresina 0,03 U/min</span> ≈ <strong>' +
+      fmtNum(vml) +
+      ' mL/h</strong> (mezcla 0,4 U/mL).'
+    )
+  }
+
+  function updateConvRow70() {
+    var w = parseWeight()
+    var elVas = document.querySelector('.conv-70-vas')
+    var vml = vasMlH(VAS_DOSE_U_MIN, VAS_U_PER_ML)
+    document.querySelectorAll('.mix-mlh').forEach(function (cell) {
+      var ug = parseFloat(cell.getAttribute('data-ugml'))
+      cell.textContent = fmtNum(naMlH(0.05, w, ug)) + ' mL/h'
+    })
+    var customUg = (function () {
+      var mg = parseFloat(document.getElementById('mgCustom').value)
+      var ml = parseFloat(document.getElementById('mlCustom').value)
+      if (!isFinite(mg) || !isFinite(ml) || mg <= 0 || ml <= 0) return NaN
+      return (mg * 1000) / ml
+    })()
+    var concCustom = document.getElementById('concCustom')
+    var mixMlCustom = document.getElementById('mixMlCustom')
+    if (concCustom) concCustom.textContent = isFinite(customUg) ? fmtConc(customUg) + ' µg/mL' : '—'
+    if (mixMlCustom) mixMlCustom.textContent = isFinite(customUg) ? fmtNum(naMlH(0.05, w, customUg)) + ' mL/h' : '—'
+    document.querySelectorAll('#menuMezcla tbody tr').forEach(function (row) {
+      var radio = row.querySelector('input[type="radio"]')
+      row.classList.toggle('on', !!(radio && radio.checked))
+    })
+    if (elVas) {
+      elVas.textContent = '0,03 U/min → ' + fmtNum(vml) + ' mL/h (0,4 U/mL)'
+    }
+  }
+
+  function refresh() {
+    var w = parseWeight()
+    var cUg = naUgPerMl()
+    var use = isFinite(cUg) && cUg > 0
+    var t1 = document.getElementById('tl-step1')
+    var t2 = document.getElementById('tl-step2')
+    var calcNa = document.getElementById('calc-na')
+    var calcVas = document.getElementById('calc-vas')
+    var sideNa = document.getElementById('side-na')
+    var sideVas = document.getElementById('side-vas')
+
+    updateConvRow70()
+
+    if (t1) t1.innerHTML = baseStep1Html(w, use, cUg)
+    if (t2) t2.innerHTML = baseStep2Html(w, use, cUg)
+
+    var startMl = naMlH(0.05, w, cUg)
+    var vasMl = vasMlH(VAS_DOSE_U_MIN, VAS_U_PER_ML)
+
+    if (calcNa) {
+      if (use) {
+        var ugm = 0.05 * w
+        calcNa.innerHTML =
+          'A <strong>' +
+          fmtNum(w) +
+          ' kg</strong>, 0,05 µg/kg/min = ' +
+          fmtNum(ugm) +
+          ' µg/min. Con <strong>' +
+          fmtConc(cUg) +
+          ' µg/mL</strong> → <strong>' +
+          fmtNum(startMl) +
+          ' mL/h</strong>.'
+      } else {
+        calcNa.textContent =
+          'Indica miligramos y mililitros mayores que cero para calcular la concentración.'
+      }
+    }
+
+    if (calcVas) {
+      calcVas.innerHTML =
+        'Concentración <strong>0,4 U/mL</strong> (20 U/50 mL). 0,03 U/min → <strong>' +
+        fmtNum(vasMl) +
+        ' mL/h</strong> (no depende del peso).'
+    }
+
+    if (sideNa) {
+      sideNa.innerHTML = use
+        ? 'Inicio <strong>0,05 µg/kg/min</strong> ≈ <strong>' +
+            fmtNum(startMl) +
+            ' mL/h</strong> (' +
+            fmtConc(cUg) +
+            ' µg/mL; ' +
+            fmtNum(w) +
+            ' kg). Titrar por PAM.'
+        : 'Inicio 0,05–0,1 µg/kg/min. Titrar por PAM. Riesgo: arritmias, isquemia.'
+    }
+
+    if (sideVas) {
+      sideVas.innerHTML = use
+        ? '<strong>0,03 U/min</strong> ≈ <strong>' +
+            fmtNum(vasMl) +
+            ' mL/h</strong> (0,4 U/mL). Rango habitual 0,01–0,04 U/min.'
+        : 'Dosis fija 0,01–0,04 U/min (0,03 U/min frecuente). Usar como coadyuvante.'
+    }
+
+    syncPair(w, cUg)
+  }
+
+  function snap(value, step) {
+    var n = Math.round((value + 1e-8) / step) * step
+    var decimals = (String(step).split('.')[1] || '').length
+    return Number(n.toFixed(decimals))
+  }
+
+  function fmtDose(x) {
+    if (!isFinite(x)) return '—'
+    var s = (Math.round(x * 100) / 100).toFixed(2).replace(/0+$/, '').replace(/\.$/, '')
+    return s.replace('.', ',')
+  }
+
+  function doseCeiling(w, cUg) {
+    return (VEL_MAX * cUg) / (w * 60)
+  }
+
+  function posToDose(pos, ceiling) {
+    if (!(ceiling > 0)) return 0
+    if (ceiling <= DOSE_KNEE) return (pos / 100) * ceiling
+    if (pos <= TRACK_KNEE) return (pos / TRACK_KNEE) * DOSE_KNEE
+    return DOSE_KNEE + ((pos - TRACK_KNEE) / (100 - TRACK_KNEE)) * (ceiling - DOSE_KNEE)
+  }
+
+  function doseToPos(dose, ceiling) {
+    if (!(ceiling > 0)) return 0
+    dose = Math.max(0, Math.min(dose, ceiling))
+    if (ceiling <= DOSE_KNEE) return (dose / ceiling) * 100
+    if (dose <= DOSE_KNEE) return (dose / DOSE_KNEE) * TRACK_KNEE
+    return TRACK_KNEE + ((dose - DOSE_KNEE) / (ceiling - DOSE_KNEE)) * (100 - TRACK_KNEE)
+  }
+
+  function readSlider(which) {
+    var w = parseWeight()
+    var cUg = naUgPerMl()
+    if (!isFinite(cUg) || cUg <= 0) return
+    var el = document.getElementById(which === 'vel' ? 'velBomba' : 'dosisVel')
+    var ceiling = doseCeiling(w, cUg)
+    var dosis = posToDose(parseFloat(el.value), ceiling)
+    var vel = (dosis * w * 60) / cUg
+    if (vel > VEL_MAX) vel = VEL_MAX
+    if (dosis > ceiling) dosis = ceiling
+    heldDose = dosis
+    heldVel = vel
+  }
+
+  function syncPair(w, cUg) {
+    var velEl = document.getElementById('velBomba')
+    var dosEl = document.getElementById('dosisVel')
+    var out = document.getElementById('concPorVel')
+    var velOut = document.getElementById('velOut')
+    var dosOut = document.getElementById('dosisOut')
+    if (!velEl || !dosEl) return
+    if (!isFinite(cUg) || cUg <= 0 || !isFinite(w) || w <= 0) {
+      if (out) out.textContent = 'Elige una mezcla válida para calcular la dosis.'
+      return
+    }
+    var ceiling = doseCeiling(w, cUg)
+    var vel
+    var dosis
+    if (linkSource === 'dosis') {
+      dosis = Math.min(Math.max(heldDose, 0), ceiling)
+      vel = (dosis * w * 60) / cUg
+    } else {
+      vel = Math.min(Math.max(heldVel, 0), VEL_MAX)
+      dosis = (vel * cUg) / (w * 60)
+    }
+    if (vel > VEL_MAX) {
+      vel = VEL_MAX
+      dosis = ceiling
+    }
+    heldDose = dosis
+    heldVel = vel
+    var pos = snap(doseToPos(dosis, ceiling), 0.1)
+    velEl.value = String(pos)
+    dosEl.value = String(pos)
+    if (velOut) velOut.textContent = fmtNum(vel) + ' mL/h'
+    if (dosOut) dosOut.textContent = fmtDose(dosis) + ' µg/kg/min'
+    var velLimit = (VAS_NA_LIMIT * w * 60) / cUg
+    var limitPos = doseToPos(VAS_NA_LIMIT, ceiling)
+    var kneePos = doseToPos(DOSE_KNEE, ceiling)
+    var velMark = document.getElementById('velLimit')
+    var velKnee = document.getElementById('velKnee')
+    var dosKnee = document.getElementById('dosisKnee')
+    if (velMark) velMark.setAttribute('data-label', fmtNum(velLimit))
+    if (velKnee) {
+      velKnee.setAttribute('data-label', fmtNum((DOSE_KNEE * w * 60) / cUg))
+      velKnee.style.display = ceiling > DOSE_KNEE ? '' : 'none'
+    }
+    if (dosKnee) dosKnee.style.display = ceiling > DOSE_KNEE ? '' : 'none'
+    placeAt(document.getElementById('dosisWrap'), limitPos, true)
+    placeAt(document.getElementById('velWrap'), limitPos, true)
+    placeAt(document.getElementById('dosisWrap'), kneePos, false)
+    placeAt(document.getElementById('velWrap'), kneePos, false)
+    var over = dosis > VAS_NA_LIMIT
+    var box = document.querySelector('.speed-box')
+    var aviso = document.getElementById('avisoVas')
+    var vpAdd = document.getElementById('vpAdd')
+    if (box) box.classList.toggle('warn', over)
+    if (aviso) aviso.hidden = !over
+    if (vpAdd) vpAdd.classList.toggle('on', over)
+    if (out) {
+      out.textContent =
+        'Mezcla ' + fmtConc(cUg) + ' µg/mL · ' + fmtNum(vel) + ' mL/h = ' +
+        fmtDose(dosis) + ' µg/kg/min a ' + fmtNum(w) + ' kg.'
+    }
+    var iniMl = document.getElementById('vpIniMl')
+    var stepMl = document.getElementById('vpStepMl')
+    var limMl = document.getElementById('vpLimMl')
+    var vasMl = document.getElementById('vpVasMl')
+    if (iniMl) iniMl.textContent = fmtNum(naMlH(0.05, w, cUg)) + ' mL/h'
+    if (stepMl) stepMl.textContent = fmtNum(naMlH(0.02, w, cUg)) + '–' + fmtNum(naMlH(0.05, w, cUg)) + ' mL/h'
+    if (limMl) limMl.textContent = fmtNum(velLimit) + ' mL/h'
+    if (vasMl) vasMl.textContent = fmtNum(vasMlH(VAS_DOSE_U_MIN, VAS_U_PER_ML)) + ' mL/h'
+  }
+
+  function placeAt(wrap, pct, isLimit) {
+    if (!wrap || !isFinite(pct)) return
+    pct = Math.max(0, Math.min(100, pct))
+    if (isLimit) wrap.style.setProperty('--cut', pct + '%')
+    var mark = wrap.querySelector(isLimit ? '.limit-mark' : '.knee-mark')
+    if (mark) mark.style.left = pct + '%'
+  }
+
+  document.getElementById('pesoPaciente').addEventListener('input', refresh)
+  document.getElementById('pesoPaciente').addEventListener('change', refresh)
+  document.getElementById('velBomba').addEventListener('input', function () {
+    linkSource = 'vel'
+    readSlider('vel')
+    refresh()
+  })
+  document.getElementById('dosisVel').addEventListener('input', function () {
+    linkSource = 'dosis'
+    readSlider('dosis')
+    refresh()
+  })
+  document.querySelectorAll('input[name="mezclaNor"]').forEach(function (radio) {
+    radio.addEventListener('change', refresh)
+  })
+  document.querySelectorAll('#menuMezcla tbody tr').forEach(function (row) {
+    row.addEventListener('click', function (e) {
+      if (e.target && e.target.type === 'number') return
+      var radio = row.querySelector('input[type="radio"]')
+      if (!radio) return
+      radio.checked = true
+      refresh()
+    })
+  })
+  function elegirOtra() {
+    var radio = document.querySelector('input[name="mezclaNor"][value="custom"]')
+    if (radio) radio.checked = true
+    refresh()
+  }
+  document.getElementById('mgCustom').addEventListener('input', elegirOtra)
+  document.getElementById('mlCustom').addEventListener('input', elegirOtra)
+  document.getElementById('mgCustom').addEventListener('focus', elegirOtra)
+  document.getElementById('mlCustom').addEventListener('focus', elegirOtra)
+  refresh()
+})()
+</script>
+
+</body>
+</html>

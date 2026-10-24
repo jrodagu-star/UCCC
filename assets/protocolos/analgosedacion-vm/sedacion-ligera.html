@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sedación ligera</title>
+<style>
+:root{
+  --bg:#f6f7f9; --ink:#1b2430; --muted:#5b6675; --line:#d9dee5; --soft:#eef1f5;
+  --blue:#2f6fde; --blue-bg:#e6efff; --blue-dk:#1d4e89;
+  --op:#e98a15; --op-bg:#fff1dc;
+  --sed:#3b78e7; --sed-bg:#dfeaff;
+  --a2:#7b3fa0; --a2-bg:#f1e6f8;
+  --inh:#d9a400; --inh-bg:#fff7d6;
+  --bzd:#d63384; --bzd-bg:#fde6f1;
+  --ok:#1f8a4c; --ok-bg:#e3f5ea; --bad:#b42318; --bad-bg:#fde7e5;
+  --font: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#e6e8ec;color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.45}
+body{width:max-content;margin:0 auto;padding:14px 12px 16px 18px}
+h2{margin:14px 0 0;font-size:1.35rem;color:var(--blue-dk);line-height:1.2;text-align:center}
+.flow{display:flex;flex-direction:column;align-items:center}
+.n{position:relative;border:2px solid var(--blue);border-radius:9px;padding:9px 14px;background:#fff;text-align:center;font-size:.92rem;max-width:440px;width:100%}
+.n.q::before{content:"?";position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:20px;height:20px;border-radius:50%;background:var(--blue);color:#fff;font:800 .72rem/20px var(--font)}
+.n.op{background:linear-gradient(#fff6e6,var(--op-bg));border-color:var(--op);font-weight:700}
+.n.sed{background:linear-gradient(#eef4ff,var(--sed-bg));border-color:var(--sed);font-weight:700}
+.n.a2{background:var(--a2-bg);border-color:var(--a2);font-weight:700}
+.n.inh{background:var(--inh-bg);border:2px dashed var(--inh);font-weight:700}
+.n.bzd{background:var(--bzd-bg);border-color:var(--bzd);font-weight:700}
+.n.end{background:var(--ok-bg);border-color:var(--ok);font-weight:600}
+.n .d{display:block;font-weight:500;font-size:.8rem;color:var(--muted);margin-top:2px}
+.ar{width:2px;height:22px;background:#2b3440;position:relative;margin:1px 0 7px}
+.ar::after{content:"";position:absolute;left:-5px;bottom:-7px;border:6px solid transparent;border-top:7px solid #2b3440;border-bottom:0}
+.ar.t{height:30px}
+.ar .lbl{position:absolute;left:9px;top:3px;white-space:nowrap;margin:0}
+.lbl{display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:.05em;padding:2px 9px;border-radius:99px;margin:0 0 6px}
+.lbl.si{background:var(--ok-bg);color:var(--ok);border:1px solid #b8e2c8}
+.lbl.no{background:var(--bad-bg);color:var(--bad);border:1px solid #f4c7c2}
+.lbl.pos{background:var(--a2-bg);color:var(--a2);border:1px solid #dcc4ea}
+.algo{background:transparent}
+.qr{display:grid;width:100%;align-items:center}
+.qr .sd{display:flex;align-items:center;min-width:0}
+.qr .hl{flex:0 0 18px;height:2px;background:#2b3440;position:relative}
+.qr .sd .hl:last-of-type{flex-basis:14px}
+.qr .sd .hl.ah::after{content:"";position:absolute;right:-6px;top:-5px;border:6px solid transparent;border-left:7px solid #2b3440;border-right:0}
+.qr .sd .lbl{margin:0 4px;flex:none}
+.qr .sd .n{flex:1;min-width:0;font-size:.84rem;padding:7px 9px;margin-left:6px}
+.flow.sp{align-items:flex-start;--sw:340px;width:calc(var(--sw) + 348px)}
+.flow.sp > .n{width:var(--sw);max-width:none}
+.flow.sp > .ar{margin-left:calc(var(--sw) / 2 - 1px)}
+.flow.sp .qr{grid-template-columns:var(--sw) 340px}
+.flow.sp .qr > .n{grid-column:1;width:var(--sw);max-width:none}
+.flow.sp .qr .sd{grid-column:2;max-width:none;width:340px}
+</style>
+</head>
+<body>
+  <div class="flowwrap">
+    <div class="algo">
+      <div class="flow sp">
+        <div class="n q">¿Objetivo RASS 0 / −2?</div>
+        <div class="ar"></div>
+        <div class="n op">REMIFENTANILO &lt; 6 µg/kg/h<span class="d">1.ª elección · analgosedación</span></div>
+        <div class="ar"></div>
+        <div class="qr"><div class="n q">¿Necesita sedación?</div><div class="sd"><span class="hl"></span><span class="lbl no">NO</span><span class="hl ah"></span><div class="n end">Mantener remifentanilo<span class="d">↺ reevaluar RASS y dolor</span></div></div></div>
+        <div class="ar t"><span class="lbl si">SÍ</span></div>
+        <div class="n op">REMIFENTANILO 6 → 12 µg/kg/h<span class="d">↑ 1,5 µg/kg/h cada ≥ 5 min</span></div>
+        <div class="ar"></div>
+        <div class="qr"><div class="n q">¿RASS objetivo?</div><div class="sd"><span class="hl"></span><span class="lbl si">SÍ</span><span class="hl ah"></span><div class="n end">Mantener<span class="d">↺ reevaluar</span></div></div></div>
+        <div class="ar t"><span class="lbl no">NO · dosis máxima</span></div>
+        <div class="qr"><div class="n q">Valorar DELIRIUM (CAM-ICU)</div><div class="sd"><span class="hl"></span><span class="lbl pos">+</span><span class="hl ah"></span><div class="n a2">Asociar DEXMEDETOMIDINA*<span class="d">0,2–1,4 µg/kg/h · sin bolo</span></div></div></div>
+        <div class="ar t"><span class="lbl si">CAM-ICU −</span></div>
+        <div class="qr"><div class="n q">¿«Contraindicaciones» para PROPOFOL?<span class="d">Hipertrigliceridemia · inestabilidad HD · shock cardiogénico</span></div><div class="sd"><span class="hl"></span><span class="lbl si">SÍ</span><span class="hl ah"></span><div class="n a2">DEXMEDETOMIDINA<span class="d">o sedación inhalada</span></div></div></div>
+        <div class="ar t"><span class="lbl no">NO</span></div>
+        <div class="n sed">PROPOFOL hasta 4–4,5 mg/kg/h<span class="d">2.º sedante</span></div>
+        <div class="ar"></div>
+        <div class="qr"><div class="n q">¿RASS objetivo?</div><div class="sd"><span class="hl"></span><span class="lbl si">SÍ</span><span class="hl ah"></span><div class="n end">Mantener<span class="d">↺ reevaluar</span></div></div></div>
+        <div class="ar t"><span class="lbl no">NO · 3.er sedante</span></div>
+        <div class="n inh">SEDACIÓN INHALADA · ISOFLURANO<span class="d">Sedaconda ACD · FeIso 0,2–1 %</span></div>
+        <div class="ar"></div>
+        <div class="n q">¿Contraindicada o insuficiente la vía inhalada?</div>
+        <div class="ar t"><span class="lbl si">SÍ</span></div>
+        <div class="n bzd">MIDAZOLAM &lt; 0,25 mg/kg/h<span class="d">Menos dosis en insuficiencia renal · uso dinámico</span></div>
+      </div>
+    </div>
+  </div>
+  <h2>Sedación ligera</h2>
+</body>
+</html>
