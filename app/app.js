@@ -125,6 +125,20 @@ const SECTIONS = [
         ]
       },
       {
+        id: 'nutricion-shock',
+        title: 'Nutrición en Shock cardiogénico',
+        description: 'Protocolo de nutrición en el shock cardiogénico.',
+        parts: [
+          {
+            id: 'protocolo',
+            title: 'Nutrición en Shock cardiogénico',
+            description: 'Protocolo clínico de nutrición en shock cardiogénico.',
+            path: '../assets/protocolos/nutricion-shock/protocolo-nutricion-shock-cardiogenico.pdf?v=20261024u',
+            ext: '.pdf'
+          }
+        ]
+      },
+      {
         id: 'nutricion-clinica',
         title: 'Calculadora nutrición clínica UCI',
         description: 'Herramienta externa de nutrición clínica en cuidados intensivos.',
