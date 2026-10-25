@@ -1,0 +1,1060 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Protocolo de nutrición en UCI · Shock cardiogénico y soporte mecánico</title>
+<style>
+:root{
+  --navy:#0d2b3e; --navy-2:#123a52; --navy-3:#1a4a68;
+  --teal:#12708c; --teal-l:#e3f2f7;
+  --ink:#1c2b33; --muted:#5b707c;
+  --green:#177a4e; --green-l:#e6f4ec;
+  --amber:#9a6b0f; --amber-l:#fdf3dd;
+  --red:#b23a3a; --red-l:#fcebeb;
+  --blue:#2456a6; --blue-l:#e9f0fb;
+  --violet:#5b3d99; --violet-l:#f0ebfa;
+  --line:#d9e3e9; --bg:#f4f8fa; --card:#ffffff;
+  --sidebar-w:280px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; padding:0; background:var(--bg); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  font-size:15.5px; line-height:1.6;
+}
+main{
+  margin-left:var(--sidebar-w); padding:0 40px 70px;
+}
+.wrap{max-width:1080px; margin:0 auto}
+
+/* ---------- SIDEBAR ---------- */
+aside.sidebar{
+  position:fixed; top:0; bottom:0; left:0; width:var(--sidebar-w);
+  background:linear-gradient(180deg,var(--navy) 0%,var(--navy-2) 100%);
+  color:#e8f1f5; display:flex; flex-direction:column; z-index:50;
+}
+.brand{padding:22px 20px 16px; border-bottom:1px solid rgba(255,255,255,.12)}
+.brand-row{display:flex; align-items:center; gap:10px}
+.brand svg{flex:none}
+.brand h1{font-size:15px; margin:0; line-height:1.3; font-weight:700; letter-spacing:.2px}
+.brand p{margin:6px 0 0; font-size:11.5px; color:#9fc3d2; line-height:1.4}
+nav.toc{flex:1; overflow-y:auto; padding:12px 0 18px}
+nav.toc a{
+  display:flex; align-items:center; gap:10px; padding:8px 18px 8px 16px;
+  color:#c6dbe4; text-decoration:none; font-size:13px; line-height:1.35;
+  border-left:3px solid transparent;
+}
+nav.toc a .n{
+  flex:none; width:22px; height:22px; border-radius:7px; background:rgba(255,255,255,.09);
+  display:flex; align-items:center; justify-content:center;
+  font-size:10.5px; font-weight:700; color:#8fb9c9;
+}
+nav.toc a:hover{background:rgba(255,255,255,.06); color:#fff}
+nav.toc a.active{background:rgba(18,112,140,.28); border-left-color:#4cc3e0; color:#fff}
+nav.toc a.active .n{background:#12708c; color:#fff}
+.side-foot{padding:14px 20px 18px; border-top:1px solid rgba(255,255,255,.12); font-size:11px; color:#8fb0bf; line-height:1.5}
+.side-foot b{color:#cfe4ec; font-weight:600}
+.menu-btn{display:none}
+
+/* ---------- HERO ---------- */
+.hero{
+  margin:0 -40px 34px; padding:52px 48px 44px;
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy-3) 55%,var(--teal) 130%);
+  color:#fff;
+}
+.hero .kicker{font-size:12px; letter-spacing:2.4px; font-weight:700; color:#7fd0e6; text-transform:uppercase; margin:0 0 10px}
+.hero h2{font-size:33px; line-height:1.2; margin:0 0 12px; font-weight:800; letter-spacing:-.3px}
+.hero .sub{font-size:16px; color:#cfe2ea; max-width:760px; margin:0 0 20px}
+.chips{display:flex; flex-wrap:wrap; gap:8px}
+.chip{
+  font-size:12px; font-weight:600; padding:5px 12px; border-radius:99px;
+  background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.22); color:#eaf6fa;
+}
+.keymsg{
+  margin-top:22px; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.25);
+  border-left:4px solid #4cc3e0; border-radius:10px; padding:14px 18px; font-size:14.5px; color:#f2fafc;
+}
+.keymsg b{color:#fff}
+.hero-note{margin-top:14px; font-size:12px; color:#a9c9d6}
+
+/* ---------- SECTIONS ---------- */
+section.sec{padding-top:38px}
+.sec-head{display:flex; align-items:flex-start; gap:14px; margin-bottom:18px}
+.sec-num{
+  flex:none; width:40px; height:40px; border-radius:12px; margin-top:3px;
+  background:var(--navy); color:#fff; font-weight:800; font-size:16px;
+  display:flex; align-items:center; justify-content:center;
+}
+.sec-head h2{margin:0; font-size:24px; font-weight:800; letter-spacing:-.2px; color:var(--navy)}
+.sec-head p{margin:3px 0 0; font-size:13.5px; color:var(--muted)}
+h3.blk{font-size:16.5px; margin:26px 0 12px; color:var(--navy); font-weight:750}
+section.sec{scroll-margin-top:20px}
+
+/* ---------- CARDS ---------- */
+.grid{display:grid; gap:14px; margin:0 0 8px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.card{
+  background:var(--card); border:1px solid var(--line); border-radius:14px;
+  padding:16px 18px; box-shadow:0 1px 2px rgba(13,43,62,.05);
+}
+.card h4{margin:0 0 8px; font-size:14.5px; font-weight:750; display:flex; align-items:center; gap:8px}
+.card p{margin:0 0 8px; font-size:14px}
+.card p:last-child{margin-bottom:0}
+.card ul{margin:6px 0 0; padding-left:18px; font-size:14px}
+.card li{margin:5px 0}
+.c-green{border-left:5px solid var(--green)} .c-green h4{color:var(--green)}
+.c-amber{border-left:5px solid #d9a12c} .c-amber h4{color:var(--amber)}
+.c-red{border-left:5px solid var(--red)} .c-red h4{color:var(--red)}
+.c-teal{border-left:5px solid var(--teal)} .c-teal h4{color:var(--teal)}
+.c-blue{border-left:5px solid var(--blue)} .c-blue h4{color:var(--blue)}
+.c-violet{border-left:5px solid var(--violet)} .c-violet h4{color:var(--violet)}
+.c-navy{border-left:5px solid var(--navy)} .c-navy h4{color:var(--navy)}
+.ico{flex:none; width:22px; height:22px; border-radius:7px; display:inline-flex; align-items:center; justify-content:center}
+.ico svg{width:13px; height:13px}
+.ico.g{background:var(--green-l)} .ico.g svg{stroke:var(--green)}
+.ico.a{background:var(--amber-l)} .ico.a svg{stroke:var(--amber)}
+.ico.r{background:var(--red-l)} .ico.r svg{stroke:var(--red)}
+.ico.t{background:var(--teal-l)} .ico.t svg{stroke:var(--teal)}
+.ico.b{background:var(--blue-l)} .ico.b svg{stroke:var(--blue)}
+.ico.v{background:var(--violet-l)} .ico.v svg{stroke:var(--violet)}
+.ico.n{background:#e8eef2} .ico.n svg{stroke:var(--navy)}
+
+/* big number pills for dose cards */
+.big{display:flex; align-items:baseline; gap:8px; margin:2px 0 6px}
+.big b{font-size:30px; font-weight:800; letter-spacing:-1px}
+.big span{font-size:13px; color:var(--muted)}
+
+/* ---------- NOTE / STRIP ---------- */
+.note{
+  display:flex; gap:12px; align-items:flex-start;
+  background:var(--teal-l); border:1px solid #bcdfe9; border-radius:12px;
+  padding:13px 16px; font-size:14px; margin:14px 0;
+}
+.note.warn{background:var(--amber-l); border-color:#ecd9a8}
+.note.stop{background:var(--red-l); border-color:#eec4c4}
+.note b{color:var(--navy)}
+.note svg{flex:none; width:18px; height:18px; stroke:var(--teal); margin-top:2px}
+.note.warn svg{stroke:var(--amber)} .note.stop svg{stroke:var(--red)}
+
+/* ---------- TIMELINE ---------- */
+.tl{position:relative; margin:18px 0 8px; padding-left:30px}
+.tl::before{content:""; position:absolute; left:9px; top:6px; bottom:6px; width:3px; background:linear-gradient(180deg,var(--teal),var(--navy)); border-radius:2px}
+.tl-item{position:relative; margin-bottom:14px}
+.tl-item::before{
+  content:""; position:absolute; left:-27px; top:6px; width:11px; height:11px;
+  border-radius:50%; background:#fff; border:3px solid var(--teal);
+}
+.tl-item h5{margin:0; font-size:14px; font-weight:750; color:var(--navy)}
+.tl-item p{margin:3px 0 0; font-size:13.5px; color:#33474f}
+
+/* ---------- TABLES ---------- */
+.tbl-wrap{overflow-x:auto; margin:14px 0}
+table.tbl{width:100%; border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden; font-size:13.5px; border:1px solid var(--line)}
+table.tbl th{
+  background:var(--navy); color:#fff; text-align:left; padding:10px 14px; font-size:12.5px;
+  letter-spacing:.4px; text-transform:uppercase; font-weight:700;
+}
+table.tbl td{padding:11px 14px; border-top:1px solid var(--line); vertical-align:top}
+table.tbl tr:nth-child(even) td{background:#f7fafc}
+table.tbl td b{color:var(--navy)}
+.tag{display:inline-block; font-size:11px; font-weight:700; padding:2px 9px; border-radius:99px; white-space:nowrap}
+.tag.g{background:var(--green-l); color:var(--green)} .tag.a{background:var(--amber-l); color:var(--amber)}
+.tag.r{background:var(--red-l); color:var(--red)} .tag.t{background:var(--teal-l); color:var(--teal)}
+
+/* ---------- CITES ---------- */
+a.cite{
+  display:inline-block; font-size:10.5px; font-weight:700; color:var(--teal);
+  background:var(--teal-l); border-radius:5px; padding:0 5px; margin-left:2px;
+  text-decoration:none; vertical-align:super; line-height:1.5;
+}
+a.cite:hover{background:var(--teal); color:#fff}
+
+/* ---------- FLOWCHART ---------- */
+.flow{max-width:860px; margin:0 auto}
+.fnode{
+  background:#fff; border:1.5px solid var(--line); border-radius:12px;
+  padding:13px 20px; text-align:center; position:relative;
+}
+.fnode b{color:var(--navy); font-size:14.5px}
+.fnode p{margin:4px 0 0; font-size:13px; color:var(--muted)}
+.fnode.start{background:var(--navy); border-color:var(--navy)}
+.fnode.start b, .fnode.start p{color:#fff}
+.fnode.decision{background:var(--amber-l); border:1.5px solid #e4c370; border-radius:18px}
+.fnode.decision b{color:var(--amber)}
+.fnode.action{background:var(--green-l); border-color:#b5dcc5}
+.fnode.action b{color:var(--green)}
+.fnode.stopnode{background:var(--red-l); border-color:#e6b1b1}
+.fnode.stopnode b{color:var(--red)}
+.varrow{width:2.5px; height:26px; background:#9db4c0; margin:0 auto; position:relative}
+.varrow::after{content:""; position:absolute; bottom:-1px; left:50%; transform:translateX(-50%);
+  border:6px solid transparent; border-top-color:#9db4c0; border-bottom:0}
+.split{display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:0 0 0}
+.split .col{display:flex; flex-direction:column}
+.lab{
+  text-align:center; font-size:11px; font-weight:800; letter-spacing:1px; margin:2px 0 6px;
+}
+.lab.yes{color:var(--green)} .lab.no{color:var(--red)}
+.fstep{font-size:10.5px; font-weight:800; letter-spacing:1.4px; color:var(--teal); text-transform:uppercase; text-align:center; margin:0 0 6px}
+
+/* ---------- FORMULA ---------- */
+.formula{
+  background:var(--navy); color:#fff; border-radius:14px; padding:20px 24px; margin:16px 0;
+  text-align:center; font-size:16.5px; font-weight:650; line-height:1.7;
+}
+.formula .op{color:#7fd0e6; font-weight:800; padding:0 6px}
+.formula small{display:block; font-size:12px; font-weight:400; color:#a9c9d6; margin-top:8px}
+
+/* ---------- REFS ---------- */
+ol.refs{counter-reset:r; list-style:none; padding:0; margin:0; font-size:13px}
+ol.refs li{counter-increment:r; position:relative; padding:9px 0 9px 44px; border-bottom:1px solid var(--line)}
+ol.refs li::before{
+  content:"["counter(r)"]"; position:absolute; left:0; top:9px;
+  font-weight:800; color:var(--teal); font-size:12.5px;
+}
+ol.refs a{color:var(--teal); text-decoration:none; font-weight:600}
+ol.refs a:hover{text-decoration:underline}
+ol.refs .meta{color:var(--muted); font-style:italic}
+
+/* ---------- MISC ---------- */
+footer.docfoot{margin-top:50px; padding-top:20px; border-top:1px solid var(--line); font-size:12.5px; color:var(--muted)}
+.legend{display:flex; flex-wrap:wrap; gap:14px; margin:10px 0 20px; font-size:12.5px; color:var(--muted)}
+.legend span{display:inline-flex; align-items:center; gap:6px}
+.dot{width:12px; height:12px; border-radius:4px; display:inline-block}
+.dot.g{background:var(--green)} .dot.a{background:#d9a12c} .dot.r{background:var(--red)} .dot.n{background:var(--navy)}
+
+/* ---------- ÍNDICE DE FIGURAS Y TABLAS ---------- */
+.idx{
+  background:#fff; border:1px solid var(--line); border-radius:14px;
+  padding:18px 22px 12px; margin:0 0 8px; box-shadow:0 1px 2px rgba(13,43,62,.05);
+}
+.idx-title{font-weight:800; font-size:15px; color:var(--navy); margin:0 0 10px; display:flex; align-items:center; gap:9px}
+.idx-title svg{flex:none}
+.idx-cols{display:grid; grid-template-columns:1fr 1fr; gap:2px 30px}
+.idx h5{margin:6px 0 4px; font-size:11px; letter-spacing:1.4px; text-transform:uppercase; color:var(--muted)}
+.idx a{display:flex; align-items:baseline; gap:8px; font-size:13.5px; color:var(--ink); text-decoration:none; padding:5px 6px; border-bottom:1px dashed var(--line); border-radius:6px}
+.idx a:last-child{border-bottom:none}
+.idx a:hover{color:var(--teal); background:var(--teal-l)}
+.idx .idx-n{flex:none; min-width:66px; font-weight:800; color:var(--teal); font-size:11.5px; letter-spacing:.2px}
+.fig-cap{
+  font-size:12px; font-weight:750; color:var(--teal); letter-spacing:.2px;
+  margin:16px 0 2px; scroll-margin-top:16px;
+}
+.fig-cap .cap-n{background:var(--teal-l); border-radius:5px; padding:1px 8px; margin-right:7px}
+@media (max-width:960px){ .idx-cols{grid-template-columns:1fr} }
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:960px){
+  main{margin-left:0; padding:0 18px 60px}
+  .hero{margin:0 -18px 28px; padding:38px 22px 34px}
+  .menu-btn{
+    display:flex; position:fixed; top:12px; right:12px; z-index:60;
+    background:var(--navy); color:#fff; border:none; border-radius:10px;
+    padding:10px 14px; font-size:14px; font-weight:700; align-items:center; gap:8px;
+    box-shadow:0 2px 10px rgba(0,0,0,.25); cursor:pointer;
+  }
+  aside.sidebar{transform:translateX(-100%); transition:transform .25s ease; width:min(300px,85vw)}
+  aside.sidebar.open{transform:translateX(0)}
+  .split{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<button class="menu-btn" id="menuBtn" aria-label="Abrir menú">☰ Menú</button>
+
+<!-- ============ SIDEBAR ============ -->
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="brand-row">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#4cc3e0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/><path d="M3.5 12.5h4l1.5-3 2.5 5.5 1.7-3.5 1 1h6.3" stroke-width="1.6"/></svg>
+      <h1>Nutrición en el paciente crítico</h1>
+    </div>
+    <p>Shock cardiogénico · Soporte mecánico ECMO / Impella · TRRC</p>
+  </div>
+  <nav class="toc" id="toc">
+    <a href="#indice-figuras"><span class="n">§</span>Figuras y tablas</a>
+    <a href="#resumen"><span class="n">01</span>Resumen práctico</a>
+    <a href="#valoracion"><span class="n">02</span>Valoración inicial</a>
+    <a href="#inicio"><span class="n">03</span>Cuándo iniciar y cuándo retrasar</a>
+    <a href="#dosis"><span class="n">04</span>Dosis y progresión</a>
+    <a href="#formula"><span class="n">05</span>Elección de fórmula enteral</a>
+    <a href="#soporte"><span class="n">06</span>ECMO e Impella</a>
+    <a href="#trrc"><span class="n">07</span>TRRC y balance de nitrógeno</a>
+    <a href="#micro"><span class="n">08</span>Micronutrientes y realimentación</a>
+    <a href="#parenteral"><span class="n">09</span>Nutrición parenteral</a>
+    <a href="#algoritmo"><span class="n">10</span>Algoritmo de decisión</a>
+    <a href="#monitorizacion"><span class="n">11</span>Monitorización y alarmas</a>
+    <a href="#referencias"><span class="n">12</span>Referencias</a>
+  </nav>
+  <div class="side-foot">
+    <b>Versión:</b> octubre 2026<br>
+    Basado en el documento «Nutrición en shock cardiogénico y soporte cardíaco» aportado por el servicio, contrastado con ELSO 2025 y ASPEN (apartado 05).
+  </div>
+</aside>
+
+<button class="menu-btn" id="menuBtnClose" style="display:none" aria-label="Cerrar menú">✕</button>
+
+<main>
+<div class="wrap">
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <p class="kicker">Protocolo asistencial · UCI</p>
+  <h2>Nutrición en el paciente crítico con shock cardiogénico y soporte de bajo gasto</h2>
+  <p class="sub">Esquema de decisión para el manejo nutricional del paciente en shock cardiogénico, con soporte mecánico circulatorio (ECMO, Impella) y/o terapia renal sustitutiva continua (TRRC).</p>
+  <div class="chips">
+    <span class="chip">Shock cardiogénico</span>
+    <span class="chip">ECMO veno-arterial</span>
+    <span class="chip">Impella / soporte ventricular</span>
+    <span class="chip">TRRC / hemofiltración</span>
+    <span class="chip">UCI · Unidad coronaria</span>
+  </div>
+  <div class="keymsg">
+    <b>Idea central:</b> iniciar el soporte nutricional <b>dentro de las primeras 48 h</b>, preferentemente por <b>vía enteral</b>, pero <b>evitando la alimentación enteral a dosis completa</b> mientras exista shock no controlado o perfusión intestinal inadecuada.<a class="cite" href="#ref-1">[1]</a><a class="cite" href="#ref-2">[2]</a><a class="cite" href="#ref-3">[3]</a>
+  </div>
+  <p class="hero-note">Documento de apoyo clínico-docente elaborado a partir de la revisión bibliográfica aportada (21 referencias, ampliado a 24 en esta revisión). La evidencia específica en shock cardiogénico es limitada: individualizar siempre según protocolo institucional.</p>
+</header>
+
+<!-- ============ ÍNDICE DE FIGURAS Y TABLAS ============ -->
+<nav class="idx" id="indice-figuras" aria-label="Índice de figuras y tablas">
+  <p class="idx-title"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#12708c" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 9v12"/></svg>Índice de figuras y tablas</p>
+  <div class="idx-cols">
+    <div>
+      <h5>Figuras</h5>
+      <a href="#figura-1"><span class="idx-n">Figura 1</span>Semáforo de decisión: iniciar frente a retrasar la nutrición enteral</a>
+      <a href="#figura-2"><span class="idx-n">Figura 2</span>Cronología orientativa de la primera semana</a>
+      <a href="#figura-3"><span class="idx-n">Figura 3</span>Algoritmo de decisión del protocolo</a>
+    </div>
+    <div>
+      <h5>Tablas</h5>
+      <a href="#tabla-1"><span class="idx-n">Tabla 1</span>Actuación nutricional según la dosis de vasopresores</a>
+      <a href="#tabla-2"><span class="idx-n">Tabla 2</span>Elección orientativa de la fórmula enteral por escenario</a>
+      <a href="#tabla-3"><span class="idx-n">Tabla 3</span>Interpretación del balance de nitrógeno</a>
+      <a href="#tabla-4"><span class="idx-n">Tabla 4</span>Parámetros prioritarios durante ECMO y TRRC</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ 1. RESUMEN ============ -->
+<section class="sec" id="resumen">
+  <div class="sec-head">
+    <span class="sec-num">01</span>
+    <div>
+      <h2>Resumen práctico</h2>
+      <p>Las cuatro decisiones que ordenan todo el protocolo</p>
+    </div>
+  </div>
+  <div class="grid g2">
+    <div class="card c-teal">
+      <h4><span class="ico t"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span>¿Cuándo?</h4>
+      <p>Iniciar nutrición enteral <b>dentro de las primeras 48 h</b> de la enfermedad crítica, siempre que el shock esté <b>controlado</b> y sin contraindicaciones gastrointestinales o hemodinámicas.<a class="cite" href="#ref-1">[1]</a><a class="cite" href="#ref-3">[3]</a></p>
+    </div>
+    <div class="card c-blue">
+      <h4><span class="ico b"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></span>¿Por dónde?</h4>
+      <p><b>Vía enteral</b> preferente siempre que sea posible: menor coste y, en la población crítica general, posible reducción de complicaciones infecciosas.<a class="cite" href="#ref-1">[1]</a><a class="cite" href="#ref-3">[3]</a></p>
+    </div>
+    <div class="card c-green">
+      <h4><span class="ico g"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></span>¿Cuánto?</h4>
+      <p>Estrategia <b>hipocalórica en la fase inicial</b> frente a la normocalórica; <b>evitar la sobrealimentación</b>. No hay cifra energética específica para shock cardiogénico.<a class="cite" href="#ref-6">[6]</a><a class="cite" href="#ref-2">[2]</a> Proteínas: objetivo <b>no establecido</b>; no aplicar pauta hiperproteica automática.<a class="cite" href="#ref-1">[1]</a></p>
+    </div>
+    <div class="card c-violet">
+      <h4><span class="ico v"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M4 12h4l2-6 4 12 2-6h4"/></svg></span>¿Con soporte mecánico?</h4>
+      <p>Con <b>ECMO</b> y/o <b>TRRC</b>: contabilizar pérdidas extracorpóreas y <b>calorías no nutricionales</b> (propofol, citrato, circuito) y reevaluar proteínas, vitaminas y oligoelementos.<a class="cite" href="#ref-8">[8]</a><a class="cite" href="#ref-9">[9]</a> Ningún parámetro aislado decide.<a class="cite" href="#ref-9">[9]</a><a class="cite" href="#ref-15">[15]</a></p>
+    </div>
+  </div>
+  <div class="note">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M12 11v5"/></svg>
+    <div><b>Límite de la evidencia:</b> la evidencia específica para shock cardiogénico es limitada. La estrategia debe individualizarse según la <b>fase del shock</b>, la <b>perfusión intestinal</b>, la <b>dosis de vasopresores</b>, la función gastrointestinal, la función renal y la presencia de <b>ECMO o hemofiltración</b>.<a class="cite" href="#ref-1">[1]</a><a class="cite" href="#ref-2">[2]</a></div>
+  </div>
+</section>
+
+<!-- ============ 2. VALORACIÓN INICIAL ============ -->
+<section class="sec" id="valoracion">
+  <div class="sec-head">
+    <span class="sec-num">02</span>
+    <div>
+      <h2>Valoración inicial</h2>
+      <p>Antes de ordenar el soporte nutricional — checklist de las 6 dimensiones</p>
+    </div>
+  </div>
+  <div class="grid g3">
+    <div class="card c-navy">
+      <h4><span class="ico n"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></span>Estado nutricional</h4>
+      <ul>
+        <li>Cribado del <b>riesgo de malnutrición</b> al ingreso.</li>
+        <li>La malnutrición en paciente con enfermedad cardiovascular se asocia a <b>peor función física y mayor mortalidad</b>.<a class="cite" href="#ref-1">[1]</a><a class="cite" href="#ref-2">[2]</a></li>
+      </ul>
+    </div>
+    <div class="card c-red">
+      <h4><span class="ico r"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg></span>Riesgo de realimentación</h4>
+      <ul>
+        <li>Considerarlo <b>siempre</b>, especialmente en pacientes malnutridos.<a class="cite" href="#ref-2">[2]</a></li>
+        <li>Inicio lento + <b>suplementación de micronutrientes</b> (apartado 08).</li>
+      </ul>
+    </div>
+    <div class="card c-amber">
+      <h4><span class="ico a"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M3 12h4l2-7 4 14 2-7h6"/></svg></span>Hemodinámica</h4>
+      <ul>
+        <li>¿Necesita <b>vasopresores</b>? ¿A qué dosis?</li>
+        <li>Grado de control del shock y respuesta a la reanimación.</li>
+      </ul>
+    </div>
+    <div class="card c-teal">
+      <h4><span class="ico t"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></span>Tubo digestivo y perfusión</h4>
+      <ul>
+        <li>Función gastrointestinal (náuseas, vómitos, íleo, diarrea).</li>
+        <li><b>Perfusión tisular</b> e intestinal: lactato, clínica abdominal.</li>
+      </ul>
+    </div>
+    <div class="card c-blue">
+      <h4><span class="ico b"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M2 12h4l3-8 4 16 3-8h6"/></svg></span>Función renal</h4>
+      <ul>
+        <li>Diuresis residual, daño renal agudo.</li>
+        <li>¿Hay <b>TRRC</b> o hemofiltración? → pérdidas extracorpóreas (apartado 07).</li>
+      </ul>
+    </div>
+    <div class="card c-violet">
+      <h4><span class="ico v"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5"/></svg></span>Composición corporal</h4>
+      <ul>
+        <li>Antropometría, ecografía, <b>bioimpedancia eléctrica o TC</b> cuando sean factibles.</li>
+        <li>Ayuda a diferenciar cambios de peso <b>por líquidos</b> frente a cambios de <b>masa corporal</b> en el paciente con ECMO.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note warn">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+    <div><b>Prioridad absoluta:</b> controlar la <b>reanimación</b> y la inestabilidad hemodinámica <b>antes de avanzar</b> la nutrición. El paso 1 de la secuencia práctica es valorar; el paso 2 es estabilizar.</div>
+  </div>
+</section>
+
+<!-- ============ 3. CUÁNDO INICIAR ============ -->
+<section class="sec" id="inicio">
+  <div class="sec-head">
+    <span class="sec-num">03</span>
+    <div>
+      <h2>Cuándo iniciar y cuándo retrasar</h2>
+      <p>Semáforo de decisión según estabilidad hemodinámica y vasopresores</p>
+    </div>
+  </div>
+  <div class="legend">
+    <span><span class="dot g"></span> Puede iniciarse</span>
+    <span><span class="dot a"></span> Precaución / dosis trófica</span>
+    <span><span class="dot r"></span> Retrasar o evitar dosis completa</span>
+  </div>
+  <p class="fig-cap" id="figura-1"><span class="cap-n">Figura 1</span>Semáforo de decisión: iniciar frente a retrasar la nutrición enteral</p>
+  <div class="split">
+    <div class="col">
+      <div class="fnode action" style="border-width:1.5px">
+        <b>Condiciones para iniciar EN temprana (&lt;48 h)</b>
+        <ul style="text-align:left; margin:8px 0 0; padding-left:20px; font-size:13.5px; color:#33474f">
+          <li>Shock <b>controlado</b> tras la reanimación inicial.</li>
+          <li>Sin contraindicaciones <b>gastrointestinales</b> ni <b>hemodinámicas</b>.<a class="cite" href="#ref-1">[1]</a><a class="cite" href="#ref-3">[3]</a></li>
+          <li>Perfusión intestinal adecuada.</li>
+        </ul>
+      </div>
+      <div class="varrow"></div>
+      <div class="fnode">
+        <b>Vía y forma de inicio</b>
+        <p><b>Enteral, preferentemente gástrica</b> · dosis <b>trófica o hipocalórica</b> en fase inicial · progresión lenta con vigilancia estrecha.<a class="cite" href="#ref-4">[4]</a><a class="cite" href="#ref-5">[5]</a><a class="cite" href="#ref-6">[6]</a></p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="fnode stopnode" style="border-width:1.5px">
+        <b>Retrasar la nutrición enteral si hay…</b>
+        <ul style="text-align:left; margin:8px 0 0; padding-left:20px; font-size:13.5px; color:#33474f">
+          <li><b>Shock no controlado</b> o hipoxemia / acidosis no controladas.<a class="cite" href="#ref-3">[3]</a></li>
+          <li><b>Isquemia</b> u obstrucción intestinal.</li>
+          <li><b>Síndrome compartimental abdominal</b>.</li>
+          <li><b>Hemorragia digestiva alta</b> no controlada.</li>
+          <li>Aspirado gástrico <b>&gt; 500 ml / 6 h</b>.<a class="cite" href="#ref-3">[3]</a></li>
+        </ul>
+      </div>
+      <div class="varrow"></div>
+      <div class="fnode">
+        <b>Mientras tanto</b>
+        <p>Reevaluar diariamente los criterios; cubrir con sueroterapia y valorar <b>NP</b> solo según indicaciones del apartado 09.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="blk">Paciente tratado con vasopresores</h3>
+  <p class="fig-cap" id="tabla-1"><span class="cap-n">Tabla 1</span>Actuación nutricional según la dosis de vasopresores</p>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead>
+        <tr><th style="width:26%">Situación</th><th>Actuación nutricional recomendada</th><th style="width:14%">Nivel</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>Sin vasopresores</b> o estabilidad previa</td>
+          <td>Iniciar EN dentro de las primeras 48 h si no hay contraindicaciones; progresión según tolerancia.<a class="cite" href="#ref-1">[1]</a><a class="cite" href="#ref-3">[3]</a></td>
+          <td><span class="tag g">Iniciar</span></td>
+        </tr>
+        <tr>
+          <td><b>Vasopresores a dosis baja / moderada</b> tras reanimación</td>
+          <td>Puede considerarse <b>EN trófica</b>, preferentemente <b>gástrica</b>, con progresión lenta y vigilancia estrecha de la intolerancia.<a class="cite" href="#ref-4">[4]</a><a class="cite" href="#ref-5">[5]</a></td>
+          <td><span class="tag a">Trófica</span></td>
+        </tr>
+        <tr>
+          <td><b>Vasopresores a dosis altas</b> / shock persistente</td>
+          <td><b>Evitar la EN a dosis completa</b>: se ha asociado a más complicaciones gastrointestinales. Mantener dosis trófica solo si se considera segura; no avanzar.<a class="cite" href="#ref-4">[4]</a><a class="cite" href="#ref-5">[5]</a></td>
+          <td><span class="tag r">Evitar</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 4. DOSIS Y PROGRESIÓN ============ -->
+<section class="sec" id="dosis">
+  <div class="sec-head">
+    <span class="sec-num">04</span>
+    <div>
+      <h2>Dosis y progresión</h2>
+      <p>Energía, proteínas y ritmo de avance en la fase inicial de la enfermedad crítica</p>
+    </div>
+  </div>
+  <div class="grid g2">
+    <div class="card c-green">
+      <h4><span class="ico g"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg></span>Energía</h4>
+      <ul>
+        <li>Fase inicial de la enfermedad crítica: preferir estrategia <b>hipocalórica</b> frente a la normocalórica.<a class="cite" href="#ref-6">[6]</a><a class="cite" href="#ref-2">[2]</a></li>
+        <li><b>Evitar la sobrealimentación</b>; contar el aporte total real (incluidas calorías no nutricionales).<a class="cite" href="#ref-15">[15]</a><a class="cite" href="#ref-16">[16]</a></li>
+        <li>No existe cifra energética específica para el shock cardiogénico.<a class="cite" href="#ref-6">[6]</a><a class="cite" href="#ref-2">[2]</a></li>
+        <li>La <b>calorimetría indirecta</b> es el método preferido para detectar la discordancia aporte–gasto.<a class="cite" href="#ref-12">[12]</a><a class="cite" href="#ref-6">[6]</a></li>
+      </ul>
+    </div>
+    <div class="card c-blue">
+      <h4><span class="ico b"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M6 3v12a4 4 0 0 0 8 0V3M4 3h16M16 8a3 3 0 1 0 3 0"/></svg></span>Proteínas</h4>
+      <ul>
+        <li>El objetivo óptimo en shock cardiogénico <b>no está establecido</b>.<a class="cite" href="#ref-1">[1]</a></li>
+        <li>Los enfoques <b>hiperproteicos no han demostrado beneficio</b> en ensayos recientes de pacientes críticos.<a class="cite" href="#ref-1">[1]</a></li>
+        <li><b>No aplicar</b> una pauta hiperproteica de forma automática; ajustar al contexto (con TRRC, reevaluar pérdidas → apartado 07).<a class="cite" href="#ref-8">[8]</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="blk">Progresión: avanzar solo con puerta abierta</h3>
+  <div class="note">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M12 11v5"/></svg>
+    <div>Aumentar el aporte de forma <b>gradual</b> únicamente tras confirmar <b>estabilidad hemodinámica</b> y <b>perfusión intestinal adecuada</b>.<a class="cite" href="#ref-6">[6]</a><a class="cite" href="#ref-4">[4]</a><a class="cite" href="#ref-7">[7]</a> La alimentación completa precoz y la progresión demasiado rápida en los primeros días se han asociado a más complicaciones gastrointestinales y posibles daños.<a class="cite" href="#ref-20">[20]</a></div>
+  </div>
+
+  <h3 class="blk">Cronología orientativa de la primera semana</h3>
+  <p class="fig-cap" id="figura-2"><span class="cap-n">Figura 2</span>Línea temporal: de la valoración a la reevaluación de la vía</p>
+  <div class="tl">
+    <div class="tl-item">
+      <h5>Día 0 – 1 · Valorar y estabilizar</h5>
+      <p>Cribado nutricional, riesgo de realimentación, perfusión intestinal, grado de shock. Controlar la reanimación antes de avanzar.</p>
+    </div>
+    <div class="tl-item">
+      <h5>&lt; 48 h · Iniciar</h5>
+      <p>Nutrición enteral <b>trófica o hipocalórica</b>, preferentemente gástrica, si no existen contraindicaciones y el shock está controlado.</p>
+    </div>
+    <div class="tl-item">
+      <h5>Días 2 – 7 · Progresión lenta</h5>
+      <p>Aumentar según tolerancia gastrointestinal y estabilidad; vigilar signos de isquemia y deterioro metabólico. Con TRRC: contabilizar pérdidas y evaluar micronutrientes entre los días 5–7.</p>
+    </div>
+    <div class="tl-item">
+      <h5>Tras la semana 1 · Reevaluar la vía</h5>
+      <p>Si no se alcanza aproximadamente el <b>70 % de los objetivos</b> por vía enteral → valorar <b>nutrición parenteral</b>.<a class="cite" href="#ref-1">[1]</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. ELECCIÓN DE FÓRMULA ENTERAL ============ -->
+<section class="sec" id="formula">
+  <div class="sec-head">
+    <span class="sec-num">05</span>
+    <div>
+      <h2>Elección de la fórmula enteral</h2>
+      <p>Familias, densidad energética y elección orientativa por escenario clínico</p>
+    </div>
+  </div>
+  <div class="note">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M12 11v5"/></svg>
+    <div><b>Alcance:</b> el documento fuente no incluye marcas comerciales ni un algoritmo de elección de fórmula. Este apartado aplica la práctica estándar de nutrición crítica y las revisiones de UCI cardíaca.<a class="cite" href="#ref-22">[22]</a><a class="cite" href="#ref-23">[23]</a> Los nombres comerciales son solo <b>ejemplos orientativos</b>: usar el catálogo disponible en cada centro.</div>
+  </div>
+  <div class="grid g3">
+    <div class="card c-teal">
+      <h4>Polimérica estándar · 1–1,2 kcal/ml <span class="tag t">1ª elección</span></h4>
+      <ul>
+        <li>La preferida con digestión conservada: mejor <b>vaciamiento gástrico y tolerancia</b> que las fórmulas densas.<a class="cite" href="#ref-23">[23]</a></li>
+        <li>Versiones <b>con fibra</b> para pautas prolongadas.</li>
+        <li>Ej.: Nutrison Fibre®, Fresubin Original®, Nutricomp Standard®.</li>
+      </ul>
+    </div>
+    <div class="card c-blue">
+      <h4>Hipercalórica · 1,5–2 kcal/ml</h4>
+      <ul>
+        <li>Cuando hay <b>restricción hídrica</b> (congestión, sobrecarga): misma energía con menos volumen.<a class="cite" href="#ref-22">[22]</a></li>
+        <li>Vigilar <b>osmolaridad e intolerancia</b>; no es la fórmula por defecto.</li>
+        <li>Ej.: Nutrison Energy®, Fresubin Energy®, Nutren 2.0®.</li>
+      </ul>
+    </div>
+    <div class="card c-navy">
+      <h4>Hiperproteica · 1,25–1,5 kcal/ml (60–75 g prot/L)</h4>
+      <ul>
+        <li><b>No automática</b> en shock cardiogénico: objetivo proteico no establecido y sin beneficio demostrado de las pautas hiperproteicas.<a class="cite" href="#ref-1">[1]</a></li>
+        <li>Considerar en fase de recuperación o si hay pérdidas (TRRC).</li>
+        <li>Ej.: Fresubin Protein®, Nutrison Protein Plus®, Fortimel Protein®.</li>
+      </ul>
+    </div>
+    <div class="card c-amber">
+      <h4>Oligomérica / peptídica · semielemental con TCM</h4>
+      <ul>
+        <li>Proteína <b>hidrolizada</b> + grasa parcialmente en <b>TCM</b>: para <b>intolerancia GI persistente</b> a la polimérica, malabsorción o hipoperfusión intestinal.</li>
+        <li>Ventaja teórica en hipoperfusión; <b>evidencia limitada</b> en adultos.<a class="cite" href="#ref-24">[24]</a></li>
+        <li>Ej.: Peptamen®, Nutricomp Peptide®, Reabilan®.</li>
+      </ul>
+    </div>
+    <div class="card c-violet">
+      <h4>Específicas renales · baja en K/P, 1,8–2 kcal/ml</h4>
+      <ul>
+        <li>Diseñadas para ERC <b>sin diálisis</b>; bajo <b>TRRC suelen ser innecesarias</b>: la terapia retira K y P.</li>
+        <li>Usar fórmula estándar y <b>reponer pérdidas</b> (apartado 07), vigilar K/P/Mg.</li>
+        <li>Ej.: Nepro®.</li>
+      </ul>
+    </div>
+    <div class="card c-green">
+      <h4>Módulos y complementos</h4>
+      <ul>
+        <li>Módulos de <b>proteína</b> para ajustarla <b>sin añadir volumen</b>.</li>
+        <li>Útiles antes de cambiar de fórmula completa.</li>
+        <li>Ej.: Protifar®, Resource Protein®.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note warn">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+    <div><b>En ECMO:</b> cambiar a una fórmula <b>más concentrada</b> para reducir el volumen de administración <b>no se recomienda</b> — se ha asociado a <b>mayor disfunción gastrointestinal</b> sin mejorarla.<a class="cite" href="#ref-9">[9]</a></div>
+  </div>
+  <h3 class="blk">Elección orientativa por escenario</h3>
+  <p class="fig-cap" id="tabla-2"><span class="cap-n">Tabla 2</span>Elección orientativa de la fórmula enteral por escenario</p>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th style="width:34%">Escenario</th><th>Fórmula orientativa</th><th style="width:30%">Clave</th></tr></thead>
+      <tbody>
+        <tr><td><b>Inicio trófico (&lt;48 h)</b>, shock controlado, sin congestión</td><td>Polimérica estándar 1–1,2 kcal/ml</td><td>Prioriza vaciamiento y tolerancia.<a class="cite" href="#ref-23">[23]</a> <span class="tag g">Primera</span></td></tr>
+        <tr><td><b>Restricción hídrica / congestión</b> (sin ECMO)</td><td>Hipercalórica 1,5–2 kcal/ml</td><td>Menos volumen para igual energía; vigilar tolerancia.<a class="cite" href="#ref-22">[22]</a> <span class="tag b">Densa</span></td></tr>
+        <tr><td><b>Paciente en ECMO</b> (± TRRC)</td><td>Polimérica estándar</td><td>No concentrar solo para reducir volumen.<a class="cite" href="#ref-9">[9]</a> <span class="tag t">Estándar</span></td></tr>
+        <tr><td><b>Intolerancia GI persistente</b> / hipoperfusión</td><td>Peptídica con TCM</td><td>Ventaja teórica, evidencia limitada.<a class="cite" href="#ref-24">[24]</a> <span class="tag a">Rescate</span></td></tr>
+        <tr><td><b>TRRC activa</b></td><td>Estándar + reposición de pérdidas</td><td>Evitar renales baja-electrólitos por regla; vigilar K/P/Mg. <span class="tag v">Ajuste</span></td></tr>
+        <tr><td><b>Fase de recuperación</b>, objetivo proteico pendiente</td><td>Hiperproteica o módulo proteico</td><td>Sin pauta hiperproteica automática.<a class="cite" href="#ref-1">[1]</a> <span class="tag n">Recuperación</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="grid g2">
+    <div class="card c-red">
+      <h4><span class="ico r"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg></span>Evitar o usar con precaución</h4>
+      <ul>
+        <li><b>Inmunomoduladoras</b> (arginina, ω-3 a dosis altas): no de forma rutinaria en shock inestable.</li>
+        <li><b>Fibra</b>: suspender si hay sospecha de <b>isquemia intestinal</b> o íleo grave.</li>
+        <li><b>Mezclas artesanales / fórmulas caseras</b> en UCI: no.</li>
+      </ul>
+    </div>
+    <div class="card c-teal">
+      <h4><span class="ico t"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>Antes de «escalar» la fórmula, revisar</h4>
+      <ul>
+        <li><b>Calorías no nutricionales</b> contadas (propofol ≈ 1,1 kcal/ml, citrato, circuito) — apartado 06.</li>
+        <li><b>Velocidad</b>, posición y valorar <b>procinéticos</b> antes de cambiar de fórmula (práctica general en UCI).</li>
+        <li><b>Interrupciones por pruebas</b>: el problema suele ser el volumen realmente administrado, no la fórmula.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. ECMO E IMPELLA ============ -->
+<section class="sec" id="soporte">
+  <div class="sec-head">
+    <span class="sec-num">06</span>
+    <div>
+      <h2>ECMO e Impella</h2>
+      <p>Qué cambia (y qué no) cuando el paciente está en soporte mecánico circulatorio</p>
+    </div>
+  </div>
+  <div class="note">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M12 11v5"/></svg>
+    <div><b>Principio rector:</b> el soporte mecánico no cambia los objetivos del protocolo; obliga a <b>individualizar</b> según la fase del shock, la perfusión intestinal, la dosis de vasopresores, la función GI, la renal y la presencia de ECMO o hemofiltración.<a class="cite" href="#ref-1">[1]</a><a class="cite" href="#ref-2">[2]</a></div>
+  </div>
+  <div class="grid g2">
+    <div class="card c-violet">
+      <h4><span class="ico v"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5"/></svg></span>ECMO (± TRRC combinada)</h4>
+      <ul>
+        <li>No existe un <b>panel único validado</b> ni un objetivo universal para la combinación <b>ECMO–TRRC</b>; estrategia individualizada.<a class="cite" href="#ref-9">[9]</a><a class="cite" href="#ref-10">[10]</a><a class="cite" href="#ref-11">[11]</a></li>
+        <li>Monitorizar la <b>adecuación del aporte</b>, el gasto energético, el catabolismo, el estado hidroelectrolítico y las <b>pérdidas extracorpóreas</b>.<a class="cite" href="#ref-9">[9]</a><a class="cite" href="#ref-10">[10]</a></li>
+        <li>Revisar la prescripción de forma <b>dinámica</b> tras cambios de flujo de efluente, modalidad o intensidad de TRRC, funcionamiento de la ECMO, sedación, movilización o tolerancia GI (apartado 11).<a class="cite" href="#ref-12">[12]</a></li>
+      </ul>
+    </div>
+    <div class="card c-amber">
+      <h4><span class="ico a"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span>Calorías no nutricionales: contarlas todas</h4>
+      <ul>
+        <li>Revisar el <b>aporte total real de energía</b>: propofol (<b>≈ 1,1 kcal/ml</b>), citrato y las soluciones del circuito.<a class="cite" href="#ref-15">[15]</a><a class="cite" href="#ref-16">[16]</a></li>
+        <li>Deben <b>incluirse en el total energético</b> para evitar la sobrealimentación.<a class="cite" href="#ref-15">[15]</a><a class="cite" href="#ref-16">[16]</a></li>
+        <li>Comparar calorías administradas frente a gasto medido por calorimetría indirecta cuando esté disponible.<a class="cite" href="#ref-12">[12]</a><a class="cite" href="#ref-6">[6]</a></li>
+      </ul>
+    </div>
+    <div class="card c-blue">
+      <h4><span class="ico b"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M2 12h4l3-8 4 16 3-8h6"/></svg></span>Pérdidas por el circuito</h4>
+      <ul>
+        <li>Si hay <b>hemofiltración continua</b>: contabilizar las pérdidas extracorpóreas y <b>reevaluar</b> los requerimientos de <b>proteínas, vitaminas hidrosolubles y oligoelementos</b>.<a class="cite" href="#ref-8">[8]</a></li>
+        <li>La TRRC puede producir pérdidas de aminoácidos de <b>≈ 14–22 g/día</b>, además de vitaminas hidrosolubles y oligoelementos (apartado 07).<a class="cite" href="#ref-16">[16]</a></li>
+      </ul>
+    </div>
+    <div class="card c-navy">
+      <h4><span class="ico n"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></span>Impella / soporte ventricular</h4>
+      <p>La información aportada no incluye recomendaciones específicas validadas para nutrición en pacientes con <b>Impella</b>. Aplicar el <b>mismo marco de decisión</b> del protocolo —shock controlado, perfusión intestinal y dosis de vasopresores— y las precauciones generales del paciente crítico en bajo gasto, con reevaluación estrecha. <span class="tag a">Extrapolación</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. TRRC Y BALANCE DE NITRÓGENO ============ -->
+<section class="sec" id="trrc">
+  <div class="sec-head">
+    <span class="sec-num">07</span>
+    <div>
+      <h2>TRRC y balance de nitrógeno</h2>
+      <p>Cómo valorar el catabolismo y la adecuación proteica cuando hay hemofiltración</p>
+    </div>
+  </div>
+  <div class="grid g3">
+    <div class="card c-teal">
+      <h4><span class="ico t"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span>1 · Nitrógeno aportado</h4>
+      <ul>
+        <li>Cuantificar los <b>gramos de proteína realmente administrados</b> por vía enteral y parenteral.</li>
+        <li>Convertir proteína en nitrógeno con el <b>factor del laboratorio o protocolo local</b> (no hay factor único especificado).</li>
+      </ul>
+    </div>
+    <div class="card c-amber">
+      <h4><span class="ico a"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></span>2 · Nitrógeno perdido</h4>
+      <ul>
+        <li><b>N ureico urinario</b> cuando exista diuresis y recogida adecuada.</li>
+        <li><b>N del efluente de la TRRC</b>, si el laboratorio puede analizarlo.</li>
+        <li>Otras pérdidas cuantificables: drenajes, heces, pérdidas digestivas.</li>
+        <li>La TRRC añade <b>≈ 14–22 g/día de aminoácidos</b> + vitaminas hidrosolubles y oligoelementos; esta cifra <b>no equivale</b> a la pérdida total de N ni la sustituye.<a class="cite" href="#ref-16">[16]</a></li>
+      </ul>
+    </div>
+    <div class="card c-navy">
+      <h4><span class="ico n"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M9 11l3 3 8-8M21 12v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11"/></svg></span>3 · Corrección</h4>
+      <ul>
+        <li>Añadir la corrección del <b>protocolo institucional</b> para pérdidas insensibles y no cuantificadas.</li>
+        <li>No existe un valor numérico validado para esta corrección en adultos con TRRC.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="formula">
+    Balance de nitrógeno <span class="op">=</span> N aportado <span class="op">−</span> pérdidas urinarias <span class="op">−</span> N del efluente (TRRC) <span class="op">−</span> otras pérdidas
+    <small>La ecuación resume el principio del cálculo; cada componente se adapta al método analítico disponible.<a class="cite" href="#ref-15" style="background:rgba(255,255,255,.15); color:#7fd0e6">[15]</a></small>
+  </div>
+
+  <h3 class="blk">Interpretación (nunca de forma aislada)</h3>
+  <p class="fig-cap" id="tabla-3"><span class="cap-n">Tabla 3</span>Interpretación del balance de nitrógeno</p>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th style="width:22%">Resultado</th><th>Lectura clínica</th></tr></thead>
+      <tbody>
+        <tr><td><b>Negativo</b> <span class="tag r">Déficit</span></td><td>Sugiere <b>catabolismo neto</b> o aporte proteico insuficiente; comprobar la calidad de la recogida y la inclusión de las pérdidas del efluente.</td></tr>
+        <tr><td><b>Próximo a cero</b> <span class="tag t">Equilibrio</span></td><td>Indica equilibrio aproximado entre aporte y pérdidas.</td></tr>
+        <tr><td><b>Positivo</b> <span class="tag g">Retención</span></td><td>Sugiere retención neta de nitrógeno; interpretar junto con la evolución clínica y la composición corporal.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M12 11v5"/></svg>
+    <div>Integrar el resultado con el <b>aporte proteico administrado</b>, el peso seco, la <b>masa muscular</b>, la función renal residual, la <b>intensidad de la TRRC</b> y la evolución clínica. La valoración nutricional combina <b>cribado + antropometría + laboratorio</b>, nunca una sola medida.<a class="cite" href="#ref-15">[15]</a></div>
+  </div>
+  <h3 class="blk">Limitaciones específicas durante TRRC</h3>
+  <div class="card c-red" style="margin-bottom:6px">
+    <ul>
+      <li>La TRRC altera la eliminación de solutos y <b>aumenta las pérdidas nitrogenadas extracorpóreas</b>: un cálculo basado solo en el N ureico urinario <b>subestima</b> las pérdidas totales.<a class="cite" href="#ref-15">[15]</a><a class="cite" href="#ref-10">[10]</a></li>
+      <li>Errores frecuentes: recogida incompleta de orina o efluente, cambios de bolsa, interrupciones de la TRRC y pérdidas digestivas no cuantificadas.</li>
+      <li><b>Repetir periódicamente</b>, especialmente tras cambios relevantes del aporte proteico, de la intensidad de la TRRC o de la función renal residual.<a class="cite" href="#ref-15">[15]</a></li>
+      <li>En <b>pediatría</b> la cuantificación del balance no es factible; esta limitación no debe extrapolarse automáticamente a adultos.<a class="cite" href="#ref-21">[21]</a></li>
+      <li>El resultado es una <b>estimación clínica</b>, no un valor exacto, cuando la recogida de muestras sea incompleta.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 7. MICRONUTRIENTES ============ -->
+<section class="sec" id="micro">
+  <div class="sec-head">
+    <span class="sec-num">08</span>
+    <div>
+      <h2>Micronutrientes y realimentación</h2>
+      <p>El riesgo que se olvida con más frecuencia al reanudar la alimentación</p>
+    </div>
+  </div>
+  <div class="grid g2">
+    <div class="card c-red">
+      <h4><span class="ico r"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg></span>Síndrome de realimentación</h4>
+      <ul>
+        <li><b>Considerarlo siempre</b> antes de iniciar y al progresar el aporte.</li>
+        <li>Especialmente en pacientes con <b>malnutrición</b>.<a class="cite" href="#ref-2">[2]</a></li>
+        <li>Inicio lento (trófico / hipocalórico) + vigilancia de electrólitos y deterioro metabólico.</li>
+      </ul>
+    </div>
+    <div class="card c-teal">
+      <h4><span class="ico t"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M12 2l2.4 5.9 6.3.4-4.9 4 1.6 6.1L12 15l-5.4 3.4 1.6-6.1-4.9-4 6.3-.4z"/></svg></span>Suplementación</h4>
+      <ul>
+        <li>Proporcionar <b>suplementación adecuada de micronutrientes</b> desde el inicio del soporte.<a class="cite" href="#ref-2">[2]</a></li>
+        <li>Ajustar en función del riesgo de realimentación y de las pérdidas (TRRC).</li>
+      </ul>
+    </div>
+    <div class="card c-blue" style="grid-column:1/-1">
+      <h4><span class="ico b"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M2 12h4l3-8 4 16 3-8h6"/></svg></span>Si hay TRRC: qué vigilar y cuándo</h4>
+      <ul>
+        <li>Pérdidas hacia el efluente: <b>vitaminas B1 y C, cobre, selenio</b> — y vigilar también <b>folato y carnitina</b>; su descenso durante TRRC prolongada sugiere riesgo de déficit.<a class="cite" href="#ref-18">[18]</a></li>
+        <li>Evaluarlos a partir de los <b>días 5–7</b> de estancia en UCI y <b>reponer las deficiencias documentadas</b>.<a class="cite" href="#ref-12">[12]</a></li>
+        <li>Valores bajos → vigilancia; <b>no existe una pauta universal de suplementación</b>.<a class="cite" href="#ref-18">[18]</a></li>
+        <li>Reevaluar requerimientos de proteínas, vitaminas hidrosolubles y oligoelementos de forma periódica.<a class="cite" href="#ref-8">[8]</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. NUTRICIÓN PARENTERAL ============ -->
+<section class="sec" id="parenteral">
+  <div class="sec-head">
+    <span class="sec-num">09</span>
+    <div>
+      <h2>Nutrición parenteral</h2>
+      <p>Reservada para escenarios concretos — no es la vía por defecto</p>
+    </div>
+  </div>
+  <div class="grid g3">
+    <div class="card c-red">
+      <h4>Indicación 1</h4>
+      <p><b>Disfunción gastrointestinal grave</b> que impide el uso de la vía enteral.<a class="cite" href="#ref-1">[1]</a></p>
+    </div>
+    <div class="card c-red">
+      <h4>Indicación 2</h4>
+      <p><b>Contraindicación de la vía enteral</b> (de las listadas en el apartado 03).</p>
+    </div>
+    <div class="card c-amber">
+      <h4>Indicación 3</h4>
+      <p>Cuando no se alcanza aproximadamente el <b>70 % de los objetivos nutricionales</b> después de la <b>primera semana</b>.<a class="cite" href="#ref-1">[1]</a></p>
+    </div>
+  </div>
+  <div class="note warn">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+    <div><b>Regla de la secuencia práctica:</b> añadir la nutrición parenteral <b>solo</b> si la vía enteral está contraindicada o resulta <b>claramente insuficiente después de la primera semana</b>.<a class="cite" href="#ref-1">[1]</a><a class="cite" href="#ref-2">[2]</a><a class="cite" href="#ref-4">[4]</a><a class="cite" href="#ref-3">[3]</a></div>
+  </div>
+</section>
+
+<!-- ============ 9. ALGORITMO ============ -->
+<section class="sec" id="algoritmo">
+  <div class="sec-head">
+    <span class="sec-num">10</span>
+    <div>
+      <h2>Algoritmo de decisión</h2>
+      <p>Toda la secuencia práctica en un solo esquema</p>
+    </div>
+  </div>
+  <div class="legend">
+    <span><span class="dot n"></span> Entrada</span>
+    <span><span class="dot a"></span> Decisión</span>
+    <span><span class="dot g"></span> Actuar</span>
+    <span><span class="dot r"></span> Retrasar / evitar</span>
+  </div>
+  <p class="fig-cap" id="figura-3"><span class="cap-n">Figura 3</span>Algoritmo de decisión del protocolo</p>
+  <div class="flow">
+    <div class="fnode start"><b>Paciente crítico en shock cardiogénico ± ECMO · Impella · TRRC</b><p>Protocolo de nutrición tras la estabilización inicial</p></div>
+    <div class="varrow"></div>
+    <div class="fstep">Paso 1 · Valorar</div>
+    <div class="fnode"><b>Valoración nutricional y hemodinámica</b><p>Malnutrición · riesgo de realimentación · perfusión intestinal · grado de shock · función GI y renal</p></div>
+    <div class="varrow"></div>
+    <div class="fstep">Decisión</div>
+    <div class="fnode decision"><b>¿Shock controlado tras la reanimación y sin contraindicaciones GI ni hemodinámicas?</b></div>
+    <div class="split">
+      <div class="col">
+        <div class="lab no">NO</div>
+        <div class="fnode stopnode"><b>Retrasar la EN a dosis completa</b><p>Tras reanimación y con vasopresores a dosis bajas–moderadas: puede mantenerse <b>EN trófica gástrica</b> con vigilancia estrecha.<a class="cite" href="#ref-4">[4]</a><a class="cite" href="#ref-5">[5]</a> Reevaluar los criterios a diario.</p></div>
+      </div>
+      <div class="col">
+        <div class="lab yes">SÍ</div>
+        <div class="fnode action"><b>Iniciar EN en las primeras 48 h</b><p>Dosis <b>trófica o hipocalórica</b> · preferentemente <b>gástrica</b>.<a class="cite" href="#ref-1">[1]</a><a class="cite" href="#ref-3">[3]</a><a class="cite" href="#ref-6">[6]</a></p></div>
+      </div>
+    </div>
+    <div class="varrow"></div>
+    <div class="fstep">Paso 2 · Progresión</div>
+    <div class="fnode action"><b>Progresión lenta solo con estabilidad hemodinámica y perfusión intestinal adecuada</b><p>Vigilar intolerancia GI, signos de isquemia y deterioro metabólico · contar calorías no nutricionales (propofol, citrato, circuito) · con TRRC, contabilizar las pérdidas.<a class="cite" href="#ref-6">[6]</a><a class="cite" href="#ref-15">[15]</a><a class="cite" href="#ref-16">[16]</a></p></div>
+    <div class="varrow"></div>
+    <div class="fstep">Decisión · tras la semana 1</div>
+    <div class="fnode decision"><b>¿Se alcanza aproximadamente el 70 % de los objetivos por vía enteral?</b></div>
+    <div class="split">
+      <div class="col">
+        <div class="lab no">NO</div>
+        <div class="fnode stopnode"><b>Valorar nutrición parenteral</b><p>Disfunción GI grave, contraindicación de la vía enteral o aporte claramente insuficiente tras la primera semana.<a class="cite" href="#ref-1">[1]</a></p></div>
+      </div>
+      <div class="col">
+        <div class="lab yes">SÍ</div>
+        <div class="fnode action"><b>Mantener EN y reevaluar dinámicamente</b><p>Ajustar según fase del shock, tolerancia GI y cambios de la terapia de soporte.<a class="cite" href="#ref-12">[12]</a></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10. MONITORIZACIÓN ============ -->
+<section class="sec" id="monitorizacion">
+  <div class="sec-head">
+    <span class="sec-num">11</span>
+    <div>
+      <h2>Monitorización y alarmas</h2>
+      <p>Parámetros prioritarios, detección de déficit y sobrealimentación, y cuándo frenar</p>
+    </div>
+  </div>
+
+  <h3 class="blk">Parámetros prioritarios durante ECMO y TRRC</h3>
+  <p class="fig-cap" id="tabla-4"><span class="cap-n">Tabla 4</span>Parámetros prioritarios durante ECMO y TRRC</p>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th style="width:24%">Parámetro</th><th>Qué valorar</th></tr></thead>
+      <tbody>
+        <tr><td><b>Aporte prescrito vs administrado</b></td><td>Porcentaje del objetivo <b>realmente recibido</b>; interrupciones de la EN o NP; tolerancia y evolución gastrointestinal.<a class="cite" href="#ref-20">[20]</a><a class="cite" href="#ref-14">[14]</a></td></tr>
+        <tr><td><b>Gasto energético</b></td><td><b>Calorimetría indirecta</b> cuando esté disponible; diferencia frente al aporte total.<a class="cite" href="#ref-12">[12]</a><a class="cite" href="#ref-6">[6]</a></td></tr>
+        <tr><td><b>Peso y composición corporal</b></td><td>Antropometría, ecografía, bioimpedancia eléctrica o TC cuando sean factibles; diferenciar cambios de peso <b>por líquidos</b> frente a cambios de <b>masa corporal</b> en el paciente con ECMO.</td></tr>
+        <tr><td><b>Electrólitos séricos</b></td><td>Especialmente los afectados por la terapia: potasio, fósforo y magnesio en el contexto de realimentación y TRRC.<a class="cite" href="#ref-10">[10]</a></td></tr>
+        <tr><td><b>Balance nitrogenado</b></td><td>Grado de <b>catabolismo</b> y adecuación proteica; una pérdida progresiva de <b>masa muscular</b> apoya un déficit persistente (apartado 07).<a class="cite" href="#ref-12">[12]</a><a class="cite" href="#ref-15">[15]</a></td></tr>
+        <tr><td><b>Micronutrientes</b></td><td>B1 y C, cobre, selenio (y folato, carnitina); valores bajos o descenso durante TRRC prolongada sugieren riesgo de déficit.<a class="cite" href="#ref-18">[18]</a></td></tr>
+        <tr><td><b>Pérdidas extracorpóreas</b></td><td>Aminoácidos del efluente (≈ 14–22 g/día), vitaminas y oligoelementos; mayores cuanto más prolongada o combinada está la TRRC.<a class="cite" href="#ref-15">[15]</a><a class="cite" href="#ref-16">[16]</a></td></tr>
+        <tr><td><b>Calorías no nutricionales</b></td><td>Propofol (≈ 1,1 kcal/ml), citrato y soluciones del circuito: incluirlos en el total energético.<a class="cite" href="#ref-15">[15]</a><a class="cite" href="#ref-16">[16]</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="split">
+    <div class="col">
+      <div class="card c-amber" style="height:100%">
+        <h4><span class="ico a"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>Sospechar déficit nutricional cuando concurren varios:</h4>
+        <ul>
+          <li>Aporte energético o proteico <b>persistentemente bajo</b> respecto al objetivo, con <b>interrupciones frecuentes</b>.<a class="cite" href="#ref-12">[12]</a></li>
+          <li><b>Balance nitrogenado negativo</b> o pérdida progresiva de masa magra.<a class="cite" href="#ref-12">[12]</a><a class="cite" href="#ref-15">[15]</a></li>
+          <li>Descenso de <b>B1 o C, cobre, selenio</b> u otros micronutrientes durante TRRC prolongada.<a class="cite" href="#ref-18">[18]</a></li>
+          <li><b>Pérdidas extracorpóreas importantes</b>, sobre todo si la TRRC es prolongada o se combina con otras terapias.<a class="cite" href="#ref-16">[16]</a><a class="cite" href="#ref-17">[17]</a></li>
+          <li>Objetivos inalcanzables por <b>intolerancia GI</b> o interrupciones de la EN.<a class="cite" href="#ref-20">[20]</a><a class="cite" href="#ref-14">[14]</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card c-violet" style="height:100%">
+        <h4><span class="ico v"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></span>Sospechar sobrealimentación cuando:</h4>
+        <ul>
+          <li>El <b>aporte total</b> —incluidas las <b>calorías no nutricionales</b>— supera de forma sostenida el gasto medido o estimado.<a class="cite" href="#ref-12">[12]</a><a class="cite" href="#ref-14">[14]</a><a class="cite" href="#ref-6">[6]</a></li>
+          <li>Revisar: propofol, citrato y soluciones del circuito dentro del total.<a class="cite" href="#ref-15">[15]</a><a class="cite" href="#ref-16">[16]</a></li>
+          <li>La <b>progresión es demasiado rápida</b> hacia objetivos completos en los primeros días: la alimentación completa precoz se asoció a más complicaciones GI y posibles daños.<a class="cite" href="#ref-20">[20]</a></li>
+          <li>Aparecen <b>alteraciones metabólicas o electrolíticas</b> al incrementar el aporte → reevaluar plan nutricional y terapia extracorpórea.<a class="cite" href="#ref-10">[10]</a><a class="cite" href="#ref-17">[17]</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="blk">Cuándo y cómo reevaluar</h3>
+  <div class="grid g2">
+    <div class="card c-teal">
+      <h4>Revisión dinámica de la prescripción</h4>
+      <ul>
+        <li>Tras cambios en el <b>flujo de efluente</b>, modalidad o <b>intensidad de la TRRC</b> o del funcionamiento de la ECMO.<a class="cite" href="#ref-12">[12]</a></li>
+        <li>Ante cambios de <b>sedación, movilización, tolerancia GI o función renal residual</b>.<a class="cite" href="#ref-13">[13]</a></li>
+        <li>Micronutrientes en riesgo: evaluar en <b>días 5–7</b> y reponer deficiencias documentadas.<a class="cite" href="#ref-12">[12]</a></li>
+      </ul>
+    </div>
+    <div class="card c-navy">
+      <h4>Ningún parámetro aislado decide</h4>
+      <ul>
+        <li>Ni el <b>peso</b>, ni el <b>balance hídrico</b>, ni un <b>laboratorio</b> aislado, ni el <b>aporte prescrito</b> por sí solos.<a class="cite" href="#ref-9">[9]</a><a class="cite" href="#ref-15">[15]</a><a class="cite" href="#ref-11">[11]</a></li>
+        <li>No existe panel único validado ni objetivo universal para la combinación ECMO–TRRC.<a class="cite" href="#ref-9">[9]</a><a class="cite" href="#ref-10">[10]</a><a class="cite" href="#ref-11">[11]</a></li>
+        <li>La valoración combina cribado, antropometría y laboratorio.<a class="cite" href="#ref-15">[15]</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note stop" style="margin-top:16px">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+    <div><b>Señales de alarma — ralentizar o suspender y reevaluar:</b> intolerancia gastrointestinal, <b>distensión abdominal</b>, vómitos, diarrea, dolor, <b>deterioro metabólico</b> y <b>signos de isquemia intestinal</b>.<a class="cite" href="#ref-6">[6]</a><a class="cite" href="#ref-4">[4]</a><a class="cite" href="#ref-7">[7]</a></div>
+  </div>
+</section>
+
+<!-- ============ 11. REFERENCIAS ============ -->
+<section class="sec" id="referencias">
+  <div class="sec-head">
+    <span class="sec-num">12</span>
+    <div>
+      <h2>Referencias bibliográficas</h2>
+      <p>24 fuentes: 21 consolidadas del documento aportado (lista unificada de sus tres secciones) + 3 añadidas en esta revisión para el apartado de fórmulas enterales</p>
+    </div>
+  </div>
+  <ol class="refs">
+    <li id="ref-1">Vest AR, DiDomenico RJ, Lichtenstein L, et al. Malnutrition and Cachexia in Inpatients With Acute Cardiac Conditions: A Scientific Statement From the American Heart Association. <span class="meta">Circulation. 2026.</span> <a href="https://pubmed.ncbi.nlm.nih.gov/41732869/" target="_blank" rel="noopener">PubMed 41732869</a></li>
+    <li id="ref-2">Frederiks P, Peetermans M, Wilmer A. Nutritional support in the cardiac intensive care unit. <span class="meta">Eur Heart J Acute Cardiovasc Care. 2024.</span> <a href="https://pubmed.ncbi.nlm.nih.gov/38333990/" target="_blank" rel="noopener">PubMed 38333990</a></li>
+    <li id="ref-3">Reintam Blaser A, Starkopf J, Alhazzani W, et al. Early enteral nutrition in critically ill patients: ESICM clinical practice guidelines. <span class="meta">Intensive Care Med. 2017.</span> <a href="https://pubmed.ncbi.nlm.nih.gov/28168570/" target="_blank" rel="noopener">PubMed 28168570</a></li>
+    <li id="ref-4">Wischmeyer PE. Optimizing Nutrition Delivery in Critically Ill Patients on Vasopressors. <span class="meta">Surg Clin North Am. 2026.</span> <a href="https://pubmed.ncbi.nlm.nih.gov/41997641/" target="_blank" rel="noopener">PubMed 41997641</a></li>
+    <li id="ref-5">Patel JJ, Lopez-Delgado JC, Stoppe C, et al. Enteral nutrition in septic shock: a call for a paradigm shift. <span class="meta">Curr Opin Crit Care. 2024.</span> <a href="https://pubmed.ncbi.nlm.nih.gov/38441124/" target="_blank" rel="noopener">PubMed 38441124</a></li>
+    <li id="ref-6">Allaparthi S, Bode A, Bury C, et al. Nutrition Optimization Among Critically Ill Patients in the Cardiac Intensive Care Unit. <span class="meta">Curr Cardiol Rep. 2025.</span> <a href="https://pubmed.ncbi.nlm.nih.gov/40184002/" target="_blank" rel="noopener">PubMed 40184002</a></li>
+    <li id="ref-7">Wang L, Zhong X, Yang H, et al. When can we start early enteral nutrition safely in patients with shock on vasopressors? <span class="meta">Clin Nutr ESPEN. 2024.</span> <a href="https://pubmed.ncbi.nlm.nih.gov/38777444/" target="_blank" rel="noopener">PubMed 38777444</a></li>
+    <li id="ref-8">Patel JJ, McClave SA. Nutrition Therapy in Critically Ill Adults. <span class="meta">N Engl J Med. 2026.</span> <a href="https://pubmed.ncbi.nlm.nih.gov/42418776/" target="_blank" rel="noopener">PubMed 42418776</a></li>
+    <li id="ref-9">Bear DE, Ridley EJ, Daly K, et al. 2025 ELSO Consensus Statement for the Provision and Management of Nutrition Therapy in Critically Ill Adult Patients Requiring Extracorporeal Membrane Oxygenation. <span class="meta">ASAIO J. 2026.</span> <a href="https://pubmed.ncbi.nlm.nih.gov/41588618/" target="_blank" rel="noopener">PubMed 41588618</a></li>
+    <li id="ref-10">Jia L, Wei J, Zhu K, et al. Summary of best evidence for nutritional management in adult patients undergoing continuous renal replacement therapy. <span class="meta">Front Med (Lausanne). 2026.</span> <a href="https://pubmed.ncbi.nlm.nih.gov/41797803/" target="_blank" rel="noopener">PubMed 41797803</a></li>
+    <li id="ref-11">Sathik N, Ghose S, Lussier N, et al. Tandem ECMO/CRRT medical nutrition therapy clinical practice points: a literature review and Delphi consensus on clinical practice. <span class="meta">J Crit Care. 2026.</span> <a href="https://pubmed.ncbi.nlm.nih.gov/42636716/" target="_blank" rel="noopener">PubMed 42636716</a></li>
+    <li id="ref-12">Wischmeyer PE, Bear DE, Berger MM, et al. Personalized nutrition therapy in critical care: 10 expert recommendations. <span class="meta">Crit Care. 2023.</span> <a href="https://pubmed.ncbi.nlm.nih.gov/37403125/" target="_blank" rel="noopener">PubMed 37403125</a></li>
+    <li id="ref-13">Stoian M, Andone A, Bândilă SR, et al. Personalized Nutrition Strategies for Patients in the Intensive Care Unit: A Narrative Review on the Future of Critical Care Nutrition. <span class="meta">Nutrients. 2025.</span> <a href="https://pubmed.ncbi.nlm.nih.gov/40431399/" target="_blank" rel="noopener">PubMed 40431399</a></li>
+    <li id="ref-14">Hermans AJH, Laarhuis BI, Kouw IWK, et al. Current insights in ICU nutrition: tailored nutrition. <span class="meta">Curr Opin Crit Care. 2023.</span> <a href="https://pubmed.ncbi.nlm.nih.gov/36762671/" target="_blank" rel="noopener">PubMed 36762671</a></li>
+    <li id="ref-15">Ostermann M, Lumlertgul N, Mehta R. Nutritional assessment and support during continuous renal replacement therapy. <span class="meta">Semin Dial. 2021.</span> <a href="https://pubmed.ncbi.nlm.nih.gov/33909935/" target="_blank" rel="noopener">PubMed 33909935</a></li>
+    <li id="ref-16">Sinatra N, Maniaci A, Cuttone G, et al. Personalized Parenteral Nutrition in Critically Ill Patients Undergoing Continuous Renal Replacement Therapy: A Comprehensive Framework for Clinical Practice. <span class="meta">J Pers Med. 2025.</span> <a href="https://pubmed.ncbi.nlm.nih.gov/41295247/" target="_blank" rel="noopener">PubMed 41295247</a></li>
+    <li id="ref-17">Alarcón-Fuentes J, Pedreros-Rosales C, Cornejo-Arriagada B, et al. Nutritional support in acute kidney injury requiring continuous renal replacement therapy: from metabolic alterations to clinical recommendations. <span class="meta">Int Urol Nephrol. 2026.</span> <a href="https://pubmed.ncbi.nlm.nih.gov/42045610/" target="_blank" rel="noopener">PubMed 42045610</a></li>
+    <li id="ref-18">Berger MM, Broman M, Forni L, et al. Nutrients and micronutrients at risk during renal replacement therapy: a scoping review. <span class="meta">Curr Opin Crit Care. 2021.</span> <a href="https://pubmed.ncbi.nlm.nih.gov/34039873/" target="_blank" rel="noopener">PubMed 34039873</a></li>
+    <li id="ref-19">Osuna-Padilla IA, Yanowsky-Escatell FG, Chávez-Iñiguez JS. Nutritional therapy in critically ill patients with acute kidney injury on renal replacement therapy: an evidence review. <span class="meta">Nefrologia (Engl Ed). 2026.</span> <a href="https://pubmed.ncbi.nlm.nih.gov/42209376/" target="_blank" rel="noopener">PubMed 42209376</a></li>
+    <li id="ref-20">Reintam Blaser A, Rooyackers O, Bear DE. How to avoid harm with feeding critically ill patients: a synthesis of viewpoints of a basic scientist, dietitian and intensivist. <span class="meta">Crit Care. 2023.</span> <a href="https://pubmed.ncbi.nlm.nih.gov/37393289/" target="_blank" rel="noopener">PubMed 37393289</a></li>
+    <li id="ref-21">Jonckheer J, Vergaelen K, Spapen H, et al. Modification of Nutrition Therapy During Continuous Renal Replacement Therapy in Critically Ill Pediatric Patients: A Narrative Review and Recommendations. <span class="meta">Nutr Clin Pract. 2019.</span> <a href="https://pubmed.ncbi.nlm.nih.gov/30570180/" target="_blank" rel="noopener">PubMed 30570180</a></li>
+    <li id="ref-22">Brown B, et al. Enteral Nutrition Formula Selection: Current Evidence and Background Review. <span class="meta">Nutr Clin Pract. 2015.</span> <a href="https://aspenjournals.onlinelibrary.wiley.com/doi/10.1177/0884533614561791" target="_blank" rel="noopener">ASPEN · doi 10.1177/0884533614561791</a></li>
+    <li id="ref-23">Ma WC, et al. Initiation of enteral nutrition in critically ill patients (revisión). <span class="meta">2025.</span> <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12364390/" target="_blank" rel="noopener">PMC 12364390</a></li>
+    <li id="ref-24">Ibrahim H, et al. Peptide-based formula versus standard-based polymeric formula for critically ill patients. <span class="meta">Arch Med Sci. 2020.</span> <a href="https://www.archivesofmedicalscience.com/Peptide-based-formula-versus-standard-based-polymeric-formula-for-critically-ill,76470,0,2.html" target="_blank" rel="noopener">Texto completo</a></li>
+  </ol>
+  </ol>
+  <div class="note" style="margin-top:18px">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M12 11v5"/></svg>
+    <div>Las citas <b>[n]</b> a lo largo del documento enlazan con esta lista. Se eliminaron los parámetros de seguimiento (<i>utm_*</i>) de los enlaces originales; los identificadores PubMed son los del documento aportado. Las referencias [22]–[24] se añadieron en esta revisión para el apartado 05 (elección de fórmula enteral), que no estaba cubierto en el documento original.</div>
+  </div>
+</section>
+
+<footer class="docfoot">
+  <p><b>Protocolo de nutrición en el paciente crítico — shock cardiogénico y soporte mecánico (ECMO / Impella / TRRC).</b> Elaborado a partir del documento «Nutrición en shock cardiogénico y soporte cardíaco» aportado por el usuario, cuyas tres secciones (manejo general, parámetros prioritarios ECMO/TRRC y balance nitrogenado en TRRC) se consolidaron en este esquema.</p>
+  <p>Documento de apoyo clínico-docente (octubre 2026). La evidencia específica en shock cardiogénico es limitada; no sustituye el juicio clínico ni el protocolo institucional. Individualizar siempre según fase del shock, perfusión intestinal, dosis de vasopresores, función GI y renal, y terapia de soporte.</p>
+</footer>
+
+</div>
+</main>
+
+<script>
+(function(){
+  var sidebar = document.getElementById('sidebar');
+  var btn = document.getElementById('menuBtn');
+  btn.addEventListener('click', function(){
+    sidebar.classList.toggle('open');
+    btn.textContent = sidebar.classList.contains('open') ? '✕ Cerrar' : '☰ Menú';
+  });
+  document.querySelectorAll('nav.toc a').forEach(function(a){
+    a.addEventListener('click', function(){
+      sidebar.classList.remove('open');
+      btn.textContent = '☰ Menú';
+    });
+  });
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+  if ('IntersectionObserver' in window) {
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) {
+          var id = '#' + e.target.id;
+          links.forEach(function(a){ a.classList.toggle('active', a.getAttribute('href') === id); });
+        }
+      });
+    }, {rootMargin: '-15% 0px -70% 0px'});
+    document.querySelectorAll('main section.sec').forEach(function(s){ obs.observe(s); });
+  }
+})();
+</script>
+</body>
+</html>

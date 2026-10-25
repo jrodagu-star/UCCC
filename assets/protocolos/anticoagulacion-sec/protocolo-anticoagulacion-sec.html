@@ -396,6 +396,10 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
     <li><a href="#sangrado">Sangrado y protamina</a></li>
     <li><a href="#resistencia">Resistencia a heparina</a></li>
     <li><a href="#hit">Trombocitopenia por heparina</a></li>
+    <li><a href="#bivalirudina">Bivalirudina</a></li>
+    <li><a href="#argatroban">Argatrobán</a></li>
+    <li><a href="#isquemia">Isquemia de la extremidad</a></li>
+    <li><a href="#hemolisis">Hemólisis</a></li>
     <li><a href="#enfermeria">Control de enfermería</a></li>
     <li><a href="#turno">Checklist por turno</a></li>
     <li><a href="#refs">Referencias</a></li>
@@ -409,7 +413,7 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
 <header class="doc">
   <div class="kicker">Protocolo clínico · UCI</div>
   <h1>Manejo de la anticoagulación en la Unidad de Shock Cardiogénico y Soporte Circulatorio Mecánico</h1>
-  <p>Heparina no fraccionada (HNF) guiada por anti-Xa y TTPa, esquemas específicos para BIAC, Impella, ECMO VA y TRRC, manejo del sangrado y reversión con protamina, resistencia a la heparina y trombocitopenia inducida por heparina (TIH).</p>
+  <p>Heparina no fraccionada (HNF) guiada por anti-Xa y TTPa, esquemas específicos para BIAC, Impella, ECMO VA y TRRC, manejo del sangrado y reversión con protamina, resistencia a la heparina, trombocitopenia inducida por heparina (TIH), bivalirudina, argatrobán, isquemia de la extremidad y hemólisis.</p>
   <div class="meta">
     <span class="chip draft">Borrador · pendiente de validación local</span>
     <span class="chip">Versión 1.0 · octubre 2026</span>
@@ -538,14 +542,14 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
         <h4>Inicio de la perfusión continua</h4>
         <div class="lanes">
           <div class="lane ac"><h5>Anticoagulación</h5><ul>
-            <li data-dev="ecmo"><span class="dv ecmo">ECMO</span> HNF <b>7,5–20 UI/kg/h sin bolo</b> cuando el ACT baje de 220–250 s y no sangren los puntos de canulación.</li>
+            <li data-dev="ecmo"><span class="dv ecmo">ECMO</span> HNF <b>8 UI/kg/h sin bolo</b> cuando el ACT sea &lt;250 s y no sangren los puntos de canulación.</li>
             <li data-dev="imp"><span class="dv imp">Impella</span> Si anti-Xa &lt;0,3: HNF IV 6–7 UI/kg/h (máx. inicial 750–1.000 UI/h), sumando la heparina de la purga.</li>
             <li data-dev="biac"><span class="dv biac">BIAC</span> Si está indicada: HNF 10–12 UI/kg/h sin bolo.</li>
           </ul></div>
           <div class="lane mon"><h5>Monitorización</h5><ul>
             <li data-dev="ecmo"><span class="dv ecmo">ECMO</span> <b>ACT cada 1–2 h</b> (diana 180–220 s).</li>
             <li data-dev="imp"><span class="dv imp">Impella</span> Anti-Xa al llegar a la UCI y 4 h tras iniciar la purga (<a href="https://acforum.org/web/scripts/viewPDF.php?id=1865">Anticoagulation Forum</a>).</li>
-            <li data-dev="all"><b>Anti-Xa + TTPa a las 6 h</b> del inicio de la perfusión.</li>
+            <li data-dev="all"><b>Anti-Xa + TTPa a las 4 h</b> del inicio de la perfusión.</li>
           </ul></div>
           <div class="lane vig"><h5>Vigilancia</h5><ul>
             <li data-dev="all">Puntos de inserción, pulsos y perfusión distal <b>cada hora</b>; drenajes.</li>
@@ -568,7 +572,7 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
             <li data-dev="all">Ajustar con el <a href="#nomograma">nomograma</a> tras cada resultado.</li>
           </ul></div>
           <div class="lane mon"><h5>Monitorización</h5><ul>
-            <li data-dev="all"><b>Anti-Xa + TTPa cada 6 h</b>.</li>
+            <li data-dev="all"><b>TTPa cada 4–6 h</b> (diana 60–80 s, o 1,2–2,5 veces el basal) y <b>anti-Xa cada 6–12 h</b> (diana 0,3–0,7 UI/ml).</li>
             <li data-dev="ecmo"><span class="dv ecmo">ECMO</span> ACT cada 2–4 h hasta la estabilidad.</li>
           </ul></div>
         </div>
@@ -588,7 +592,7 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
             <li data-dev="all"><b>Revisión diaria de la diana</b>: sangrado, trombosis, eyección del VI.</li>
           </ul></div>
           <div class="lane mon"><h5>Monitorización</h5><ul>
-            <li data-dev="all">Tras 2 valores en rango: <b>anti-Xa cada 12–24 h</b> y TTPa cada 12 h. Volver a cada 6 h tras cada cambio de ritmo.</li>
+            <li data-dev="all"><b>Anti-Xa cada 6–12 h</b> y <b>TTPa cada 4–6 h</b>. Tras un cambio de ritmo, el siguiente control es el del nomograma.</li>
           </ul></div>
           <div class="lane vig"><h5>Vigilancia</h5><ul>
             <li data-dev="ecmo"><span class="dv ecmo">ECMO</span> Inspección del circuito y ΔP del oxigenador cada turno.</li>
@@ -612,7 +616,7 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
             <li data-dev="imp"><span class="dv imp">Impella</span> Sangrado: suspender HNF IV y, si persiste, purga con bicarbonato.</li>
           </ul></div>
           <div class="lane mon"><h5>Monitorización</h5><ul>
-            <li data-dev="all">Anti-Xa diario + TTPa cada 12–24 h.</li>
+            <li data-dev="all">Anti-Xa cada 6–12 h y TTPa cada 4–6 h.</li>
           </ul></div>
           <div class="lane vig"><h5>Vigilancia</h5><ul>
             <li data-dev="ecmo"><span class="dv ecmo">ECMO</span> Cambio de oxigenador o bomba si sube la ΔP, hay hemólisis o empeora el intercambio de gases.</li>
@@ -692,8 +696,8 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
     <thead><tr><th>Control</th><th>Ingreso</th><th>Implante</th><th>0–6 h</th><th>6–24 h</th><th>Días 1–3</th><th>Día 4 →</th><th>Destete</th><th>Retirada</th><th>Post</th></tr></thead>
     <tbody>
       <tr><td><b>ACT</b> <span class="dv ecmo">ECMO</span><span class="dv imp">Impella</span></td><td class="f0">—</td><td class="f3">3–5 min</td><td class="f3">1–2 h</td><td class="f2">2–4 h</td><td class="f1">Si precisa</td><td class="f0">—</td><td class="f0">—</td><td class="f2">&lt;150 s*</td><td class="f0">—</td></tr>
-      <tr><td><b>Anti-Xa</b></td><td class="f1">Basal</td><td class="f0">—</td><td class="f2">A las 6 h</td><td class="f2">6 h</td><td class="f1">12–24 h</td><td class="f1">24 h</td><td class="f1">24 h</td><td class="f0">—</td><td class="f1">Si HNF</td></tr>
-      <tr><td><b>TTPa</b></td><td class="f1">Basal</td><td class="f0">—</td><td class="f2">A las 6 h</td><td class="f2">6 h</td><td class="f1">12 h</td><td class="f1">12–24 h</td><td class="f1">12–24 h</td><td class="f1">Previo</td><td class="f1">Si HNF</td></tr>
+      <tr><td><b>Anti-Xa</b></td><td class="f1">Basal</td><td class="f0">—</td><td class="f2">A las 4 h</td><td class="f2">6–12 h</td><td class="f2">6–12 h</td><td class="f2">6–12 h</td><td class="f2">6–12 h</td><td class="f0">—</td><td class="f1">Si HNF</td></tr>
+      <tr><td><b>TTPa</b></td><td class="f1">Basal</td><td class="f0">—</td><td class="f2">A las 4 h</td><td class="f2">4–6 h</td><td class="f2">4–6 h</td><td class="f2">4–6 h</td><td class="f2">4–6 h</td><td class="f1">Previo</td><td class="f1">Si HNF</td></tr>
       <tr><td><b>Hemograma + fibrinógeno</b></td><td class="f1">Basal</td><td class="f0">—</td><td class="f1">Post-implante</td><td class="f2">12 h</td><td class="f1">24 h</td><td class="f1">24 h</td><td class="f1">24 h</td><td class="f1">Previo</td><td class="f1">24 h</td></tr>
       <tr><td><b>Hemólisis</b> (LDH, Hb libre)</td><td class="f1">Basal</td><td class="f0">—</td><td class="f1">Post-implante</td><td class="f1">12–24 h</td><td class="f1">24 h</td><td class="f1">24 h</td><td class="f1">24 h</td><td class="f0">—</td><td class="f0">—</td></tr>
       <tr><td><b>Antitrombina</b></td><td class="f1">Basal</td><td class="f0">—</td><td class="f0">—</td><td class="f0">—</td><td class="f1">Si resistencia</td><td class="f1">Si resistencia</td><td class="f0">—</td><td class="f0">—</td><td class="f0">—</td></tr>
@@ -733,7 +737,7 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
     <div class="gl">HNF IV</div>
     <div class="g g-off"></div><div class="g g-bolus">Bolo</div><div class="g g-hep2">Titulación</div><div class="g g-hep2">En diana</div><div class="g g-hep2">En diana</div><div class="g g-stop">Stop 30–60 min → reinicio</div><div class="g g-hep2">En diana</div><div class="g g-stop">Stop</div><div class="g g-pro">Profilaxis / terapéutica</div>
     <div class="gl">Diana anti-Xa</div>
-    <div class="g g-off"></div><div class="g g-txt">ACT ≥250 s</div><div class="g g-txt" style="grid-column:span 3">0,30–0,50 UI/ml</div><div class="g g-txt">—</div><div class="g g-txt">0,20–0,50*</div><div class="g g-txt">ACT &lt;150 s</div><div class="g g-txt">Según indicación</div>
+    <div class="g g-off"></div><div class="g g-txt">ACT ≥250 s</div><div class="g g-txt" style="grid-column:span 3">0,3–0,7 UI/ml</div><div class="g g-txt">—</div><div class="g g-txt">0,20–0,50*</div><div class="g g-txt">ACT &lt;150 s</div><div class="g g-txt">Según indicación</div>
   </div>
   <p style="font-size:12.5px;color:var(--muted);margin-top:6px">* Con Impella solo, aplicar la diana local de Impella: 0,2–0,4 UI/ml según <a href="https://www.scai.org/quality-improvement-tools/qi-tips/impella-anticoagulation-management-ccu">SCAI</a> o 0,3–0,5 UI/ml según <a href="https://www.jacc.org/doi/10.1016/j.jacc.2022.02.052">JACC</a>.</p>
 
@@ -762,13 +766,13 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
 
     <li class="ph p2"><div class="when"><b>0–24 h</b><span>Inicio</span></div><div class="pcard"><h4>Perfusión IV ajustada a la purga</h4><div class="lanes">
       <div class="lane ac"><h5>Anticoagulación</h5><ul>
-        <li><b>Diana única anti-Xa 0,30–0,50 UI/ml</b> (o ACT 180–220 s) (<a href="https://www.intechopen.com/chapters/1238922">IntechOpen, descarga del VI en ECMO</a>).</li>
+        <li><b>Diana única anti-Xa 0,3–0,7 UI/ml</b>. TTPa 60–80 s, o 1,2–2,5 veces el basal.</li>
         <li><b>HNF IV = dosis total − heparina de la purga</b>. La purga puede aportar unas 8–10 UI/kg/h (<a href="https://www.jacc.org/doi/10.1016/j.jacc.2020.12.054">JACC</a>).</li>
-        <li>Iniciar HNF IV <b>sin bolo a 6–7 UI/kg/h</b> cuando el ACT baje de 220–250 s y no haya sangrado.</li>
+        <li>Iniciar HNF IV <b>sin bolo a 6–7 UI/kg/h</b> cuando el ACT sea &lt;250 s y no haya sangrado. La purga ya aporta heparina: no usar aquí los 8 UI/kg/h del ECMO aislado.</li>
       </ul></div>
       <div class="lane mon"><h5>Monitorización</h5><ul>
         <li>ACT cada 1–2 h hasta el primer anti-Xa.</li>
-        <li><b>Anti-Xa + TTPa a las 4–6 h y después cada 6 h</b>.</li>
+        <li><b>Anti-Xa y TTPa a las 4 h</b> del inicio. Después, TTPa cada 4–6 h y anti-Xa cada 6–12 h.</li>
         <li>Flujo y presión de purga cada hora.</li>
       </ul></div>
       <div class="lane lab"><h5>Analítica</h5><ul><li>Hemograma, fibrinógeno y <b>hemólisis cada 12 h</b> (LDH, Hb libre).</li></ul></div>
@@ -870,7 +874,7 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
     <div class="gl"><span class="dv cit">A</span>Calcio IV</div>
     <div class="g g-off"></div><div class="g g-off"></div><div class="g g-ca" style="grid-column:span 3">Reposición · iCa sistémico 1,0–1,2</div><div class="g g-ca">Ajustar</div><div class="g g-stop">Stop con citrato</div><div class="g g-stop">Stop con citrato</div><div class="g g-txt">iCa a 1–2 h</div>
     <div class="gl"><span class="dv hnf">B</span>HNF sistémica</div>
-    <div class="g g-hep2" style="grid-column:span 6">Sigue el protocolo del dispositivo (anti-Xa 0,3–0,5) · sin heparina extra en el circuito</div><div class="g g-hep2">Sin cambios</div><div class="g g-hep2">Sin cambios</div><div class="g g-hep2">Según dispositivo</div>
+    <div class="g g-hep2" style="grid-column:span 6">Sigue el protocolo del dispositivo (anti-Xa 0,3–0,7) · sin heparina extra en el circuito</div><div class="g g-hep2">Sin cambios</div><div class="g g-hep2">Sin cambios</div><div class="g g-hep2">Según dispositivo</div>
     <div class="gl"><span class="dv hnf">B</span>Citrato añadido</div>
     <div class="g g-off" style="grid-column:span 4"></div><div class="g g-txt">Si ≥2 filtros en 24 h</div><div class="g g-cit">Añadir citrato</div><div class="g g-off"></div><div class="g g-stop">Stop</div><div class="g g-off"></div>
     <div class="gl"><span class="dv tih">C</span>TIH</div>
@@ -1049,12 +1053,12 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
 <!-- 3 -->
 <section class="card" id="monitor">
   <h2><span class="num">6</span>Monitorización de la anticoagulación</h2>
-  <p class="lead">Según las <a href="https://pubmed.ncbi.nlm.nih.gov/35080509/">guías ELSO 2021 de anticoagulación</a>, son aceptables tanto las pruebas basadas en tiempo (ACT, TTPa, viscoelásticas) como el anti-Xa; las dianas habituales son TTPa 1,5–2,5 veces el basal o anti-Xa 0,3–0,7 UI/ml (<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11063723/">revisión sistemática, 2024</a>).</p>
+  <p class="lead">Diana de la unidad con heparina: anti-Xa <b>0,3–0,7 UI/ml</b> y TTPa <b>60–80 s</b>, o <b>1,2–2,5 veces el basal</b>. El primer control de ambas pruebas es a las 4 h del inicio de la perfusión. Después, el TTPa se repite cada 4–6 h y el anti-Xa cada 6–12 h.</p>
   <div class="tbl-wrap"><table>
     <thead><tr><th>Prueba</th><th>Uso en la unidad</th><th>Frecuencia</th><th>Limitaciones</th></tr></thead>
     <tbody>
-      <tr><td><b>Anti-Xa</b> (HNF)</td><td>Prueba principal para titular HNF</td><td class="num">6 h tras inicio o cambio; cada 12–24 h si 2 valores en rango</td><td>Falsamente bajo con hiperbilirrubinemia, hipertrigliceridemia o hemólisis (Hb libre elevada)</td></tr>
-      <tr><td><b>TTPa / ratio</b></td><td>En paralelo al anti-Xa; titulación si no hay anti-Xa disponible</td><td class="num">Cada 6–12 h</td><td>Alterado por déficit de factores, fibrinógeno alto, FVIII elevado, anticoagulante lúpico</td></tr>
+      <tr><td><b>Anti-Xa</b> (HNF)</td><td>Prueba principal para titular HNF. Diana 0,3–0,7 UI/ml</td><td class="num">A las 4 h del inicio; después cada 6–12 h</td><td>Falsamente bajo con hiperbilirrubinemia, hipertrigliceridemia o hemólisis (Hb libre elevada)</td></tr>
+      <tr><td><b>TTPa / ratio</b></td><td>En paralelo al anti-Xa. Diana 60–80 s, o 1,2–2,5 veces el basal</td><td class="num">A las 4 h del inicio; después cada 4–6 h</td><td>Alterado por déficit de factores, fibrinógeno alto, FVIII elevado, anticoagulante lúpico</td></tr>
       <tr><td><b>ACT</b></td><td>Canulación, procedimientos, primeras horas en ECMO</td><td class="num">Cada 1–2 h en fase inicial</td><td>Baja correlación con dosis de HNF a niveles bajos</td></tr>
       <tr><td><b>ROTEM/TEG</b></td><td>Sangrado, coagulopatía mixta, discordancia de pruebas</td><td class="num">A demanda</td><td>Disponibilidad; interpretación con heparina (usar canal HEP)</td></tr>
       <tr><td><b>Antitrombina</b></td><td>Sospecha de resistencia a heparina</td><td class="num">A demanda</td><td>Sin umbral validado de suplementación</td></tr>
@@ -1065,7 +1069,7 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
     <thead><tr><th>Anti-Xa</th><th>TTPa</th><th>Posible causa</th><th>Actitud</th></tr></thead>
     <tbody>
       <tr><td>En rango</td><td>Muy prolongado</td><td>Coagulopatía de consumo, déficit de factores, hepatopatía, hemodilución</td><td>Guiar por anti-Xa; TP, fibrinógeno, ROTEM; corregir déficit si sangra</td></tr>
-      <tr><td>Bajo</td><td>Prolongado</td><td>Déficit de AT, interferencia por hemólisis/bilirrubina</td><td>Medir AT y Hb libre; ver <a href="#resistencia">Resistencia a heparina</a></td></tr>
+      <tr><td>Bajo</td><td>Prolongado</td><td>Déficit de AT, interferencia por hemólisis/bilirrubina</td><td>Subir la heparina según el anti-Xa y revisar resistencia: medir AT y Hb libre (<a href="#resistencia">Resistencia a heparina</a>)</td></tr>
       <tr><td>En rango</td><td>Acortado</td><td>Reactantes de fase aguda (FVIII, fibrinógeno elevados)</td><td>Guiar por anti-Xa</td></tr>
       <tr><td>Alto</td><td>En rango</td><td>Acumulación de HNF (insuficiencia renal/hepática), heparina de la purga del Impella</td><td>Contabilizar HNF total; reducir ritmo según nomograma</td></tr>
     </tbody>
@@ -1094,7 +1098,7 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
           <tr><td>Sin MCS, indicación terapéutica (SCA, FA, trombo)</td><td class="num">60–80 UI/kg (máx. 5.000)</td><td class="num">12–18 UI/kg/h</td></tr>
           <tr><td>BIAC (estrategia selectiva)</td><td class="num">No</td><td class="num">10–12 UI/kg/h</td></tr>
           <tr><td>Impella con purga heparinizada</td><td class="num">No</td><td class="num">6–7 UI/kg/h si anti-Xa &lt;0,3</td></tr>
-          <tr><td>ECMO VA (tras canulación)</td><td class="num">50–100 UI/kg en canulación</td><td class="num">7,5–20 UI/kg/h</td></tr>
+          <tr><td>ECMO VA (tras canulación)</td><td class="num">50–100 UI/kg en canulación</td><td class="num">8 UI/kg/h si ACT &lt;250 s</td></tr>
           <tr><td>Alto riesgo hemorrágico</td><td class="num">No</td><td class="num">Diana baja; iniciar al extremo inferior</td></tr>
         </tbody>
       </table></div>
@@ -1196,22 +1200,23 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
       <li>Dosis total = HNF de purga + HNF sistémica. El flujo de purga lo regula automáticamente la consola; registrarlo cada hora.</li>
     </ol>
     <div class="callout danger"><b>Sangrado con Impella</b>Suspender primero la HNF sistémica y, si persiste, cambiar la purga a bicarbonato. Nunca interrumpir la purga.</div>
-    <div class="callout"><b>TIH con Impella</b>Purga con bicarbonato + anticoagulación sistémica con inhibidor directo de trombina (bivalirudina o argatrobán) (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10655856/">revisión de MCS temporal</a>).</div>
+    <div class="callout"><b>TIH con Impella</b>Purga con bicarbonato + anticoagulación sistémica con inhibidor directo de trombina (<a href="#bivalirudina">bivalirudina</a> o <a href="#argatroban">argatrobán</a>) (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10655856/">revisión de MCS temporal</a>).</div>
+    <p>Complicaciones del dispositivo: <a href="#isquemia">isquemia de la extremidad</a> y <a href="#hemolisis">hemólisis</a>.</p>
   </div>
 
   <div class="panel" id="p-ecmo" style="border-top:4px solid var(--ecmo)">
     <h3>ECMO venoarterial</h3>
     <div class="flow">
       <div class="step"><span class="n">1</span><div><b>Canulación:</b> bolo de HNF 50–100 UI/kg (reducir a 25–50 UI/kg si sangrado activo o poscardiotomía) y comprobar ACT (<a href="https://www.ahajournals.org/doi/10.1161/CIRCULATIONAHA.119.034512">Circulation, ECMO VA en shock cardiogénico</a>).</div></div>
-      <div class="step"><span class="n">2</span><div><b>Inicio de perfusión:</b> 7,5–20 UI/kg/h cuando el ACT baje de 220–250 s y no haya sangrado activo en los puntos de canulación (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8062644/">revisión de anticoagulación en ECMO</a>).</div></div>
-      <div class="step"><span class="n">3</span><div><b>Primeras 24 h:</b> ACT cada 1–2 h (diana 180–220 s) hasta disponer de anti-Xa; anti-Xa y TTPa cada 6 h.</div></div>
-      <div class="step"><span class="n">4</span><div><b>Mantenimiento:</b> anti-Xa 0,3–0,5 UI/ml (estándar); 0,2–0,3 UI/ml si alto riesgo hemorrágico; hasta 0,5–0,7 si trombosis. ELSO acepta 0,3–0,7 UI/ml.</div></div>
+      <div class="step"><span class="n">2</span><div><b>Inicio de perfusión:</b> 8 UI/kg/h cuando el ACT sea &lt;250 s y no haya sangrado activo en los puntos de canulación.</div></div>
+      <div class="step"><span class="n">3</span><div><b>Primer control:</b> anti-Xa y TTPa a las 4 h del inicio de la perfusión. Después, TTPa cada 4–6 h y anti-Xa cada 6–12 h. ACT cada 1–2 h (diana 180–220 s) hasta el primer anti-Xa.</div></div>
+      <div class="step"><span class="n">4</span><div><b>Mantenimiento:</b> anti-Xa 0,3–0,7 UI/ml. TTPa 60–80 s, o 1,2–2,5 veces el basal.</div></div>
     </div>
     <h4>Objetivos hemostáticos orientativos</h4>
     <div class="tbl-wrap"><table>
       <thead><tr><th>Parámetro</th><th>Sin sangrado</th><th>Con sangrado</th></tr></thead>
       <tbody>
-        <tr><td>Plaquetas</td><td class="num">&gt;50 ×10⁹/L</td><td class="num">&gt;80–100 ×10⁹/L</td></tr>
+        <tr><td>Plaquetas</td><td class="num">&gt;80 ×10⁹/L</td><td class="num">&gt;80–100 ×10⁹/L</td></tr>
         <tr><td>Fibrinógeno</td><td class="num">&gt;1,5 g/L</td><td class="num">&gt;2 g/L</td></tr>
         <tr><td>Hemoglobina</td><td class="num">&gt;7–8 g/dl</td><td class="num">Individualizar</td></tr>
         <tr><td>Hb libre en plasma</td><td class="num">&lt;50 mg/dl</td><td class="num">Valorar cambio de bomba/oxigenador si &gt;50</td></tr>
@@ -1230,7 +1235,7 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
     <h3>ECPELLA (ECMO VA + Impella)</h3>
     <p><a href="#crono-ecpella">Ver la cronología específica de ECPELLA →</a></p>
     <ul>
-      <li>Diana única basada en el dispositivo de mayor riesgo trombótico (habitualmente anti-Xa 0,3–0,5 UI/ml).</li>
+      <li>Diana única basada en el dispositivo de mayor riesgo trombótico: anti-Xa 0,3–0,7 UI/ml.</li>
       <li>Contabilizar la HNF de la purga dentro de la dosis total para evitar sobredosificación.</li>
       <li>En sangrado: suspender HNF sistémica, mantener la purga (cambiar a bicarbonato si persiste) y valorar el flujo de ECMO.</li>
       <li>Vigilar hemólisis con mayor frecuencia (LDH y Hb libre cada 12–24 h): la posición de Impella y la succión aumentan el riesgo.</li>
@@ -1284,6 +1289,29 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
       <ul><li>Suspender toda heparina.</li><li>Protamina (ver cálculo).</li><li>Con ECMO: preparar circuito de recambio y aumentar flujo si es posible.</li></ul>
     </div>
   </div>
+
+  <h3>Medidas complementarias del protocolo local</h3>
+  <p class="lead">Se suman a la escala anterior. Bajar o suspender la heparina sistémica es una decisión consensuada entre cardiología, medicina intensiva y cirugía cardiaca.</p>
+  <div class="grid-2">
+    <div class="box">
+      <h4>Mientras el sangrado está activo</h4>
+      <ul>
+        <li>Reducir o suspender la perfusión de heparina. Si el sangrado es mayor, suspenderla de inmediato.</li>
+        <li>TTPa en rango bajo, 40–60 s. Si es masivo y la localización no es compresible, se puede aceptar un TTPa por debajo de ese rango. El mismo protocolo también admite 45–55 s.</li>
+        <li>Transfundir para mantener hemoglobina &gt;7 g/dl, plaquetas &gt;50 ×10⁹/L y fibrinógeno &gt;1,5 g/L.</li>
+        <li>Soporte con plaquetas, plasma y crioprecipitado según el protocolo de transfusión.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Cuando el sangrado se controla</h4>
+      <ul>
+        <li>Reiniciar con una diana más baja: anti-Xa 0,2–0,4 UI/ml.</li>
+        <li>Mantener plaquetas &gt;80 ×10⁹/L y fibrinógeno &gt;1,5 g/L.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout warn"><b>Purga del Impella</b>No interrumpir la purga. El manejo es el del ECMO: bajar o suspender solo la heparina sistémica. Si la purga lleva heparina y el sangrado es grave, se puede bajar la concentración de 50 a 25 UI/ml, con vigilancia estrecha. No se suspende esa purga salvo sospecha de TIH. En la práctica actual la purga es de bicarbonato.</div>
+
   <h3>Dosificación de protamina</h3>
   <ul>
     <li><b>Perfusión de HNF:</b> 1 mg de protamina por cada 100 UI de HNF administradas en las <b>últimas 2–3 h</b>; dosis máxima 50 mg (<a href="https://www.heart.org/-/media/files/professional/quality-improvement/hemorrhagic--stroke/hemorrhagic-stroke-toolkit-page/5_18_2021/anticoagulation-reversal-guideline-for-adults-5182021.pdf">AHA, guía de reversión</a>).</li>
@@ -1327,7 +1355,7 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
         <div class="step"><span class="n">1</span><div>Confirmar con <b>anti-Xa</b> (descartar pseudorresistencia por TTPa).</div></div>
         <div class="step"><span class="n">2</span><div>Medir <b>actividad de AT</b>; revisar errores de preparación o de vía.</div></div>
         <div class="step warn"><span class="n">3</span><div>Si anti-Xa bajo y AT &lt;50–60 % con trombosis o diana no alcanzada: valorar <b>concentrado de AT</b> (consenso con Hematología).</div></div>
-        <div class="step danger"><span class="n">4</span><div>Si persiste: cambiar a <b>bivalirudina</b> (o argatrobán).</div></div>
+        <div class="step danger"><span class="n">4</span><div>Si persiste: cambiar a <b><a href="#bivalirudina">bivalirudina</a></b> o <b><a href="#argatroban">argatrobán</a></b>.</div></div>
       </div>
     </div>
   </div>
@@ -1381,28 +1409,188 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
   </ul>
 
   <h3>Anticoagulantes alternativos</h3>
-  <p style="font-size:13.5px;color:var(--muted)">En pacientes críticos, con riesgo hemorrágico o con procedimientos urgentes, se prefieren argatrobán o bivalirudina por su corta duración de acción; evitar o reducir argatrobán en disfunción hepática Child-Pugh B–C (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6258919/">ASH 2018</a>).</p>
+  <p style="font-size:13.5px;color:var(--muted)">En pacientes críticos, con riesgo hemorrágico o con procedimientos urgentes, se prefieren argatrobán o bivalirudina por su corta duración de acción; evitar o reducir argatrobán en disfunción hepática Child-Pugh B–C (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6258919/">ASH 2018</a>). La dosificación local está en <a href="#bivalirudina">Bivalirudina</a> y <a href="#argatroban">Argatrobán</a>.</p>
   <div class="tbl-wrap"><table>
     <thead><tr><th>Fármaco</th><th>Dosis de inicio</th><th>Monitorización</th><th>Consideraciones</th></tr></thead>
     <tbody>
-      <tr><td><b>Bivalirudina</b></td><td class="num">0,15 mg/kg/h sin bolo (función orgánica normal); reducir en insuficiencia renal</td><td>TTPa 1,5–2,5 × basal (<a href="https://www.hematology.org/-/media/Hematology/Files/Education/Clinicians/Guidelines-Quality/Documents/ASH_VTE_HIT_PocketGuide.pdf">ASH</a>)</td><td>De elección en ECMO e ICP. Riesgo de estasis en el circuito (proteólisis local): evitar zonas de flujo lento</td></tr>
-      <tr><td><b>Argatrobán</b></td><td class="num">0,1–0,3 µg/kg/min en ECMO/crítico; titular</td><td>TTPa 50–70 s / ACT 150–230 s (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10532142/">revisión de ECMO</a>)</td><td>Metabolismo hepático: preferible en insuficiencia renal. Prolonga el INR</td></tr>
+      <tr><td><b>Bivalirudina</b></td><td class="num">0,15–0,25 mg/kg/h si el filtrado es &gt;60; menos si baja. Bolo opcional. <a href="#bivalirudina">Pauta completa</a></td><td>TTPa 50–70 s, o 1,5–2,0 veces el basal</td><td>Pauta del protocolo local. Sin antídoto. Ajustar por función renal</td></tr>
+      <tr><td><b>Argatrobán</b></td><td class="num">0,2–0,3 µg/kg/min, sin bolo. <a href="#argatroban">Pauta completa</a></td><td>TTPa 1,5–2,5 veces el basal. Cada 2–4 h hasta tres valores seguidos en rango</td><td>Vigilar la función hepática. Prolonga el INR. Sin ajuste renal</td></tr>
       <tr><td>Fondaparinux</td><td class="num">Según peso</td><td>Anti-Xa calibrado específico</td><td>Vida media larga; no apropiado en MCS ni con procedimientos previstos</td></tr>
     </tbody>
   </table></div>
 </section>
 
+<!-- 13 -->
+<section class="card" id="bivalirudina">
+  <h2><span class="num">13</span>Bivalirudina</h2>
+  <p class="lead">Inhibidor directo de la trombina en perfusión continua para ECMO e Impella. Se monitoriza con TTPa y no tiene antídoto específico. Apartado tomado del protocolo local de diciembre de 2025.</p>
+
+  <div class="grid-2">
+    <div class="box">
+      <h4>Indicaciones</h4>
+      <ul>
+        <li><b>Principal:</b> sospecha o confirmación de TIH.</li>
+        <li>Resistencia a la heparina que no responde a la suplementación de antitrombina III.</li>
+        <li>Antecedente de TIH en un paciente que necesita anticoagulación.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Contraindicaciones</h4>
+      <ul>
+        <li>Hipersensibilidad conocida a la bivalirudina o a sus componentes.</li>
+        <li>Sangrado activo mayor no controlado.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Dosificación</h3>
+  <p>La dosis de perfusión se ajusta según la función renal. El bolo de carga es opcional: 0,25–0,5 mg/kg si se necesita un efecto rápido. En un circuito ya establecido se prefiere omitir el bolo para evitar un pico de anticoagulación.</p>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Filtrado glomerular</th><th>Perfusión inicial</th></tr></thead>
+    <tbody>
+      <tr><td>&gt;60 ml/min</td><td class="num">0,15–0,25 mg/kg/h</td></tr>
+      <tr><td>30–59 ml/min</td><td class="num">0,1–0,15 mg/kg/h</td></tr>
+      <tr><td>&lt;30 ml/min, sin diálisis</td><td class="num">0,05 mg/kg/h</td></tr>
+      <tr><td>TRRC</td><td class="num">0,1–0,2 mg/kg/h</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout"><b>TRRC</b>La bivalirudina es parcialmente dializable. En insuficiencia renal aguda o fluctuante puede acumularse: monitorizar con más frecuencia y bajar la dosis.</div>
+
+  <h3>Paso desde heparina</h3>
+  <ol>
+    <li>Suspender la perfusión de heparina. No hace falta esperar a que desaparezca su efecto.</li>
+    <li>Iniciar de inmediato la bivalirudina a la dosis que corresponda a la función renal.</li>
+    <li>No administrar bolo de carga durante la transición.</li>
+  </ol>
+
+  <h3>Monitorización</h3>
+  <ul>
+    <li>Prueba principal: TTPa. Diana 50–70 s, o 1,5–2,0 veces el valor basal.</li>
+    <li>TTPa basal antes de iniciar.</li>
+    <li>Nuevo TTPa a las 2 h del inicio o de cualquier cambio de dosis.</li>
+    <li>En rango, cada 4–6 h durante las primeras 24 h.</li>
+    <li>Si se mantiene estable, cada 8–12 h.</li>
+  </ul>
+
+  <h3>Nomograma por TTPa</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>TTPa</th><th>Acción</th><th>Siguiente control</th></tr></thead>
+    <tbody>
+      <tr class="low"><td class="num">&lt;50 s</td><td>Subir la perfusión un 15–20 % de la dosis actual</td><td>A las 2 h</td></tr>
+      <tr class="goal"><td class="num">50–70 s</td><td>Rango terapéutico. Sin cambios</td><td>A las 4–6 h, si está estable</td></tr>
+      <tr class="high"><td class="num">71–90 s</td><td>Bajar la perfusión un 10–15 % de la dosis actual</td><td>A las 2 h</td></tr>
+      <tr class="high"><td class="num">&gt;90 s</td><td>Suspender 1 h. Reiniciar un 25–30 % por debajo de la dosis previa</td><td>A las 2 h de reiniciar</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Complicaciones</h3>
+  <div class="grid-2">
+    <div class="box">
+      <h4>Sangrado</h4>
+      <p>Vida media aproximada de 25 min con función renal normal.</p>
+      <ul>
+        <li><b>Menor:</b> bajar la perfusión o suspenderla de forma temporal.</li>
+        <li><b>Mayor:</b> suspender de inmediato. No hay antídoto. Soporte con hemoderivados y control de la fuente.</li>
+        <li>En casos extremos se ha considerado complejo protrombínico o factor VIIa recombinante. Su uso es controvertido.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Trombosis del circuito</h4>
+      <ul>
+        <li>Si sube la presión transmembrana del oxigenador o se ven coágulos, subir la dosis hasta el rango alto del TTPa (70–80 s).</li>
+        <li>Corregir otras causas: estasis de flujo y bajo gasto.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout warn"><b>Coste</b>La bivalirudina es bastante más cara que la heparina. Reservarla para las indicaciones de este apartado.</div>
+</section>
+
+<!-- 14 -->
+<section class="card" id="argatroban">
+  <h2><span class="num">14</span>Argatrobán</h2>
+  <p class="lead">Inhibidor directo de la trombina de metabolismo hepático para ECMO e Impella. No lleva dosis de carga. La perfusión se vigila con el TTPa y con la función hepática.</p>
+
+  <h3>Dosificación</h3>
+  <div class="callout warn"><b>Sin dosis de carga</b>No se administra bolo. La perfusión se inicia directamente a 0,2–0,3 µg/kg/min.</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Situación</th><th>Dosis</th></tr></thead>
+    <tbody>
+      <tr class="goal"><td>Inicio</td><td class="num">0,2–0,3 µg/kg/min</td></tr>
+      <tr><td>Diana de TTPa</td><td class="num">1,5–2,5 veces el valor basal</td></tr>
+      <tr><td>Función renal</td><td>Sin ajuste</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout danger"><b>Función hepática</b>El argatrobán se aclara por el hígado. Vigilar bilirrubina y transaminasas antes de iniciar y mientras dura la perfusión. Si la función hepática empeora, el fármaco puede acumularse: bajar la dosis y acortar el intervalo de los controles.</div>
+
+  <h3>Monitorización</h3>
+  <ul>
+    <li>TTPa basal antes de empezar.</li>
+    <li>Tras iniciar la perfusión, y tras cada ajuste, repetir el TTPa cada 2–4 h.</li>
+    <li>Seguir así hasta tres valores consecutivos dentro de 1,5–2,5 veces el basal.</li>
+  </ul>
+  <div class="callout"><b>Sin antídoto</b>En un sangrado grave se detiene la perfusión y se da soporte transfusional. Eleva el INR de forma falsa.</div>
+</section>
+
+<!-- 15 -->
+<section class="card" id="isquemia">
+  <h2><span class="num">15</span>Isquemia de la extremidad</h2>
+  <p class="lead">Complicación del acceso vascular del Impella, en la práctica casi siempre femoral. Apartado tomado del protocolo local de diciembre de 2025.</p>
+  <div class="grid-2">
+    <div class="box">
+      <h4>Qué vigilar</h4>
+      <ul class="check">
+        <li>Pulso de la extremidad del acceso.</li>
+        <li>Color.</li>
+        <li>Temperatura.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Cada cuánto</h4>
+      <ul>
+        <li>Exploración clínica regular del pulso, el color y la temperatura.</li>
+        <li>Cada día, el punto de inserción: sangrado, hematoma, isquemia del miembro o infección.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout warn"><b>Aviso</b>Un cambio de pulso, color o temperatura, o un hematoma, sangrado o signos de infección en el punto de inserción, se comunica al médico responsable en ese momento. En la cronología del ingreso, si hay hematoma, soplo o isquemia, está indicado el Doppler del acceso.</div>
+</section>
+
+<!-- 16 -->
+<section class="card" id="hemolisis">
+  <h2><span class="num">16</span>Hemólisis</h2>
+  <p class="lead">La hemólisis y la trombosis del dispositivo se vigilan juntas. Una mala posición del Impella y la succión aumentan la hemólisis. Apartado tomado del protocolo local de diciembre de 2025.</p>
+
+  <h3>Cuándo sospecharla</h3>
+  <ul class="check">
+    <li>Hemoglobina libre en plasma elevada.</li>
+    <li>LDH elevada.</li>
+    <li>Ictericia.</li>
+    <li>Hemoglobinuria: orina oscura.</li>
+    <li>Alarmas de motor en la consola.</li>
+  </ul>
+  <p>Medir LDH y haptoglobina o hemoglobina libre en plasma a diario, o antes si aparece alguno de estos signos.</p>
+
+  <h3>Qué hacer</h3>
+  <div class="flow">
+    <div class="step"><span class="n">1</span><div>Asegurar que la anticoagulación sistémica es adecuada. Si se sospecha trombosis del dispositivo, subir el objetivo de TTPa.</div></div>
+    <div class="step"><span class="n">2</span><div>Comprobar que la solución de purga es la correcta y que está infundiendo.</div></div>
+    <div class="step"><span class="n">3</span><div>Optimizar la posición del Impella con ecocardiografía. Una mala posición aumenta la hemólisis.</div></div>
+    <div class="step warn"><span class="n">4</span><div>Si la hemólisis es grave y persiste, reposicionar el dispositivo o cambiarlo.</div></div>
+  </div>
+  <div class="callout"><b>ECMO</b>En el circuito, el mismo cuadro de laboratorio junto con subida de la presión transmembrana o coágulos visibles obliga a revisar la anticoagulación. Si la trombosis del oxigenador compromete su función, puede hacer falta cambiarlo.</div>
+</section>
+
 <!-- CONTROL ENFERMERIA -->
 <section class="card enf-page" id="enfermeria">
-  <h2><span class="num">13</span>Control de enfermería: ingreso y primeras 24 h</h2>
+  <h2><span class="num">17</span>Control de enfermería: ingreso y primeras 24 h</h2>
   <p class="lead">Página operativa para la enfermera responsable: material que debe estar preparado antes de que llegue el paciente, preparación y cálculo de la heparina, vía de administración, compatibilidades, controles de las primeras 24 h y qué hacer con cada resultado. La heparina es un medicamento de alto riesgo: el cálculo y la programación de la bomba se comprueban con doble chequeo independiente (<a href="https://seguridaddelpaciente.sanidad.gob.es/practicasSeguras/usoSeguroMedicamentos/docs/Recomendaciones_uso_seguro_medicamentos_alto_riesgo.pdf">Ministerio de Sanidad e ISMP-España</a>).</p>
 
   <div class="nseq" aria-label="Secuencia de ingreso">
     <div class="ns"><span class="nn">1</span><b>Analítica basal</b><span>Antes de cualquier heparina</span></div>
     <div class="ns"><span class="nn">2</span><b>Bomba y vía</b><span>Preparadas, etiquetadas y con doble chequeo</span></div>
     <div class="ns"><span class="nn">3</span><b>Bolo</b><span>Si está pautado: IV directo y hora registrada</span></div>
-    <div class="ns"><span class="nn">4</span><b>Perfusión</b><span>ECMO: iniciar cuando el ACT baje de 220–250 s</span></div>
-    <div class="ns"><span class="nn">5</span><b>Control a las 6 h</b><span>Anti-Xa y TTPa</span></div>
+    <div class="ns"><span class="nn">4</span><b>Perfusión</b><span>ECMO: 8 UI/kg/h cuando el ACT sea &lt;250 s</span></div>
+    <div class="ns"><span class="nn">5</span><b>Control a las 4 h</b><span>Anti-Xa y TTPa</span></div>
     <div class="ns"><span class="nn">6</span><b>Ajuste</b><span>Nomograma; nuevo control a las 6 h</span></div>
   </div>
 
@@ -1449,7 +1637,7 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
       </select></label>
       <label>Bolo (UI/kg)<input type="number" id="e_bolo" min="0" max="150" step="5" value="75"></label>
       <label>Bolo máximo (UI; 0 = sin límite)<input type="number" id="e_bmax" min="0" step="500" value="0"></label>
-      <label>Perfusión (UI/kg/h)<input type="number" id="e_perf" min="0" max="40" step="0.5" value="10"></label>
+      <label>Perfusión (UI/kg/h)<input type="number" id="e_perf" min="0" max="40" step="0.5" value="8"></label>
       <label>Preparación<select id="e_prep">
         <option value="250">25.000 UI en 250 ml → 100 UI/ml (bolsa)</option>
         <option value="500">25.000 UI en 500 ml → 50 UI/ml (bolsa)</option>
@@ -1524,7 +1712,8 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
       <tr class="grp"><td colspan="9">Analítica</td></tr>
       <tr><td><b>Hemograma</b> (Hb, plaquetas)</td><td><i class="d"></i></td><td></td><td></td><td><i class="d"></i></td><td><i class="d"></i></td><td></td><td><i class="d"></i></td><td>Hb ↓ ≥2 g/dl, plaquetas &lt;100.000 o caída &gt;30 %: avisar</td></tr>
       <tr><td><b>Coagulación</b> (TP, TTPa, fibrinógeno)</td><td><i class="d"></i></td><td></td><td></td><td></td><td><i class="d"></i></td><td></td><td><i class="d"></i></td><td>Fibrinógeno &lt;1,5 g/l con sangrado: avisar</td></tr>
-      <tr><td><b>Anti-Xa + TTPa</b></td><td><i class="d o"></i></td><td></td><td></td><td><i class="d k"></i></td><td><i class="d k"></i></td><td><i class="d k"></i></td><td><i class="d k"></i></td><td>Aplicar el <a href="#nomograma">nomograma</a>; repetir a las 6 h de cada cambio</td></tr>
+      <tr><td><b>Anti-Xa</b></td><td><i class="d o"></i></td><td></td><td><i class="d k"></i></td><td></td><td><i class="d k"></i></td><td></td><td><i class="d k"></i></td><td>Primero a las 4 h; después cada 6–12 h. Tras un cambio, el nomograma</td></tr>
+      <tr><td><b>TTPa</b></td><td><i class="d"></i></td><td></td><td><i class="d k"></i></td><td></td><td><i class="d k"></i></td><td><i class="d k"></i></td><td><i class="d k"></i></td><td>Diana 60–80 s o 1,2–2,5 × basal. Cada 4–6 h</td></tr>
       <tr><td><b>ACT</b> (ECMO, Impella)</td><td></td><td><i class="d k"></i></td><td><i class="d"></i></td><td></td><td></td><td></td><td></td><td>3–5 min tras el bolo y cada 1–2 h en la fase inicial</td></tr>
       <tr><td><b>Gasometría</b> con Hb y lactato</td><td><i class="d"></i></td><td></td><td><i class="d"></i></td><td><i class="d"></i></td><td><i class="d"></i></td><td><i class="d"></i></td><td><i class="d"></i></td><td>Hb en descenso: buscar sangrado y avisar</td></tr>
       <tr><td><b>Hemólisis</b> (LDH, Hb libre, bilirrubina)</td><td><i class="d"></i></td><td></td><td></td><td><i class="d o"></i></td><td><i class="d"></i></td><td></td><td><i class="d"></i></td><td>Hb libre o LDH en aumento: avisar (posición del Impella, circuito)</td></tr>
@@ -1588,7 +1777,7 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
       <label>Dispositivo<input id="r_dev" placeholder="ECMO / Impella / ECPELLA / BIAC"></label>
       <label>Peso (kg)<input id="r_peso" type="number" step="0.5"></label>
       <label>Concentración (UI/ml)<select id="r_conc"><option value="100">100</option><option value="50">50</option><option value="500">500</option></select></label>
-      <label>Diana pautada<input id="r_diana" placeholder="anti-Xa 0,3–0,5 · ACT 180–220"></label>
+      <label>Diana pautada<input id="r_diana" placeholder="anti-Xa 0,3–0,7 · TTPa 60–80 s"></label>
       <label>Purga Impella (UI/h)<input id="r_purga" type="number" step="1"></label>
     </div>
     <div class="reg-key">
@@ -1611,7 +1800,7 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
 
 <!-- 10 -->
 <section class="card" id="turno">
-  <h2><span class="num">14</span>Checklist de anticoagulación por turno</h2>
+  <h2><span class="num">18</span>Checklist de anticoagulación por turno</h2>
   <div class="grid-2">
     <div class="box">
       <h4>Enfermería</h4>
@@ -1641,7 +1830,7 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
 
 <!-- 11 -->
 <section class="card" id="refs">
-  <h2><span class="num">15</span>Referencias</h2>
+  <h2><span class="num">19</span>Referencias</h2>
   <ol class="refs">
     <li>McMichael ABV, et al. 2021 ELSO Adult and Pediatric Anticoagulation Guidelines. ASAIO J. 2022;68(3):303-310. <a href="https://pubmed.ncbi.nlm.nih.gov/35080509/">https://pubmed.ncbi.nlm.nih.gov/35080509/</a></li>
     <li>ELSO. Traducción al español de las guías de anticoagulación. <a href="https://www.elso.org/ecmo-resources/elso-ecmo-guidelines.aspx">https://www.elso.org/ecmo-resources/elso-ecmo-guidelines.aspx</a></li>
@@ -1767,8 +1956,8 @@ i.ak{font-style:normal;font-weight:700;padding:1px 7px;border-radius:5px;margin-
   const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+e.target.id));}}),{rootMargin:'-30% 0px -65% 0px'});
   document.querySelectorAll('section.card').forEach(s=>obs.observe(s));
   /* Hoja de preparación enfermería */
-  const PRE={ecmo:[75,0,10],imp:[0,0,6],ecp:[0,0,6],biac:[0,0,10],std:[80,5000,18]};
-  const NOTE={ecmo:'Bolo en la canulación (50–100 UI/kg; 25–50 si sangrado o poscardiotomía). La perfusión se inicia sin bolo cuando el ACT baje de 220–250 s.',imp:'Sin bolo en la UCI (en el implante se titula por ACT ≥250 s). Perfusión sistémica 6–7 UI/kg/h solo si el anti-Xa es &lt;0,3 con la purga sola.',ecp:'Sin bolo en la UCI. HNF sistémica de inicio 6–7 UI/kg/h sumada a la purga del Impella.',biac:'Sin bolo. Estrategia selectiva: 10–12 UI/kg/h si hay indicación.',std:'Bolo 60–80 UI/kg (máximo 5.000 UI) y perfusión 12–18 UI/kg/h.',custom:'Dosis personalizada según la prescripción.'};
+  const PRE={ecmo:[75,0,8],imp:[0,0,6],ecp:[0,0,6],biac:[0,0,10],std:[80,5000,18]};
+  const NOTE={ecmo:'Bolo en la canulación (50–100 UI/kg; 25–50 si sangrado o poscardiotomía). La perfusión se inicia sin bolo a 8 UI/kg/h cuando el ACT sea &lt;250 s.',imp:'Sin bolo en la UCI (en el implante se titula por ACT ≥250 s). Perfusión sistémica 6–7 UI/kg/h solo si el anti-Xa es &lt;0,3 con la purga sola.',ecp:'Sin bolo en la UCI. HNF sistémica de inicio 6–7 UI/kg/h sumada a la purga del Impella, cuando el ACT sea &lt;250 s.',biac:'Sin bolo. Estrategia selectiva: 10–12 UI/kg/h si hay indicación.',std:'Bolo 60–80 UI/kg (máximo 5.000 UI) y perfusión 12–18 UI/kg/h.',custom:'Dosis personalizada según la prescripción.'};
   function prep(){
     const w=+$('e_peso').value||0, bk=+$('e_bolo').value||0, bmax=+$('e_bmax').value||0, pk=+$('e_perf').value||0, vol=+$('e_prep').value, vc=+$('e_vial').value, pu=+$('e_purga').value||0, ind=$('e_ind').value;
     const conc=25000/vol; let bol=bk*w; const cap=bmax>0&&bol>bmax; if(cap) bol=bmax;
