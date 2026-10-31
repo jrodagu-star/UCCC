@@ -54,7 +54,7 @@ const SECTIONS = [
     items: [
       {
         id: 'dds',
-        title: 'DDS (Descontaminación Digestiva)',
+        title: 'DDS',
         description: 'Guía rápida y protocolo detallado de descontaminación digestiva selectiva.',
         parts: [
           {
