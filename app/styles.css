@@ -154,6 +154,17 @@ button { border: 0; background: none; color: inherit; }
   border-bottom: 1px solid var(--line);
   background: var(--panel);
 }
+.topbar[class*="tone-"] {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--tone-bg) 72%, #fff) 0%, var(--tone-bg) 100%);
+  border-bottom-color: color-mix(in srgb, var(--tone) 35%, var(--tone-bg));
+}
+.topbar[class*="tone-"] .crumbs {
+  color: color-mix(in srgb, var(--tone) 62%, var(--ink));
+}
+.topbar[class*="tone-"] .meta {
+  background: #fff;
+  color: var(--tone);
+}
 .title-row {
   display: flex;
   align-items: center;

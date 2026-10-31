@@ -387,6 +387,7 @@ const state = {
 
 const els = {
   nav: document.getElementById('sectionNav'),
+  topbar: document.querySelector('.topbar'),
   title: document.getElementById('pageTitle'),
   crumbs: document.getElementById('crumbs'),
   meta: document.getElementById('pageMeta'),
@@ -419,6 +420,8 @@ function setActiveNav(sectionId) {
   els.nav.querySelectorAll('.nav-btn').forEach((btn) => {
     btn.classList.toggle('active', btn.dataset.sectionId === sectionId);
   });
+  const toneClass = sectionId === 'team' ? 'tone-equipo' : (sectionId ? 'tone-' + sectionId : '');
+  if (els.topbar) els.topbar.className = toneClass ? 'topbar ' + toneClass : 'topbar';
 }
 
 const ICONS = {
