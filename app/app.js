@@ -419,8 +419,6 @@ function setActiveNav(sectionId) {
   els.nav.querySelectorAll('.nav-btn').forEach((btn) => {
     btn.classList.toggle('active', btn.dataset.sectionId === sectionId);
   });
-  const teamBtn = document.getElementById('teamBtn');
-  if (teamBtn) teamBtn.classList.toggle('active', sectionId === 'team');
 }
 
 const ICONS = {
@@ -432,6 +430,7 @@ const ICONS = {
   hemodinamica: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg>',
   neurologico: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6a3 3 0 0 1 5.8-1A3 3 0 0 1 18 8a3 3 0 0 1 1 5 3 3 0 0 1-2 5 3 3 0 0 1-5 1 3 3 0 0 1-5-1 3 3 0 0 1-2-5 3 3 0 0 1 1-5 3 3 0 0 1 3-2z"/><path d="M12 7v10M9 10h6"/></svg>',
   formacion: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l9-4 9 4-9 4-9-4z"/><path d="M7 11v5c0 1.5 2.2 3 5 3s5-1.5 5-3v-5"/></svg>',
+  equipo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="2.2"/><circle cx="16" cy="9" r="1.8"/><path d="M4.5 18c.4-2.6 2.2-4 4.5-4s4.1 1.4 4.5 4"/><path d="M13 14.2c1.3-.5 2.6-.7 3.6-.4 1.6.4 2.6 1.6 3 3.2"/></svg>',
   doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>',
   file: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v6h6"/><path d="M8 16h3M8 12h8"/></svg>',
   image: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.4"/><path d="M7 17l4-4 3 3 2-2 2 3"/></svg>',
@@ -454,14 +453,22 @@ function itemKind(item) {
 }
 
 function renderNav() {
-  els.nav.innerHTML = SECTIONS.map((section) =>
+  const sections = SECTIONS.map((section) =>
     '<button type="button" class="nav-btn tone-' + escapeHtml(section.id) + '" data-section-id="' + escapeHtml(section.id) + '">' +
       iconHtml(section.id) +
       '<span class="nav-label">' + escapeHtml(section.title) + '</span>' +
     '</button>'
   ).join('');
+  els.nav.innerHTML = sections +
+    '<button type="button" class="nav-btn tone-equipo" id="teamBtn" data-section-id="team">' +
+      iconHtml('equipo') +
+      '<span class="nav-label">Equipo</span>' +
+    '</button>';
   els.nav.querySelectorAll('.nav-btn').forEach((btn) => {
-    btn.addEventListener('click', () => openSection(btn.dataset.sectionId));
+    btn.addEventListener('click', () => {
+      if (btn.dataset.sectionId === 'team') openTeam();
+      else openSection(btn.dataset.sectionId);
+    });
   });
 }
 
@@ -470,6 +477,7 @@ function showHome() {
   state.itemId = null;
   setActiveNav(null);
   els.title.textContent = 'Inicio';
+  showSectionTeam(null);
   els.crumbs.textContent = 'Unidad Cuidados Críticos Cardiológicos HM';
   els.meta.textContent = 'Elige una sección del menú';
   els.viewer.innerHTML =
@@ -488,6 +496,7 @@ function openSection(sectionId) {
   state.itemId = null;
   setActiveNav(section.id);
   els.title.textContent = section.title;
+  showSectionTeam(section.id);
   els.crumbs.textContent = 'UCC Cardiológicos HM / ' + section.title;
   els.meta.textContent = (section.items || []).length
     ? (section.items.length + ' recurso' + (section.items.length === 1 ? '' : 's'))
@@ -508,7 +517,9 @@ function openSection(sectionId) {
   const cards = items.map((item) => {
     const inner =
       iconHtml(itemKind(item)) +
-      '<span class="card-title">' + escapeHtml(item.title) + '</span>' +
+      '<span class="card-title-row"><span class="card-title">' + escapeHtml(item.title) + '</span>' +
+        assigneesHtml(peopleForItem(section.id, item.id)) +
+      '</span>' +
       '<span class="card-desc">' + escapeHtml(item.description || '') + '</span>' +
       '<span class="card-cta">Abrir</span>';
     if (item.url && item.direct) {
@@ -590,6 +601,7 @@ function openItem(sectionId, itemId) {
   state.sectionId = section.id;
   state.itemId = item.id;
   setActiveNav(section.id);
+  showSectionTeam(null);
 
   if (item.url) {
     openExternal(section, item);
@@ -614,7 +626,9 @@ function openItem(sectionId, itemId) {
   const cards = parts.map((part) =>
     '<button type="button" class="card" data-part-id="' + escapeHtml(part.id) + '">' +
       iconHtml(itemKind(part)) +
-      '<span class="card-title">' + escapeHtml(part.title) + '</span>' +
+      '<span class="card-title-row"><span class="card-title">' + escapeHtml(part.title) + '</span>' +
+        assigneesHtml(peopleForItem(section.id, item.id)) +
+      '</span>' +
       '<span class="card-desc">' + escapeHtml(part.description || '') + '</span>' +
       '<span class="card-cta">Abrir</span>' +
     '</button>'
@@ -646,7 +660,7 @@ function openExternal(section, item) {
   els.viewer.innerHTML =
     '<div class="doc-view">' +
       '<div class="doc-toolbar">' +
-        '<div class="doc-toolbar-title">' + escapeHtml(item.title) + '</div>' +
+        '<div class="doc-toolbar-title">' + assigneesHtml(peopleForItem(section.id, item.id)) + escapeHtml(item.title) + '</div>' +
         '<div class="doc-toolbar-actions">' +
           '<a class="btn" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">Abrir en pestaña</a>' +
           '<button type="button" class="btn btn-accent" id="closeDocBtn">Cerrar</button>' +
@@ -694,7 +708,7 @@ function openPart(section, item, part) {
   els.viewer.innerHTML =
     '<div class="doc-view">' +
       '<div class="doc-toolbar">' +
-        '<div class="doc-toolbar-title">' + escapeHtml(part.title) + '</div>' +
+        '<div class="doc-toolbar-title">' + assigneesHtml(peopleForItem(section.id, item.id)) + escapeHtml(part.title) + '</div>' +
         '<div class="doc-toolbar-actions">' +
           (enlarge ? '<button type="button" class="btn" id="enlargeDocBtn">Ampliar</button>' : '') +
           '<a class="btn" href="' + escapeHtml(src) + '" target="_blank" rel="noopener noreferrer">Abrir en pestaña</a>' +
@@ -765,6 +779,41 @@ function loadTeam() {
 }
 
 let team = loadTeam();
+
+function peopleForSection(sectionId) {
+  return team.filter((person) => {
+    const ref = targetParts(person.target);
+    return ref.sectionId === sectionId && (ref.kind === 'section' || ref.kind === 'item');
+  });
+}
+
+function peopleForItem(sectionId, itemId) {
+  return team.filter((person) => {
+    const ref = targetParts(person.target);
+    return ref.kind === 'item' && ref.sectionId === sectionId && ref.itemId === itemId;
+  });
+}
+
+function miniAvatar(person) {
+  const name = person.name || 'Sin nombre';
+  return '<span class="mini-avatar shape-' + escapeHtml(person.shape) + '" style="background:' + escapeHtml(person.color) + ';color:' + inkFor(person.color) + '" title="' + escapeHtml(name) + '">' + avatarInner(person) + '</span>';
+}
+
+function assigneesHtml(people) {
+  if (!people.length) return '';
+  return '<span class="card-assignees">' + people.map(miniAvatar).join('') + '</span>';
+}
+
+function showSectionTeam(sectionId) {
+  const box = document.getElementById('sectionTeam');
+  if (!box) return;
+  const people = sectionId ? peopleForSection(sectionId) : [];
+  box.hidden = people.length === 0;
+  box.innerHTML = people.map((person) => {
+    const name = person.name || 'Sin nombre';
+    return '<span class="section-person">' + miniAvatar(person) + '<span>' + escapeHtml(name) + '</span></span>';
+  }).join('');
+}
 
 function saveTeam() {
   try { localStorage.setItem(TEAM_KEY, JSON.stringify(team)); } catch (err) {}
@@ -923,6 +972,7 @@ function openTeam() {
   state.itemId = null;
   setActiveNav('team');
   els.title.textContent = 'Equipo';
+  showSectionTeam(null);
   els.crumbs.textContent = 'UCC Cardiológicos HM / Equipo';
   els.meta.textContent = '9 personas';
   const cards = team.map((person) => {
@@ -955,5 +1005,4 @@ function openTeam() {
 }
 
 renderNav();
-document.getElementById('teamBtn').addEventListener('click', openTeam);
 openItem('hemodinamica', 'escalas-shock');
