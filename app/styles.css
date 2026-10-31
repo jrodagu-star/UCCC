@@ -216,16 +216,16 @@ button { border: 0; background: none; color: inherit; }
   box-shadow: 0 4px 10px rgba(28, 32, 30, .08);
 }
 .mini-avatar {
-  width: 22px;
-  height: 22px;
+  width: 16px;
+  height: 16px;
   display: inline-grid;
   place-items: center;
   flex: 0 0 auto;
-  font-size: 8px;
+  font-size: 7px;
   font-weight: 800;
   line-height: 1;
 }
-.section-person .mini-avatar { width: 28px; height: 28px; font-size: 10px; }
+.section-person .mini-avatar { width: 18px; height: 18px; font-size: 8px; }
 .mini-avatar svg { width: 68%; height: 68%; fill: currentColor; display: block; }
 .mini-avatar.shape-circle { border-radius: 50%; }
 .mini-avatar.shape-rounded { border-radius: 28%; }
@@ -696,12 +696,12 @@ button { border: 0; background: none; color: inherit; }
   gap: 3px;
   max-width: 76px;
   color: var(--ink);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 750;
   line-height: 1.15;
   text-align: center;
 }
-.tree-doctor .mini-avatar { width: 28px; height: 28px; font-size: 10px; }
+.tree-doctor .mini-avatar { width: 18px; height: 18px; font-size: 8px; }
 .team-slot {
   display: flex;
   flex-direction: column;
@@ -725,11 +725,11 @@ button { border: 0; background: none; color: inherit; }
   color: inherit;
 }
 .avatar {
-  width: 64px;
-  height: 64px;
+  width: 46px;
+  height: 46px;
   display: grid;
   place-items: center;
-  font-size: 26px;
+  font-size: 18px;
   font-weight: 800;
   letter-spacing: .02em;
   line-height: 1;
