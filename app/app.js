@@ -604,7 +604,7 @@ function openItem(sectionId, itemId) {
   state.sectionId = section.id;
   state.itemId = item.id;
   setActiveNav(section.id);
-  showSectionTeam(null);
+  showSectionTeam(section.id);
 
   if (item.url) {
     openExternal(section, item);
@@ -991,7 +991,7 @@ function openTeam() {
   }).join('');
   els.viewer.innerHTML =
     '<div class="panel">' +
-      '<p class="panel-lead">Nueve personas del equipo. Personaliza el icono y elige, en el menú, la sección o subsección que abre cada una.</p>' +
+      '<p class="panel-lead">Nueve personas del equipo. Personaliza el icono y elige, en el menú, la sección o subsección que abre cada una. Los cambios se guardan en este navegador.</p>' +
       '<div class="team-grid">' + cards + '</div>' +
     '</div>';
   els.viewer.querySelectorAll('[data-team-open]').forEach((btn) => {
