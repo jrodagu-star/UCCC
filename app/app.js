@@ -484,11 +484,8 @@ function showHome() {
   els.crumbs.textContent = 'Unidad Cuidados Críticos Cardiológicos HM';
   els.meta.textContent = 'Elige una sección del menú';
   els.viewer.innerHTML =
-    '<div class="panel home-hero">' +
-      '<div>' +
-        '<h2>Unidad Cuidados Críticos Cardiológicos HM</h2>' +
-        '<p>Selecciona Respiratorio, Infecciones, Nutrición u otra área del menú superior para abrir sus protocolos y herramientas.</p>' +
-      '</div>' +
+    '<div class="home-stage">' +
+      '<img class="home-art" src="../assets/inicio/portada.jpg" alt="Unidad de cuidados críticos cardiológicos">' +
     '</div>';
 }
 
@@ -1028,5 +1025,7 @@ function openTeam() {
 loadTeam().then((loaded) => {
   team = loaded;
   renderNav();
-  openItem('hemodinamica', 'escalas-shock');
+  showHome();
 });
+
+document.getElementById('homeBtn').addEventListener('click', showHome);

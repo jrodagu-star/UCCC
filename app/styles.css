@@ -60,7 +60,10 @@ button { border: 0; background: none; color: inherit; }
   gap: 10px;
   align-items: center;
   flex: 0 0 auto;
+  padding: 0;
+  text-align: left;
 }
+.brand:hover .brand-mark { filter: brightness(1.08); }
 .brand-mark {
   width: 44px;
   height: 44px;
@@ -532,23 +535,19 @@ button { border: 0; background: none; color: inherit; }
   display: block;
 }
 
-.home-hero {
+.home-stage {
   height: 100%;
   display: grid;
   place-items: center;
-  text-align: center;
-  padding: 24px;
+  padding: 12px 8px 20px;
 }
-.home-hero h2 {
-  font-size: clamp(22px, 3vw, 32px);
-  color: var(--ink);
-  margin-bottom: 10px;
-}
-.home-hero p {
-  color: var(--muted);
-  max-width: 52ch;
-  line-height: 1.5;
-  font-size: 15px;
+.home-art {
+  display: block;
+  width: min(980px, 100%);
+  max-height: 100%;
+  object-fit: contain;
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 58%, transparent 86%);
+  mask-image: radial-gradient(ellipse at center, #000 58%, transparent 86%);
 }
 
 .team-grid {
