@@ -224,7 +224,17 @@ button { border: 0; background: none; color: inherit; }
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+.assignee-chip {
+  display: inline-flex;
+  align-items: center;
   gap: 6px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
 }
 .doc-view > .card-assignees { flex: 0 0 auto; }
 .crumbs {

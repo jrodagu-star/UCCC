@@ -809,14 +809,23 @@ function peopleForItem(sectionId, itemId) {
   });
 }
 
+function givenName(name) {
+  const part = String(name || '').trim().split(/\s+/)[0];
+  return part || 'Sin nombre';
+}
+
 function miniAvatar(person) {
   const name = person.name || 'Sin nombre';
   return '<span class="mini-avatar shape-' + escapeHtml(person.shape) + '" style="background:' + escapeHtml(person.color) + ';color:' + inkFor(person.color) + '" title="' + escapeHtml(name) + '">' + avatarInner(person) + '</span>';
 }
 
+function assigneeChip(person) {
+  return '<span class="assignee-chip">' + miniAvatar(person) + '<span class="assignee-given">' + escapeHtml(givenName(person.name)) + '</span></span>';
+}
+
 function assigneesHtml(people) {
   if (!people.length) return '';
-  return '<span class="card-assignees">' + people.map(miniAvatar).join('') + '</span>';
+  return '<span class="card-assignees">' + people.map(assigneeChip).join('') + '</span>';
 }
 
 function cardWithAssignees(cardHtml, people) {
