@@ -1048,19 +1048,21 @@ function openTeam() {
     '</div>';
   }).join('');
   const tree = SECTIONS.map((section) => {
-    const docs = (section.items || []).map((item) =>
-      '<li><button type="button" data-tree-item="' + escapeHtml(section.id + ':' + item.id) + '">' + escapeHtml(item.title) + '</button></li>'
-    ).join('');
-    const doctors = peopleForSection(section.id).map((person) =>
-      '<span class="tree-doctor">' + miniAvatar(person) + '<span>' + escapeHtml(givenName(person.name)) + '</span></span>'
-    ).join('');
+    const docs = (section.items || []).map((item) => {
+      const doctors = peopleForItem(section.id, item.id).map((person) =>
+        '<span class="tree-doctor">' + miniAvatar(person) + '<span>' + escapeHtml(givenName(person.name)) + '</span></span>'
+      ).join('');
+      return '<li><div class="tree-doc-row">' +
+        '<button type="button" data-tree-item="' + escapeHtml(section.id + ':' + item.id) + '">' + escapeHtml(item.title) + '</button>' +
+        (doctors ? '<span class="tree-doctors">' + doctors + '</span>' : '') +
+      '</div></li>';
+    }).join('');
     return '<li class="tree-section tone-' + escapeHtml(section.id) + '">' +
       '<div class="tree-section-row">' +
         '<button type="button" class="tree-section-btn" data-tree-section="' + escapeHtml(section.id) + '">' +
           iconHtml(section.id) +
           '<span>' + escapeHtml(section.title) + '</span>' +
         '</button>' +
-        (doctors ? '<span class="tree-doctors">' + doctors + '</span>' : '') +
       '</div>' +
       '<ul>' + docs + '</ul>' +
     '</li>';

@@ -688,6 +688,12 @@ button { border: 0; background: none; color: inherit; }
 }
 .tree-section-btn .ico { width: 30px; height: 30px; border-radius: 9px; }
 .tree-section-btn .ico svg { width: 16px; height: 16px; }
+.tree-doc-row {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
+}
 .tree-doctors { display: flex; flex-wrap: wrap; gap: 8px; }
 .tree-doctor {
   display: flex;
