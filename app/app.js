@@ -485,7 +485,10 @@ function showHome() {
   els.meta.textContent = 'Elige una sección del menú';
   els.viewer.innerHTML =
     '<div class="home-stage">' +
-      '<img class="home-art" src="../assets/inicio/portada.jpg" alt="Unidad de cuidados críticos cardiológicos">' +
+      '<div class="home-frame">' +
+        '<img class="home-art" src="../assets/inicio/portada.jpg" alt="">' +
+        '<p class="home-title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-9a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 4.6-7 9-7 9z"/></svg><span>UCCC Monteprincipe</span></p>' +
+      '</div>' +
     '</div>';
 }
 
