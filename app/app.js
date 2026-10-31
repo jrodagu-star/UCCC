@@ -786,14 +786,11 @@ async function loadTeam() {
   const base = defaultTeam();
   let published = [];
   try {
-    const response = await fetch('equipo.json?v=20261031h');
+    const response = await fetch('equipo.json?v=20261031i');
     if (response.ok) published = await response.json();
   } catch (err) {}
-  let saved = [];
-  try {
-    saved = JSON.parse(localStorage.getItem(TEAM_KEY) || 'null');
-  } catch (err) {}
-  return mergeTeam(mergeTeam(base, published, false), saved, true);
+  try { localStorage.removeItem(TEAM_KEY); } catch (err) {}
+  return mergeTeam(base, published, false);
 }
 
 let team = defaultTeam();
@@ -1006,7 +1003,7 @@ function openTeam() {
   }).join('');
   els.viewer.innerHTML =
     '<div class="panel">' +
-      '<p class="panel-lead">Nueve personas del equipo. Personaliza el icono y elige, en el menú, la sección o subsección que abre cada una. Los cambios se guardan en este navegador.</p>' +
+      '<p class="panel-lead">Nueve personas del equipo. Se muestra la configuración publicada. Una copia guardada en este navegador no se añade.</p>' +
       '<div class="team-grid">' + cards + '</div>' +
     '</div>';
   els.viewer.querySelectorAll('[data-team-open]').forEach((btn) => {
