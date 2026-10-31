@@ -1079,16 +1079,13 @@ function openTeam() {
           '<li><button type="button" data-team-go="' + escapeHtml(item.target) + '">' + escapeHtml(item.title) + '</button></li>'
         ).join('') + '</ul>'
       : '<p class="team-protocols-empty">Sin protocolos</p>';
-    return '<div class="team-row">' +
-      '<article class="team-slot">' +
-        '<button type="button" class="team-person" data-team-open="' + person.id + '" aria-label="' + escapeHtml(name) + '">' +
-          '<span class="avatar shape-' + escapeHtml(person.shape) + '" style="background:' + escapeHtml(person.color) + ';color:' + inkFor(person.color) + '">' + avatarInner(person) + '</span>' +
-          '<span class="team-name">' + escapeHtml(name) + '</span>' +
-        '</button>' +
-        '<button type="button" class="team-edit" data-team-edit="' + person.id + '">Personalizar</button>' +
-      '</article>' +
-      list +
-    '</div>';
+    const identity =
+      '<span class="avatar shape-' + escapeHtml(person.shape) + '" style="background:' + escapeHtml(person.color) + ';color:' + inkFor(person.color) + '">' + avatarInner(person) + '</span>' +
+      '<span class="team-name">' + escapeHtml(name) + '</span>';
+    const personHtml = protocols.length
+      ? '<button type="button" class="team-person" data-team-open="' + person.id + '" aria-label="' + escapeHtml(name) + '">' + identity + '</button>'
+      : '<div class="team-person">' + identity + '</div>';
+    return '<article class="team-slot">' + personHtml + list + '</article>';
   }).join('');
   const tree = SECTIONS.map((section) => {
     const docs = visibleItems(section).map((item) => {
@@ -1127,11 +1124,7 @@ function openTeam() {
       if (!person) return;
       const targets = personTargets(person);
       if (targets.length) openAssignment(targets[0]);
-      else openTeamEditor(person.id);
     });
-  });
-  els.viewer.querySelectorAll('[data-team-edit]').forEach((btn) => {
-    btn.addEventListener('click', () => openTeamEditor(btn.dataset.teamEdit));
   });
   els.viewer.querySelectorAll('[data-team-go]').forEach((btn) => {
     btn.addEventListener('click', () => openAssignment(btn.dataset.teamGo));

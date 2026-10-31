@@ -578,11 +578,21 @@ button { border: 0; background: none; color: inherit; }
   gap: 10px 12px;
   align-items: start;
 }
-.team-row {
+.team-slot {
   display: grid;
-  grid-template-columns: 108px minmax(0, 1fr);
-  gap: 12px;
+  grid-template-columns: 68px minmax(0, 1fr);
+  gap: 8px;
   align-items: center;
+  height: 100%;
+  padding: 10px 10px 10px 8px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, .92);
+  background: linear-gradient(165deg, #ffffff 0%, #f4f0e8 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .98),
+    0 1px 1px rgba(28, 32, 30, .05),
+    0 8px 16px rgba(28, 32, 30, .1),
+    0 16px 28px rgba(28, 32, 30, .12);
 }
 .team-protocols, .team-protocols-empty { margin: 0; }
 .team-protocols { list-style: none; display: flex; flex-direction: column; gap: 4px; }
@@ -662,20 +672,6 @@ button { border: 0; background: none; color: inherit; }
   text-align: center;
 }
 .tree-doctor .mini-avatar { width: 14px; height: 14px; font-size: 7px; }
-.team-slot {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 8px;
-  padding: 12px 10px 10px;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, .85);
-  background: linear-gradient(180deg, #ffffff 0%, var(--card) 100%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, .95),
-    0 1px 2px rgba(28, 32, 30, .06),
-    0 12px 24px rgba(28, 32, 30, .13);
-}
 .team-person {
   display: flex;
   flex-direction: column;
@@ -702,27 +698,16 @@ button { border: 0; background: none; color: inherit; }
 .avatar.shape-diamond { clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
 .avatar.shape-shield { clip-path: polygon(50% 0, 100% 16%, 86% 70%, 50% 100%, 14% 70%, 0 16%); }
 .team-name {
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 750;
   color: var(--ink);
-  line-height: 1.25;
+  line-height: 1.2;
 }
 .team-assign {
   font-size: 12px;
   line-height: 1.35;
   color: var(--muted);
 }
-.team-edit {
-  align-self: center;
-  border: 1px solid var(--line);
-  background: var(--panel);
-  color: var(--ink);
-  border-radius: 999px;
-  padding: 5px 10px;
-  font-size: 12px;
-  font-weight: 700;
-}
-.team-edit:hover { background: #e7e1d6; }
 .team-dialog {
   position: fixed;
   inset: 0;
@@ -830,5 +815,5 @@ button { border: 0; background: none; color: inherit; }
   .brand-copy { display: none; }
   .topbar { flex-direction: column; align-items: flex-start; }
   .team-people { grid-template-columns: 1fr 1fr; }
-  .team-row, .proto-tree { grid-template-columns: 1fr; }
+  .proto-tree { grid-template-columns: 1fr; }
 }
