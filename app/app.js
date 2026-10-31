@@ -1052,18 +1052,30 @@ function openTeam() {
     const docs = (section.items || []).map((item) =>
       '<li><button type="button" data-tree-item="' + escapeHtml(section.id + ':' + item.id) + '">' + escapeHtml(item.title) + '</button></li>'
     ).join('');
-    return '<li class="tree-section">' +
-      '<button type="button" data-tree-section="' + escapeHtml(section.id) + '">' + escapeHtml(section.title) + '</button>' +
+    const doctors = peopleForSection(section.id).map((person) =>
+      '<span class="tree-doctor">' + miniAvatar(person) + '<span>' + escapeHtml(givenName(person.name)) + '</span></span>'
+    ).join('');
+    return '<li class="tree-section tone-' + escapeHtml(section.id) + '">' +
+      '<div class="tree-section-row">' +
+        '<button type="button" class="tree-section-btn" data-tree-section="' + escapeHtml(section.id) + '">' +
+          iconHtml(section.id) +
+          '<span>' + escapeHtml(section.title) + '</span>' +
+        '</button>' +
+        (doctors ? '<span class="tree-doctors">' + doctors + '</span>' : '') +
+      '</div>' +
       '<ul>' + docs + '</ul>' +
     '</li>';
   }).join('');
   els.viewer.innerHTML =
-    '<div class="panel">' +
-      '<p class="panel-lead">A la izquierda, cada persona y los protocolos que tiene asignados. A la derecha, todas las secciones y sus documentos.</p>' +
-      '<div class="team-board">' +
+    '<div class="team-board">' +
+      '<section class="panel team-pane">' +
+        '<p class="panel-lead">Personas y protocolos asignados.</p>' +
         '<div class="team-people">' + rows + '</div>' +
+      '</section>' +
+      '<section class="panel team-pane">' +
+        '<p class="panel-lead">Secciones y documentos.</p>' +
         '<ul class="proto-tree">' + tree + '</ul>' +
-      '</div>' +
+      '</section>' +
     '</div>';
   els.viewer.querySelectorAll('[data-team-open]').forEach((btn) => {
     btn.addEventListener('click', () => {
