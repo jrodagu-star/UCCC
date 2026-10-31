@@ -595,8 +595,13 @@ button { border: 0; background: none; color: inherit; }
 }
 .team-protocols-empty { color: var(--muted); font-weight: 650; }
 .proto-tree, .proto-tree ul { list-style: none; margin: 0; }
-.proto-tree { padding-left: 2px; }
-.proto-tree > .tree-section + .tree-section { margin-top: 12px; }
+.proto-tree {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 32px;
+  align-items: start;
+  padding-left: 2px;
+}
 .proto-tree ul {
   margin: 4px 0 8px 22px;
   padding: 2px 0 2px 14px;
@@ -825,5 +830,5 @@ button { border: 0; background: none; color: inherit; }
   .brand-copy { display: none; }
   .topbar { flex-direction: column; align-items: flex-start; }
   .team-people { grid-template-columns: 1fr 1fr; }
-  .team-row { grid-template-columns: 1fr; }
+  .team-row, .proto-tree { grid-template-columns: 1fr; }
 }
