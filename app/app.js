@@ -464,15 +464,14 @@ function renderNav() {
     '</button>'
   ).join('');
   els.nav.innerHTML =
-    '<button type="button" class="nav-btn tone-inicio" data-section-id="inicio">' +
+    '<button type="button" class="nav-btn nav-home tone-inicio" data-section-id="inicio" aria-label="Inicio">' +
       iconHtml('inicio') +
-      '<span class="nav-label">Inicio</span>' +
     '</button>' +
-    sections +
     '<button type="button" class="nav-btn tone-equipo" id="teamBtn" data-section-id="team">' +
       iconHtml('equipo') +
       '<span class="nav-label">Equipo</span>' +
-    '</button>';
+    '</button>' +
+    sections;
   els.nav.querySelectorAll('.nav-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       if (btn.dataset.sectionId === 'inicio') showHome();
