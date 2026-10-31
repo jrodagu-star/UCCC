@@ -520,15 +520,13 @@ function openSection(sectionId) {
   const cards = items.map((item) => {
     const inner =
       iconHtml(itemKind(item)) +
-      '<span class="card-title-row"><span class="card-title">' + escapeHtml(item.title) + '</span>' +
-        assigneesHtml(peopleForItem(section.id, item.id)) +
-      '</span>' +
+      '<span class="card-title">' + escapeHtml(item.title) + '</span>' +
       '<span class="card-desc">' + escapeHtml(item.description || '') + '</span>' +
       '<span class="card-cta">Abrir</span>';
-    if (item.url && item.direct) {
-      return '<a class="card" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' + inner + '</a>';
-    }
-    return '<button type="button" class="card" data-item-id="' + escapeHtml(item.id) + '">' + inner + '</button>';
+    const card = item.url && item.direct
+      ? '<a class="card" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' + inner + '</a>'
+      : '<button type="button" class="card" data-item-id="' + escapeHtml(item.id) + '">' + inner + '</button>';
+    return cardWithAssignees(card, peopleForItem(section.id, item.id));
   }).join('');
 
   const posters = section.posters || (section.poster ? [section.poster] : []);
@@ -626,15 +624,15 @@ function openItem(sectionId, itemId) {
   els.crumbs.textContent = 'UCC Cardiológicos HM / ' + section.title + ' / ' + item.title;
   els.meta.textContent = parts.length + ' documentos';
 
-  const cards = parts.map((part) =>
-    '<button type="button" class="card" data-part-id="' + escapeHtml(part.id) + '">' +
-      iconHtml(itemKind(part)) +
-      '<span class="card-title-row"><span class="card-title">' + escapeHtml(part.title) + '</span>' +
-        assigneesHtml(peopleForItem(section.id, item.id)) +
-      '</span>' +
-      '<span class="card-desc">' + escapeHtml(part.description || '') + '</span>' +
-      '<span class="card-cta">Abrir</span>' +
-    '</button>'
+  const partCards = parts.map((part) => cardWithAssignees(
+      '<button type="button" class="card" data-part-id="' + escapeHtml(part.id) + '">' +
+        iconHtml(itemKind(part)) +
+        '<span class="card-title">' + escapeHtml(part.title) + '</span>' +
+        '<span class="card-desc">' + escapeHtml(part.description || '') + '</span>' +
+        '<span class="card-cta">Abrir</span>' +
+      '</button>',
+      peopleForItem(section.id, item.id)
+    )
   ).join('');
 
   els.viewer.innerHTML =
@@ -643,7 +641,7 @@ function openItem(sectionId, itemId) {
         '<p class="panel-lead" style="margin:0">Elige la parte que quieres visualizar.</p>' +
         '<button type="button" class="btn" id="backToSectionBtn">Volver</button>' +
       '</div>' +
-      '<div class="grid">' + cards + '</div>' +
+      '<div class="grid">' + partCards + '</div>' +
     '</div>';
 
   const backBtn = document.getElementById('backToSectionBtn');
@@ -663,13 +661,14 @@ function openExternal(section, item) {
   els.viewer.innerHTML =
     '<div class="doc-view">' +
       '<div class="doc-toolbar">' +
-        '<div class="doc-toolbar-title">' + assigneesHtml(peopleForItem(section.id, item.id)) + escapeHtml(item.title) + '</div>' +
+        '<div class="doc-toolbar-title">' + escapeHtml(item.title) + '</div>' +
         '<div class="doc-toolbar-actions">' +
           '<a class="btn" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">Abrir en pestaña</a>' +
           '<button type="button" class="btn btn-accent" id="closeDocBtn">Cerrar</button>' +
         '</div>' +
       '</div>' +
       '<iframe class="doc-frame" title="' + escapeHtml(item.title) + '" src="' + escapeHtml(item.url) + '"></iframe>' +
+      assigneesHtml(peopleForItem(section.id, item.id)) +
     '</div>';
   const closeBtn = document.getElementById('closeDocBtn');
   if (closeBtn) closeBtn.addEventListener('click', () => openSection(section.id));
@@ -711,7 +710,7 @@ function openPart(section, item, part) {
   els.viewer.innerHTML =
     '<div class="doc-view">' +
       '<div class="doc-toolbar">' +
-        '<div class="doc-toolbar-title">' + assigneesHtml(peopleForItem(section.id, item.id)) + escapeHtml(part.title) + '</div>' +
+        '<div class="doc-toolbar-title">' + escapeHtml(part.title) + '</div>' +
         '<div class="doc-toolbar-actions">' +
           (enlarge ? '<button type="button" class="btn" id="enlargeDocBtn">Ampliar</button>' : '') +
           '<a class="btn" href="' + escapeHtml(src) + '" target="_blank" rel="noopener noreferrer">Abrir en pestaña</a>' +
@@ -719,6 +718,7 @@ function openPart(section, item, part) {
         '</div>' +
       '</div>' +
       body +
+      assigneesHtml(peopleForItem(section.id, item.id)) +
     '</div>';
 
   const closeBtn = document.getElementById('closeDocBtn');
@@ -817,6 +817,12 @@ function miniAvatar(person) {
 function assigneesHtml(people) {
   if (!people.length) return '';
   return '<span class="card-assignees">' + people.map(miniAvatar).join('') + '</span>';
+}
+
+function cardWithAssignees(cardHtml, people) {
+  const icons = assigneesHtml(people);
+  if (!icons) return cardHtml;
+  return '<div class="card-slot">' + cardHtml + icons + '</div>';
 }
 
 function showSectionTeam(sectionId) {

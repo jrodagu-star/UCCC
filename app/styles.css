@@ -208,14 +208,22 @@ button { border: 0; background: none; color: inherit; }
 .mini-avatar.shape-hex { clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
 .mini-avatar.shape-diamond { clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
 .mini-avatar.shape-shield { clip-path: polygon(50% 0, 100% 16%, 86% 70%, 50% 100%, 14% 70%, 0 16%); }
-.card-title-row {
+.card-slot {
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
-  justify-content: space-between;
   gap: 8px;
-  width: 100%;
+  min-width: 0;
 }
-.card-assignees { display: inline-flex; gap: 4px; flex: 0 0 auto; }
+.card-slot > .card { width: 100%; }
+.card-assignees {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 6px;
+}
+.doc-view > .card-assignees { flex: 0 0 auto; }
 .crumbs {
   font-size: 13px;
   color: var(--muted);
