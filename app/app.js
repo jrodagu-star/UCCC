@@ -141,6 +141,7 @@ const SECTIONS = [
       },
       {
         id: 'nutricion-clinica',
+        hidden: true,
         title: 'Calculadora nutrición clínica UCI',
         description: 'Herramienta externa de nutrición clínica en cuidados intensivos.',
         url: 'https://icuconnect-nutricion.web.app'
@@ -416,6 +417,10 @@ function findItem(section, itemId) {
   return (section.items || []).find((item) => item.id === itemId) || null;
 }
 
+function visibleItems(section) {
+  return (section.items || []).filter((item) => !item.hidden);
+}
+
 function setActiveNav(sectionId) {
   els.nav.querySelectorAll('.nav-btn').forEach((btn) => {
     btn.classList.toggle('active', btn.dataset.sectionId === sectionId);
@@ -490,11 +495,10 @@ function openSection(sectionId) {
   els.title.textContent = section.title;
   showSectionTeam(section.id);
   els.crumbs.textContent = 'UCC Cardiológicos HM / ' + section.title;
-  els.meta.textContent = (section.items || []).length
-    ? (section.items.length + ' recurso' + (section.items.length === 1 ? '' : 's'))
+  const items = visibleItems(section);
+  els.meta.textContent = items.length
+    ? (items.length + ' recurso' + (items.length === 1 ? '' : 's'))
     : 'Sin protocolos todavía';
-
-  const items = section.items || [];
   if (!items.length) {
     els.viewer.innerHTML =
     '<div class="panel tone-' + escapeHtml(section.id) + '">' +
@@ -893,7 +897,7 @@ function assignmentOptions(selected) {
   const head = '<option value="">Sin asignar</option>';
   const groups = SECTIONS.map((section) => {
     const whole = 'section:' + section.id;
-    const items = (section.items || []).map((item) => {
+    const items = (section.items || []).filter((item) => !item.hidden || ('item:' + section.id + ':' + item.id) === selected).map((item) => {
       const value = 'item:' + section.id + ':' + item.id;
       return '<option value="' + escapeHtml(value) + '"' + (value === selected ? ' selected' : '') + '>' + escapeHtml(item.title) + '</option>';
     }).join('');
@@ -1012,7 +1016,7 @@ function assignedProtocols(person) {
   const section = findSection(ref.sectionId);
   if (!section) return [];
   if (ref.kind === 'section') {
-    return (section.items || []).map((item) => ({
+    return visibleItems(section).map((item) => ({
       title: item.title,
       target: 'item:' + section.id + ':' + item.id
     }));
@@ -1054,7 +1058,7 @@ function openTeam() {
     '</div>';
   }).join('');
   const tree = SECTIONS.map((section) => {
-    const docs = (section.items || []).map((item) => {
+    const docs = visibleItems(section).map((item) => {
       const doctors = peopleForItem(section.id, item.id).map((person) =>
         '<span class="tree-doctor">' + miniAvatar(person) + '<span>' + escapeHtml(givenName(person.name)) + '</span></span>'
       ).join('');
