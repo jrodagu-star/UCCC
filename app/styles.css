@@ -735,6 +735,27 @@ button { border: 0; background: none; color: inherit; }
 .team-sheet h2 { font-size: 18px; color: var(--ink); margin-bottom: 14px; }
 .team-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
 .team-field span { font-size: 12px; font-weight: 750; color: var(--muted); }
+.team-protocols-box {
+  max-height: 180px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+}
+.team-check-group { border: 0; margin: 0; padding: 0; }
+.team-check-group legend { font-size: 12px; font-weight: 750; color: var(--ink); }
+.team-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 3px 0 3px 2px;
+  font-size: 13px;
+  color: var(--text);
+}
 .team-field input[type="text"], .team-field select {
   width: 100%;
   border: 1px solid var(--line);

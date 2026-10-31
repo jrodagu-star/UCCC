@@ -13,7 +13,11 @@
     "color": "#8a3d08",
     "shape": "rounded",
     "mark": "man",
-    "target": ""
+    "target": "item:respiratorio:via-aerea",
+    "targets": [
+      "item:respiratorio:via-aerea",
+      "item:coagulacion:anticoagulacion-sec"
+    ]
   },
   {
     "id": "p3",

@@ -31,6 +31,12 @@ const SECTIONS = [
             ext: '.png'
           }
         ]
+      },
+      {
+        id: 'via-aerea',
+        title: 'Protocolo de Vía Aérea',
+        description: 'El documento se añadirá más adelante.',
+        parts: []
       }
     ],
     posters: [
@@ -609,8 +615,14 @@ function openItem(sectionId, itemId) {
     return;
   }
   if (!parts.length) {
+    els.title.textContent = item.title;
+    els.crumbs.textContent = 'UCC Cardiológicos HM / ' + section.title + ' / ' + item.title;
+    els.meta.textContent = 'Documento pendiente';
     els.viewer.innerHTML =
-      '<div class="panel"><div class="empty"><strong>' + escapeHtml(item.title) + '</strong>No hay documentos disponibles.</div></div>';
+      '<div class="panel tone-' + escapeHtml(section.id) + '">' +
+        '<div class="empty"><strong>' + escapeHtml(item.title) + '</strong>' + escapeHtml(item.description || 'El documento se añadirá más adelante.') + '</div>' +
+        assigneesHtml(peopleForItem(section.id, item.id)) +
+      '</div>';
     return;
   }
 
@@ -760,14 +772,25 @@ function personFrom(person, found) {
   const shape = TEAM_SHAPES.some((item) => item.id === found.shape) ? found.shape : person.shape;
   const mark = found.mark === 'initials' || found.mark === 'man' || found.mark === 'woman' ? found.mark : person.mark;
   const color = /^#[0-9a-fA-F]{6}$/.test(found.color || '') ? found.color : person.color;
+  const listed = Array.isArray(found.targets) ? found.targets : (found.target ? [found.target] : []);
+  const targets = listed.filter((target) => typeof target === 'string' && target.trim());
   return {
     id: person.id,
     name: String(found.name || '').slice(0, 40),
     color: color,
     shape: shape,
     mark: mark,
-    target: typeof found.target === 'string' ? found.target : ''
+    target: targets[0] || '',
+    targets: targets
   };
+}
+
+function personTargets(person) {
+  if (!person) return [];
+  if (Array.isArray(person.targets) && person.targets.length) {
+    return person.targets.filter((target) => typeof target === 'string' && target.trim());
+  }
+  return person.target ? [person.target] : [];
 }
 
 function mergeTeam(base, entries, skipEmpty) {
@@ -775,7 +798,8 @@ function mergeTeam(base, entries, skipEmpty) {
   const merged = base.map((person) => {
     const found = entries.find((entry) => entry && entry.id === person.id);
     if (!found) return person;
-    if (skipEmpty && !String(found.name || '').trim() && !String(found.target || '').trim()) return person;
+    const publishedTargets = Array.isArray(found.targets) ? found.targets : [];
+    if (skipEmpty && !String(found.name || '').trim() && !String(found.target || '').trim() && !publishedTargets.some((target) => String(target || '').trim())) return person;
     return personFrom(person, found);
   });
   const known = new Set(base.map((person) => person.id));
@@ -783,7 +807,8 @@ function mergeTeam(base, entries, skipEmpty) {
     if (!entry || typeof entry.id !== 'string' || known.has(entry.id)) return;
     const name = String(entry.name || '').trim();
     const target = String(entry.target || '').trim();
-    if (skipEmpty && !name && !target) return;
+    const extra = Array.isArray(entry.targets) ? entry.targets.some((item) => String(item || '').trim()) : false;
+    if (skipEmpty && !name && !target && !extra) return;
     merged.push(personFrom({
       id: entry.id,
       name: '',
@@ -800,7 +825,7 @@ async function loadTeam() {
   const base = defaultTeam();
   let published = [];
   try {
-    const response = await fetch('equipo.json?v=20261031w');
+    const response = await fetch('equipo.json?v=20261031aa');
     if (response.ok) published = await response.json();
   } catch (err) {}
   try { localStorage.removeItem(TEAM_KEY); } catch (err) {}
@@ -810,17 +835,17 @@ async function loadTeam() {
 let team = defaultTeam();
 
 function peopleForSection(sectionId) {
-  return team.filter((person) => {
-    const ref = targetParts(person.target);
+  return team.filter((person) => personTargets(person).some((target) => {
+    const ref = targetParts(target);
     return ref.sectionId === sectionId && (ref.kind === 'section' || ref.kind === 'item');
-  });
+  }));
 }
 
 function peopleForItem(sectionId, itemId) {
-  return team.filter((person) => {
-    const ref = targetParts(person.target);
+  return team.filter((person) => personTargets(person).some((target) => {
+    const ref = targetParts(target);
     return ref.kind === 'item' && ref.sectionId === sectionId && ref.itemId === itemId;
-  });
+  }));
 }
 
 function givenName(name) {
@@ -893,20 +918,19 @@ function targetLabel(target) {
   return item ? section.title + ' · ' + item.title : 'Sin sección';
 }
 
-function assignmentOptions(selected) {
-  const head = '<option value="">Sin asignar</option>';
-  const groups = SECTIONS.map((section) => {
+function assignmentChecks(selected) {
+  const chosen = new Set(Array.isArray(selected) ? selected : (selected ? [selected] : []));
+  return SECTIONS.map((section) => {
     const whole = 'section:' + section.id;
-    const items = (section.items || []).filter((item) => !item.hidden || ('item:' + section.id + ':' + item.id) === selected).map((item) => {
+    const items = (section.items || []).filter((item) => !item.hidden || chosen.has('item:' + section.id + ':' + item.id)).map((item) => {
       const value = 'item:' + section.id + ':' + item.id;
-      return '<option value="' + escapeHtml(value) + '"' + (value === selected ? ' selected' : '') + '>' + escapeHtml(item.title) + '</option>';
+      return '<label class="team-check"><input type="checkbox" name="targets" value="' + escapeHtml(value) + '"' + (chosen.has(value) ? ' checked' : '') + '>' + escapeHtml(item.title) + '</label>';
     }).join('');
-    return '<optgroup label="' + escapeHtml(section.title) + '">' +
-      '<option value="' + escapeHtml(whole) + '"' + (whole === selected ? ' selected' : '') + '>Sección completa</option>' +
+    return '<fieldset class="team-check-group"><legend>' + escapeHtml(section.title) + '</legend>' +
+      '<label class="team-check"><input type="checkbox" name="targets" value="' + escapeHtml(whole) + '"' + (chosen.has(whole) ? ' checked' : '') + '>Sección completa</label>' +
       items +
-    '</optgroup>';
+    '</fieldset>';
   }).join('');
-  return head + groups;
 }
 
 function avatarInner(person) {
@@ -940,7 +964,7 @@ function openTeamEditor(personId) {
       '<div class="team-field"><span>Apariencia</span><div class="team-choices" id="teamMarks"></div></div>' +
       '<div class="team-field"><span>Color</span><div class="team-swatches" id="teamColors"></div></div>' +
       '<div class="team-field"><span>Forma</span><div class="team-choices" id="teamShapes"></div></div>' +
-      '<label class="team-field"><span>Sección o subsección</span><select name="target">' + assignmentOptions(draft.target) + '</select></label>' +
+      '<div class="team-field"><span>Protocolos</span><div class="team-protocols-box">' + assignmentChecks(personTargets(draft)) + '</div></div>' +
       '<div class="team-actions">' +
         '<button type="button" class="btn" id="teamCancel">Cancelar</button>' +
         '<button type="submit" class="btn btn-accent">Guardar</button>' +
@@ -995,7 +1019,8 @@ function openTeamEditor(personId) {
     person.mark = draft.mark;
     person.color = draft.color;
     person.shape = draft.shape;
-    person.target = form.elements.target.value;
+    person.targets = [...form.querySelectorAll('input[name="targets"]:checked')].map((input) => input.value);
+    person.target = person.targets[0] || '';
     saveTeam();
     closeTeamEditor();
     openTeam();
@@ -1012,20 +1037,28 @@ function openTeamEditor(personId) {
 }
 
 function assignedProtocols(person) {
-  const ref = targetParts(person.target);
-  const section = findSection(ref.sectionId);
-  if (!section) return [];
-  if (ref.kind === 'section') {
-    return visibleItems(section).map((item) => ({
-      title: item.title,
-      target: 'item:' + section.id + ':' + item.id
-    }));
-  }
-  if (ref.kind === 'item') {
+  const seen = new Set();
+  const list = [];
+  personTargets(person).forEach((target) => {
+    const ref = targetParts(target);
+    const section = findSection(ref.sectionId);
+    if (!section) return;
+    if (ref.kind === 'section') {
+      visibleItems(section).forEach((item) => {
+        const value = 'item:' + section.id + ':' + item.id;
+        if (seen.has(value)) return;
+        seen.add(value);
+        list.push({ title: item.title, target: value });
+      });
+      return;
+    }
+    if (ref.kind !== 'item' || seen.has(target)) return;
     const item = findItem(section, ref.itemId);
-    return item ? [{ title: item.title, target: person.target }] : [];
-  }
-  return [];
+    if (!item) return;
+    seen.add(target);
+    list.push({ title: item.title, target: target });
+  });
+  return list;
 }
 
 function openTeam() {
@@ -1092,7 +1125,8 @@ function openTeam() {
     btn.addEventListener('click', () => {
       const person = team.find((entry) => entry.id === btn.dataset.teamOpen);
       if (!person) return;
-      if (person.target) openAssignment(person.target);
+      const targets = personTargets(person);
+      if (targets.length) openAssignment(targets[0]);
       else openTeamEditor(person.id);
     });
   });
