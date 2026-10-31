@@ -433,6 +433,7 @@ const ICONS = {
   hemodinamica: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg>',
   neurologico: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6a3 3 0 0 1 5.8-1A3 3 0 0 1 18 8a3 3 0 0 1 1 5 3 3 0 0 1-2 5 3 3 0 0 1-5 1 3 3 0 0 1-5-1 3 3 0 0 1-2-5 3 3 0 0 1 1-5 3 3 0 0 1 3-2z"/><path d="M12 7v10M9 10h6"/></svg>',
   formacion: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l9-4 9 4-9 4-9-4z"/><path d="M7 11v5c0 1.5 2.2 3 5 3s5-1.5 5-3v-5"/></svg>',
+  inicio: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 5l8 6.5"/><path d="M7 10.5V19h10v-8.5"/></svg>',
   equipo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="2.2"/><circle cx="16" cy="9" r="1.8"/><path d="M4.5 18c.4-2.6 2.2-4 4.5-4s4.1 1.4 4.5 4"/><path d="M13 14.2c1.3-.5 2.6-.7 3.6-.4 1.6.4 2.6 1.6 3 3.2"/></svg>',
   doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>',
   file: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v6h6"/><path d="M8 16h3M8 12h8"/></svg>',
@@ -462,14 +463,20 @@ function renderNav() {
       '<span class="nav-label">' + escapeHtml(section.title) + '</span>' +
     '</button>'
   ).join('');
-  els.nav.innerHTML = sections +
+  els.nav.innerHTML =
+    '<button type="button" class="nav-btn tone-inicio" data-section-id="inicio">' +
+      iconHtml('inicio') +
+      '<span class="nav-label">Inicio</span>' +
+    '</button>' +
+    sections +
     '<button type="button" class="nav-btn tone-equipo" id="teamBtn" data-section-id="team">' +
       iconHtml('equipo') +
       '<span class="nav-label">Equipo</span>' +
     '</button>';
   els.nav.querySelectorAll('.nav-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
-      if (btn.dataset.sectionId === 'team') openTeam();
+      if (btn.dataset.sectionId === 'inicio') showHome();
+      else if (btn.dataset.sectionId === 'team') openTeam();
       else openSection(btn.dataset.sectionId);
     });
   });
@@ -478,7 +485,7 @@ function renderNav() {
 function showHome() {
   state.sectionId = null;
   state.itemId = null;
-  setActiveNav(null);
+  setActiveNav('inicio');
   els.title.textContent = 'Inicio';
   showSectionTeam(null);
   els.crumbs.textContent = 'Unidad Cuidados Críticos Cardiológicos HM';

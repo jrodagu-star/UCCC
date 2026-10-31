@@ -35,6 +35,7 @@ button { border: 0; background: none; color: inherit; }
 .tone-hemodinamica { --tone: #9a3412; --tone-bg: #ecc4a4; }
 .tone-neurologico { --tone: #1e3a8a; --tone-bg: #c3d0ef; }
 .tone-formacion { --tone: #0f5c56; --tone-bg: #b5ddd6; }
+.tone-inicio { --tone: #0b5f73; --tone-bg: #d5e4ea; }
 .tone-equipo { --tone: #0b5f73; --tone-bg: #c5dde6; }
 
 .layout {
