@@ -419,6 +419,8 @@ function setActiveNav(sectionId) {
   els.nav.querySelectorAll('.nav-btn').forEach((btn) => {
     btn.classList.toggle('active', btn.dataset.sectionId === sectionId);
   });
+  const teamBtn = document.getElementById('teamBtn');
+  if (teamBtn) teamBtn.classList.toggle('active', sectionId === 'team');
 }
 
 const ICONS = {
@@ -713,5 +715,245 @@ function openPart(section, item, part) {
   }
 }
 
+const TEAM_KEY = 'uccc-equipo-v1';
+const TEAM_COLORS = ['#0b5f73', '#8a3d08', '#146b34', '#9a1236', '#5b21b6', '#9a3412', '#1e3a8a', '#0f5c56', '#3d4f5f'];
+const TEAM_SHAPES = [
+  { id: 'circle', label: 'Círculo' },
+  { id: 'rounded', label: 'Redondeado' },
+  { id: 'hex', label: 'Hexágono' },
+  { id: 'diamond', label: 'Rombo' },
+  { id: 'shield', label: 'Escudo' }
+];
+const PERSON_SVG = {
+  man: '<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="15" r="9"/><path d="M8 58V40c0-10 8-16 24-16s24 6 24 16v18z"/></svg>',
+  woman: '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M18 20c0-8 6-14 14-14s14 6 14 14v20c0 2-1 3-2 3h-3V24c0-5-4-9-9-9s-9 4-9 9v19h-3c-1 0-2-1-2-3z"/><circle cx="32" cy="20" r="8"/><path d="M22 42h20l8 16H14z"/></svg>'
+};
+
+function defaultTeam() {
+  return TEAM_COLORS.map((color, index) => ({
+    id: 'p' + (index + 1),
+    name: '',
+    color: color,
+    shape: TEAM_SHAPES[index % TEAM_SHAPES.length].id,
+    mark: index % 2 === 0 ? 'woman' : 'man',
+    target: ''
+  }));
+}
+
+function loadTeam() {
+  const base = defaultTeam();
+  try {
+    const saved = JSON.parse(localStorage.getItem(TEAM_KEY) || 'null');
+    if (!Array.isArray(saved)) return base;
+    return base.map((person) => {
+      const found = saved.find((entry) => entry && entry.id === person.id) || {};
+      const shape = TEAM_SHAPES.some((item) => item.id === found.shape) ? found.shape : person.shape;
+      const mark = found.mark === 'initials' || found.mark === 'man' || found.mark === 'woman' ? found.mark : person.mark;
+      const color = /^#[0-9a-fA-F]{6}$/.test(found.color || '') ? found.color : person.color;
+      return {
+        id: person.id,
+        name: String(found.name || '').slice(0, 40),
+        color: color,
+        shape: shape,
+        mark: mark,
+        target: typeof found.target === 'string' ? found.target : ''
+      };
+    });
+  } catch (err) {
+    return base;
+  }
+}
+
+let team = loadTeam();
+
+function saveTeam() {
+  try { localStorage.setItem(TEAM_KEY, JSON.stringify(team)); } catch (err) {}
+}
+
+function personInitials(name) {
+  const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return '·';
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function inkFor(hex) {
+  const raw = String(hex || '').replace('#', '');
+  if (raw.length !== 6) return '#fff';
+  const r = parseInt(raw.slice(0, 2), 16);
+  const g = parseInt(raw.slice(2, 4), 16);
+  const b = parseInt(raw.slice(4, 6), 16);
+  return (r * 299 + g * 587 + b * 114) / 1000 > 165 ? '#1c2422' : '#fff';
+}
+
+function targetParts(target) {
+  const bits = String(target || '').split(':');
+  return { kind: bits[0] || '', sectionId: bits[1] || '', itemId: bits[2] || '' };
+}
+
+function targetLabel(target) {
+  const ref = targetParts(target);
+  const section = findSection(ref.sectionId);
+  if (!section) return 'Sin sección';
+  if (ref.kind === 'section') return section.title;
+  const item = findItem(section, ref.itemId);
+  return item ? section.title + ' · ' + item.title : 'Sin sección';
+}
+
+function assignmentOptions(selected) {
+  const head = '<option value="">Sin asignar</option>';
+  const groups = SECTIONS.map((section) => {
+    const whole = 'section:' + section.id;
+    const items = (section.items || []).map((item) => {
+      const value = 'item:' + section.id + ':' + item.id;
+      return '<option value="' + escapeHtml(value) + '"' + (value === selected ? ' selected' : '') + '>' + escapeHtml(item.title) + '</option>';
+    }).join('');
+    return '<optgroup label="' + escapeHtml(section.title) + '">' +
+      '<option value="' + escapeHtml(whole) + '"' + (whole === selected ? ' selected' : '') + '>Sección completa</option>' +
+      items +
+    '</optgroup>';
+  }).join('');
+  return head + groups;
+}
+
+function avatarInner(person) {
+  if (person.mark === 'man' || person.mark === 'woman') return PERSON_SVG[person.mark];
+  return escapeHtml(personInitials(person.name));
+}
+
+function openAssignment(target) {
+  const ref = targetParts(target);
+  if (ref.kind === 'item') openItem(ref.sectionId, ref.itemId);
+  else if (ref.kind === 'section') openSection(ref.sectionId);
+}
+
+function closeTeamEditor() {
+  const dialog = document.getElementById('teamDialog');
+  if (dialog) dialog.remove();
+}
+
+function openTeamEditor(personId) {
+  const person = team.find((entry) => entry.id === personId);
+  if (!person) return;
+  closeTeamEditor();
+  const draft = Object.assign({}, person);
+  const box = document.createElement('div');
+  box.id = 'teamDialog';
+  box.className = 'team-dialog';
+  box.innerHTML =
+    '<form class="team-sheet" role="dialog" aria-modal="true" aria-labelledby="teamEditorTitle">' +
+      '<h2 id="teamEditorTitle">Personalizar</h2>' +
+      '<label class="team-field"><span>Nombre</span><input type="text" name="name" maxlength="40" value="' + escapeHtml(draft.name) + '"></label>' +
+      '<div class="team-field"><span>Apariencia</span><div class="team-choices" id="teamMarks"></div></div>' +
+      '<div class="team-field"><span>Color</span><div class="team-swatches" id="teamColors"></div></div>' +
+      '<div class="team-field"><span>Forma</span><div class="team-choices" id="teamShapes"></div></div>' +
+      '<label class="team-field"><span>Sección o subsección</span><select name="target">' + assignmentOptions(draft.target) + '</select></label>' +
+      '<div class="team-actions">' +
+        '<button type="button" class="btn" id="teamCancel">Cancelar</button>' +
+        '<button type="submit" class="btn btn-accent">Guardar</button>' +
+      '</div>' +
+    '</form>';
+  document.body.appendChild(box);
+  const form = box.querySelector('form');
+  const nameInput = form.elements.name;
+  nameInput.focus();
+
+  function paintChoices() {
+    box.querySelector('#teamMarks').innerHTML = [
+      { id: 'initials', label: 'Iniciales' },
+      { id: 'man', label: 'Hombre' },
+      { id: 'woman', label: 'Mujer' }
+    ].map((item) =>
+      '<button type="button" class="team-choice' + (draft.mark === item.id ? ' is-on' : '') + '" data-mark="' + item.id + '">' + item.label + '</button>'
+    ).join('');
+    box.querySelector('#teamColors').innerHTML =
+      TEAM_COLORS.map((color) =>
+        '<button type="button" class="team-swatch' + (draft.color.toLowerCase() === color ? ' is-on' : '') + '" data-color="' + color + '" style="background:' + color + '" aria-label="' + color + '"></button>'
+      ).join('') +
+      '<input class="team-color" type="color" value="' + escapeHtml(draft.color) + '" aria-label="Color personalizado">';
+    box.querySelector('#teamShapes').innerHTML = TEAM_SHAPES.map((item) =>
+      '<button type="button" class="team-shape shape-' + item.id + (draft.shape === item.id ? ' is-on' : '') + '" data-shape="' + item.id + '" style="background:' + escapeHtml(draft.color) + '" aria-label="' + item.label + '"></button>'
+    ).join('');
+    box.querySelectorAll('[data-mark]').forEach((btn) => {
+      btn.addEventListener('click', () => { draft.mark = btn.dataset.mark; paintChoices(); });
+    });
+    box.querySelectorAll('[data-color]').forEach((btn) => {
+      btn.addEventListener('click', () => { draft.color = btn.dataset.color; paintChoices(); });
+    });
+    box.querySelectorAll('[data-shape]').forEach((btn) => {
+      btn.addEventListener('click', () => { draft.shape = btn.dataset.shape; paintChoices(); });
+    });
+    const colorInput = box.querySelector('.team-color');
+    colorInput.addEventListener('input', () => {
+      draft.color = colorInput.value;
+      box.querySelectorAll('.team-swatch').forEach((swatch) => {
+        swatch.classList.toggle('is-on', swatch.dataset.color.toLowerCase() === draft.color.toLowerCase());
+      });
+      box.querySelectorAll('.team-shape').forEach((shape) => {
+        shape.style.background = draft.color;
+      });
+    });
+  }
+  paintChoices();
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    person.name = nameInput.value.trim().slice(0, 40);
+    person.mark = draft.mark;
+    person.color = draft.color;
+    person.shape = draft.shape;
+    person.target = form.elements.target.value;
+    saveTeam();
+    closeTeamEditor();
+    openTeam();
+  });
+  box.querySelector('#teamCancel').addEventListener('click', closeTeamEditor);
+  box.addEventListener('click', (event) => { if (event.target === box) closeTeamEditor(); });
+  function onKey(event) {
+    if (event.key === 'Escape') {
+      closeTeamEditor();
+      document.removeEventListener('keydown', onKey);
+    }
+  }
+  document.addEventListener('keydown', onKey);
+}
+
+function openTeam() {
+  state.sectionId = null;
+  state.itemId = null;
+  setActiveNav('team');
+  els.title.textContent = 'Equipo';
+  els.crumbs.textContent = 'UCC Cardiológicos HM / Equipo';
+  els.meta.textContent = '9 personas';
+  const cards = team.map((person) => {
+    const name = person.name || 'Sin nombre';
+    return '<article class="team-slot">' +
+      '<button type="button" class="team-person" data-team-open="' + person.id + '" aria-label="' + escapeHtml(name + '. ' + targetLabel(person.target)) + '">' +
+        '<span class="avatar shape-' + escapeHtml(person.shape) + '" style="background:' + escapeHtml(person.color) + ';color:' + inkFor(person.color) + '">' + avatarInner(person) + '</span>' +
+        '<span class="team-name">' + escapeHtml(name) + '</span>' +
+        '<span class="team-assign">' + escapeHtml(targetLabel(person.target)) + '</span>' +
+      '</button>' +
+      '<button type="button" class="team-edit" data-team-edit="' + person.id + '">Personalizar</button>' +
+    '</article>';
+  }).join('');
+  els.viewer.innerHTML =
+    '<div class="panel">' +
+      '<p class="panel-lead">Nueve personas del equipo. Personaliza el icono y elige, en el menú, la sección o subsección que abre cada una.</p>' +
+      '<div class="team-grid">' + cards + '</div>' +
+    '</div>';
+  els.viewer.querySelectorAll('[data-team-open]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const person = team.find((entry) => entry.id === btn.dataset.teamOpen);
+      if (!person) return;
+      if (person.target) openAssignment(person.target);
+      else openTeamEditor(person.id);
+    });
+  });
+  els.viewer.querySelectorAll('[data-team-edit]').forEach((btn) => {
+    btn.addEventListener('click', () => openTeamEditor(btn.dataset.teamEdit));
+  });
+}
+
 renderNav();
+document.getElementById('teamBtn').addEventListener('click', openTeam);
 openItem('hemodinamica', 'escalas-shock');
