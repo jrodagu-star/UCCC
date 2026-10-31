@@ -997,6 +997,23 @@ function openTeamEditor(personId) {
   document.addEventListener('keydown', onKey);
 }
 
+function assignedProtocols(person) {
+  const ref = targetParts(person.target);
+  const section = findSection(ref.sectionId);
+  if (!section) return [];
+  if (ref.kind === 'section') {
+    return (section.items || []).map((item) => ({
+      title: item.title,
+      target: 'item:' + section.id + ':' + item.id
+    }));
+  }
+  if (ref.kind === 'item') {
+    const item = findItem(section, ref.itemId);
+    return item ? [{ title: item.title, target: person.target }] : [];
+  }
+  return [];
+}
+
 function openTeam() {
   state.sectionId = null;
   state.itemId = null;
@@ -1005,21 +1022,41 @@ function openTeam() {
   showSectionTeam(null);
   els.crumbs.textContent = 'UCC Cardiológicos HM / Equipo';
   els.meta.textContent = '9 personas';
-  const cards = team.map((person) => {
+  const rows = team.map((person) => {
     const name = person.name || 'Sin nombre';
-    return '<article class="team-slot">' +
-      '<button type="button" class="team-person" data-team-open="' + person.id + '" aria-label="' + escapeHtml(name + '. ' + targetLabel(person.target)) + '">' +
-        '<span class="avatar shape-' + escapeHtml(person.shape) + '" style="background:' + escapeHtml(person.color) + ';color:' + inkFor(person.color) + '">' + avatarInner(person) + '</span>' +
-        '<span class="team-name">' + escapeHtml(name) + '</span>' +
-        '<span class="team-assign">' + escapeHtml(targetLabel(person.target)) + '</span>' +
-      '</button>' +
-      '<button type="button" class="team-edit" data-team-edit="' + person.id + '">Personalizar</button>' +
-    '</article>';
+    const protocols = assignedProtocols(person);
+    const list = protocols.length
+      ? '<ul class="team-protocols">' + protocols.map((item) =>
+          '<li><button type="button" data-team-go="' + escapeHtml(item.target) + '">' + escapeHtml(item.title) + '</button></li>'
+        ).join('') + '</ul>'
+      : '<p class="team-protocols-empty">Sin protocolos</p>';
+    return '<div class="team-row">' +
+      '<article class="team-slot">' +
+        '<button type="button" class="team-person" data-team-open="' + person.id + '" aria-label="' + escapeHtml(name) + '">' +
+          '<span class="avatar shape-' + escapeHtml(person.shape) + '" style="background:' + escapeHtml(person.color) + ';color:' + inkFor(person.color) + '">' + avatarInner(person) + '</span>' +
+          '<span class="team-name">' + escapeHtml(name) + '</span>' +
+        '</button>' +
+        '<button type="button" class="team-edit" data-team-edit="' + person.id + '">Personalizar</button>' +
+      '</article>' +
+      list +
+    '</div>';
+  }).join('');
+  const tree = SECTIONS.map((section) => {
+    const docs = (section.items || []).map((item) =>
+      '<li><button type="button" data-tree-item="' + escapeHtml(section.id + ':' + item.id) + '">' + escapeHtml(item.title) + '</button></li>'
+    ).join('');
+    return '<li class="tree-section">' +
+      '<button type="button" data-tree-section="' + escapeHtml(section.id) + '">' + escapeHtml(section.title) + '</button>' +
+      '<ul>' + docs + '</ul>' +
+    '</li>';
   }).join('');
   els.viewer.innerHTML =
     '<div class="panel">' +
-      '<p class="panel-lead">Nueve personas del equipo. Se muestra la configuración publicada. Una copia guardada en este navegador no se añade.</p>' +
-      '<div class="team-grid">' + cards + '</div>' +
+      '<p class="panel-lead">A la izquierda, cada persona y los protocolos que tiene asignados. A la derecha, todas las secciones y sus documentos.</p>' +
+      '<div class="team-board">' +
+        '<div class="team-people">' + rows + '</div>' +
+        '<ul class="proto-tree">' + tree + '</ul>' +
+      '</div>' +
     '</div>';
   els.viewer.querySelectorAll('[data-team-open]').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -1031,6 +1068,18 @@ function openTeam() {
   });
   els.viewer.querySelectorAll('[data-team-edit]').forEach((btn) => {
     btn.addEventListener('click', () => openTeamEditor(btn.dataset.teamEdit));
+  });
+  els.viewer.querySelectorAll('[data-team-go]').forEach((btn) => {
+    btn.addEventListener('click', () => openAssignment(btn.dataset.teamGo));
+  });
+  els.viewer.querySelectorAll('[data-tree-section]').forEach((btn) => {
+    btn.addEventListener('click', () => openSection(btn.dataset.treeSection));
+  });
+  els.viewer.querySelectorAll('[data-tree-item]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const bits = btn.dataset.treeItem.split(':');
+      openItem(bits[0], bits[1]);
+    });
   });
 }
 

@@ -591,18 +591,51 @@ button { border: 0; background: none; color: inherit; }
   stroke-linejoin: round;
 }
 
-.team-grid {
+.team-board {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 16px;
-  max-width: 980px;
+  grid-template-columns: minmax(280px, 1.05fr) minmax(240px, .95fr);
+  gap: 28px;
+  align-items: start;
 }
+.team-people { display: flex; flex-direction: column; gap: 14px; }
+.team-row {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+}
+.team-protocols, .team-protocols-empty { margin: 0; }
+.team-protocols { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.team-protocols button, .team-protocols-empty {
+  text-align: left;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+}
+.team-protocols-empty { color: var(--muted); font-weight: 650; }
+.proto-tree, .proto-tree ul { list-style: none; margin: 0; }
+.proto-tree { padding-left: 2px; }
+.proto-tree ul {
+  margin-left: 11px;
+  padding-left: 14px;
+  border-left: 1px solid #cfc8bb;
+}
+.proto-tree li { margin: 2px 0; }
+.proto-tree button {
+  text-align: left;
+  padding: 3px 0;
+  font-size: 14px;
+  line-height: 1.35;
+  color: var(--text);
+}
+.tree-section > button { font-weight: 780; color: var(--ink); }
 .team-slot {
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: 8px;
-  padding: 14px 12px 12px;
+  padding: 12px 10px 10px;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, .85);
   background: linear-gradient(180deg, #ffffff 0%, var(--card) 100%);
@@ -620,8 +653,8 @@ button { border: 0; background: none; color: inherit; }
   color: inherit;
 }
 .avatar {
-  width: 84px;
-  height: 84px;
+  width: 64px;
+  height: 64px;
   display: grid;
   place-items: center;
   font-size: 26px;
@@ -740,5 +773,5 @@ button { border: 0; background: none; color: inherit; }
   .brand-copy { display: none; }
   .home-title { font-size: 20px; gap: 8px; max-width: 92%; }
   .topbar { flex-direction: column; align-items: flex-start; }
-  .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .team-board, .team-row { grid-template-columns: 1fr; }
 }
