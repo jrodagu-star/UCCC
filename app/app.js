@@ -745,7 +745,11 @@ const TEAM_SHAPES = [
   { id: 'rounded', label: 'Redondeado' },
   { id: 'hex', label: 'Hexágono' },
   { id: 'diamond', label: 'Rombo' },
-  { id: 'shield', label: 'Escudo' }
+  { id: 'shield', label: 'Escudo' },
+  { id: 'square', label: 'Cuadrado' },
+  { id: 'pentagon', label: 'Pentágono' },
+  { id: 'octagon', label: 'Octágono' },
+  { id: 'arch', label: 'Arco' }
 ];
 const PERSON_SVG = {
   man: '<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="15" r="9"/><path d="M8 58V40c0-10 8-16 24-16s24 6 24 16v18z"/></svg>',
@@ -792,7 +796,7 @@ async function loadTeam() {
   const base = defaultTeam();
   let published = [];
   try {
-    const response = await fetch('equipo.json?v=20261031i');
+    const response = await fetch('equipo.json?v=20261031v');
     if (response.ok) published = await response.json();
   } catch (err) {}
   try { localStorage.removeItem(TEAM_KEY); } catch (err) {}
