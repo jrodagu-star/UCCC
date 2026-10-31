@@ -35,7 +35,6 @@ button { border: 0; background: none; color: inherit; }
 .tone-hemodinamica { --tone: #9a3412; --tone-bg: #ecc4a4; }
 .tone-neurologico { --tone: #1e3a8a; --tone-bg: #c3d0ef; }
 .tone-formacion { --tone: #0f5c56; --tone-bg: #b5ddd6; }
-.tone-inicio { --tone: #0b5f73; --tone-bg: #d5e4ea; }
 .tone-equipo { --tone: #0b5f73; --tone-bg: #c5dde6; }
 
 .layout {
@@ -139,26 +138,6 @@ button { border: 0; background: none; color: inherit; }
 }
 .ico svg { width: 18px; height: 18px; display: block; }
 .nav-btn.active .ico { background: var(--panel); }
-.nav-home {
-  padding: 4px;
-  background: #1a2422;
-  border-color: rgba(255, 255, 255, .06);
-  color: #f4f7f6;
-}
-.nav-home:hover { background: #222c2a; }
-.nav-home .ico {
-  background: #121917;
-  color: #f4f7f6;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12), 0 2px 4px rgba(0, 0, 0, .35);
-}
-.nav-home.active,
-.nav-home.active .ico {
-  background: #0e1514;
-  color: #fff;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, .1),
-    0 8px 16px rgba(0, 0, 0, .4);
-}
 
 .main {
   flex: 1;
@@ -278,6 +257,12 @@ button { border: 0; background: none; color: inherit; }
   min-height: 0;
   overflow: hidden;
   padding: 16px 18px 18px;
+}
+.viewer.has-cover {
+  background: url("../assets/inicio/portada.jpg") center / cover no-repeat;
+}
+.viewer.has-cover .team-pane {
+  background: linear-gradient(180deg, rgba(251, 249, 245, .9) 0%, rgba(246, 243, 237, .84) 100%);
 }
 
 .panel {
@@ -566,52 +551,6 @@ button { border: 0; background: none; color: inherit; }
   display: block;
 }
 
-.home-stage {
-  height: 100%;
-  display: grid;
-  place-items: center;
-  padding: 12px 8px 20px;
-}
-.home-frame {
-  position: relative;
-  max-width: min(980px, 100%);
-  max-height: 100%;
-}
-.home-art {
-  display: block;
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
-  object-fit: contain;
-  -webkit-mask-image: radial-gradient(ellipse at center, #000 58%, transparent 86%);
-  mask-image: radial-gradient(ellipse at center, #000 58%, transparent 86%);
-}
-.home-title {
-  position: absolute;
-  top: 9%;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 0;
-  color: #163844;
-  font-size: clamp(22px, 3.4vw, 42px);
-  font-weight: 750;
-  letter-spacing: -.01em;
-  white-space: nowrap;
-}
-.home-title svg {
-  width: .9em;
-  height: .9em;
-  flex: 0 0 auto;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.7;
-  stroke-linejoin: round;
-}
-
 .team-board {
   display: grid;
   grid-template-columns: minmax(280px, 1.05fr) minmax(260px, .95fr);
@@ -854,7 +793,6 @@ button { border: 0; background: none; color: inherit; }
   .app-bar { gap: 10px; padding: 14px 10px 10px; }
   .nav { padding-bottom: 22px; }
   .brand-copy { display: none; }
-  .home-title { font-size: 20px; gap: 8px; max-width: 92%; }
   .topbar { flex-direction: column; align-items: flex-start; }
   .team-board, .team-row { grid-template-columns: 1fr; }
 }

@@ -433,7 +433,6 @@ const ICONS = {
   hemodinamica: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg>',
   neurologico: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6a3 3 0 0 1 5.8-1A3 3 0 0 1 18 8a3 3 0 0 1 1 5 3 3 0 0 1-2 5 3 3 0 0 1-5 1 3 3 0 0 1-5-1 3 3 0 0 1-2-5 3 3 0 0 1 1-5 3 3 0 0 1 3-2z"/><path d="M12 7v10M9 10h6"/></svg>',
   formacion: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l9-4 9 4-9 4-9-4z"/><path d="M7 11v5c0 1.5 2.2 3 5 3s5-1.5 5-3v-5"/></svg>',
-  inicio: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 5l8 6.5"/><path d="M7 10.5V19h10v-8.5"/></svg>',
   equipo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="2.2"/><circle cx="16" cy="9" r="1.8"/><path d="M4.5 18c.4-2.6 2.2-4 4.5-4s4.1 1.4 4.5 4"/><path d="M13 14.2c1.3-.5 2.6-.7 3.6-.4 1.6.4 2.6 1.6 3 3.2"/></svg>',
   doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>',
   file: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v6h6"/><path d="M8 16h3M8 12h8"/></svg>',
@@ -464,9 +463,6 @@ function renderNav() {
     '</button>'
   ).join('');
   els.nav.innerHTML =
-    '<button type="button" class="nav-btn nav-home tone-inicio" data-section-id="inicio" aria-label="Inicio">' +
-      iconHtml('inicio') +
-    '</button>' +
     '<button type="button" class="nav-btn tone-equipo" id="teamBtn" data-section-id="team">' +
       iconHtml('equipo') +
       '<span class="nav-label">Equipo</span>' +
@@ -474,31 +470,18 @@ function renderNav() {
     sections;
   els.nav.querySelectorAll('.nav-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
-      if (btn.dataset.sectionId === 'inicio') showHome();
-      else if (btn.dataset.sectionId === 'team') openTeam();
+      if (btn.dataset.sectionId === 'team') openTeam();
       else openSection(btn.dataset.sectionId);
     });
   });
 }
 
-function showHome() {
-  state.sectionId = null;
-  state.itemId = null;
-  setActiveNav('inicio');
-  els.title.textContent = 'Inicio';
-  showSectionTeam(null);
-  els.crumbs.textContent = 'Unidad Cuidados Críticos Cardiológicos HM';
-  els.meta.textContent = 'Elige una sección del menú';
-  els.viewer.innerHTML =
-    '<div class="home-stage">' +
-      '<div class="home-frame">' +
-        '<img class="home-art" src="../assets/inicio/portada.jpg" alt="">' +
-        '<p class="home-title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-9a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 4.6-7 9-7 9z"/></svg><span>UCCC Monteprincipe</span></p>' +
-      '</div>' +
-    '</div>';
+function setCover(on) {
+  els.viewer.classList.toggle('has-cover', !!on);
 }
 
 function openSection(sectionId) {
+  setCover(false);
   const section = findSection(sectionId);
   if (!section) return;
   state.sectionId = section.id;
@@ -602,6 +585,7 @@ function openPoster(poster) {
 }
 
 function openItem(sectionId, itemId) {
+  setCover(false);
   const section = findSection(sectionId);
   const item = findItem(section, itemId);
   if (!section || !item) return;
@@ -784,19 +768,35 @@ function personFrom(person, found) {
 
 function mergeTeam(base, entries, skipEmpty) {
   if (!Array.isArray(entries)) return base;
-  return base.map((person) => {
+  const merged = base.map((person) => {
     const found = entries.find((entry) => entry && entry.id === person.id);
     if (!found) return person;
     if (skipEmpty && !String(found.name || '').trim() && !String(found.target || '').trim()) return person;
     return personFrom(person, found);
   });
+  const known = new Set(base.map((person) => person.id));
+  entries.forEach((entry) => {
+    if (!entry || typeof entry.id !== 'string' || known.has(entry.id)) return;
+    const name = String(entry.name || '').trim();
+    const target = String(entry.target || '').trim();
+    if (skipEmpty && !name && !target) return;
+    merged.push(personFrom({
+      id: entry.id,
+      name: '',
+      color: '#146b34',
+      shape: 'circle',
+      mark: 'man',
+      target: ''
+    }, entry));
+  });
+  return merged;
 }
 
 async function loadTeam() {
   const base = defaultTeam();
   let published = [];
   try {
-    const response = await fetch('equipo.json?v=20261031v');
+    const response = await fetch('equipo.json?v=20261031w');
     if (response.ok) published = await response.json();
   } catch (err) {}
   try { localStorage.removeItem(TEAM_KEY); } catch (err) {}
@@ -1031,7 +1031,9 @@ function openTeam() {
   els.title.textContent = 'Equipo';
   showSectionTeam(null);
   els.crumbs.textContent = 'UCC Cardiológicos HM / Equipo';
-  els.meta.textContent = '9 personas';
+  setCover(true);
+  const count = team.length;
+  els.meta.textContent = count + (count === 1 ? ' persona' : ' personas');
   const rows = team.map((person) => {
     const name = person.name || 'Sin nombre';
     const protocols = assignedProtocols(person);
@@ -1110,7 +1112,7 @@ function openTeam() {
 loadTeam().then((loaded) => {
   team = loaded;
   renderNav();
-  showHome();
+  openTeam();
 });
 
-document.getElementById('homeBtn').addEventListener('click', showHome);
+document.getElementById('homeBtn').addEventListener('click', openTeam);

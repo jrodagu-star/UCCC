@@ -70,5 +70,13 @@
     "shape": "arch",
     "mark": "man",
     "target": ""
+  },
+  {
+    "id": "p10",
+    "name": "Jordi",
+    "color": "#146b34",
+    "shape": "circle",
+    "mark": "man",
+    "target": "item:infecciones:dds"
   }
 ]
