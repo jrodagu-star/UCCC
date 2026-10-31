@@ -757,31 +757,46 @@ function defaultTeam() {
   }));
 }
 
-function loadTeam() {
-  const base = defaultTeam();
-  try {
-    const saved = JSON.parse(localStorage.getItem(TEAM_KEY) || 'null');
-    if (!Array.isArray(saved)) return base;
-    return base.map((person) => {
-      const found = saved.find((entry) => entry && entry.id === person.id) || {};
-      const shape = TEAM_SHAPES.some((item) => item.id === found.shape) ? found.shape : person.shape;
-      const mark = found.mark === 'initials' || found.mark === 'man' || found.mark === 'woman' ? found.mark : person.mark;
-      const color = /^#[0-9a-fA-F]{6}$/.test(found.color || '') ? found.color : person.color;
-      return {
-        id: person.id,
-        name: String(found.name || '').slice(0, 40),
-        color: color,
-        shape: shape,
-        mark: mark,
-        target: typeof found.target === 'string' ? found.target : ''
-      };
-    });
-  } catch (err) {
-    return base;
-  }
+function personFrom(person, found) {
+  if (!found || typeof found !== 'object') return person;
+  const shape = TEAM_SHAPES.some((item) => item.id === found.shape) ? found.shape : person.shape;
+  const mark = found.mark === 'initials' || found.mark === 'man' || found.mark === 'woman' ? found.mark : person.mark;
+  const color = /^#[0-9a-fA-F]{6}$/.test(found.color || '') ? found.color : person.color;
+  return {
+    id: person.id,
+    name: String(found.name || '').slice(0, 40),
+    color: color,
+    shape: shape,
+    mark: mark,
+    target: typeof found.target === 'string' ? found.target : ''
+  };
 }
 
-let team = loadTeam();
+function mergeTeam(base, entries, skipEmpty) {
+  if (!Array.isArray(entries)) return base;
+  return base.map((person) => {
+    const found = entries.find((entry) => entry && entry.id === person.id);
+    if (!found) return person;
+    if (skipEmpty && !String(found.name || '').trim() && !String(found.target || '').trim()) return person;
+    return personFrom(person, found);
+  });
+}
+
+async function loadTeam() {
+  const base = defaultTeam();
+  let published = [];
+  try {
+    const response = await fetch('equipo.json?v=20261031h');
+    if (response.ok) published = await response.json();
+  } catch (err) {}
+  let saved = [];
+  try {
+    saved = JSON.parse(localStorage.getItem(TEAM_KEY) || 'null');
+  } catch (err) {}
+  return mergeTeam(mergeTeam(base, published, false), saved, true);
+}
+
+let team = defaultTeam();
 
 function peopleForSection(sectionId) {
   return team.filter((person) => {
@@ -1007,5 +1022,8 @@ function openTeam() {
   });
 }
 
-renderNav();
-openItem('hemodinamica', 'escalas-shock');
+loadTeam().then((loaded) => {
+  team = loaded;
+  renderNav();
+  openItem('hemodinamica', 'escalas-shock');
+});

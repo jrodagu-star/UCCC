@@ -1,0 +1,10 @@
+[
+  {
+    "id": "p1",
+    "name": "Jordi",
+    "color": "#146b34",
+    "shape": "circle",
+    "mark": "man",
+    "target": "item:infecciones:dds"
+  }
+]
