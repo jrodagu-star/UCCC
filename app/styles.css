@@ -632,7 +632,7 @@ button { border: 0; background: none; color: inherit; }
 .team-people { display: flex; flex-direction: column; gap: 14px; }
 .team-row {
   display: grid;
-  grid-template-columns: 132px minmax(0, 1fr);
+  grid-template-columns: 108px minmax(0, 1fr);
   gap: 12px;
   align-items: center;
 }
@@ -640,8 +640,8 @@ button { border: 0; background: none; color: inherit; }
 .team-protocols { list-style: none; display: flex; flex-direction: column; gap: 4px; }
 .team-protocols button, .team-protocols-empty {
   text-align: left;
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 650;
   color: var(--ink);
   line-height: 1.3;
 }
@@ -673,6 +673,7 @@ button { border: 0; background: none; color: inherit; }
   line-height: 1.35;
   color: var(--text);
 }
+.proto-tree ul button { font-size: 12px; }
 .tree-section-row {
   display: flex;
   align-items: center;
@@ -702,12 +703,12 @@ button { border: 0; background: none; color: inherit; }
   gap: 3px;
   max-width: 76px;
   color: var(--ink);
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 750;
   line-height: 1.15;
   text-align: center;
 }
-.tree-doctor .mini-avatar { width: 18px; height: 18px; font-size: 8px; }
+.tree-doctor .mini-avatar { width: 14px; height: 14px; font-size: 7px; }
 .team-slot {
   display: flex;
   flex-direction: column;
@@ -731,11 +732,11 @@ button { border: 0; background: none; color: inherit; }
   color: inherit;
 }
 .avatar {
-  width: 46px;
-  height: 46px;
+  width: 32px;
+  height: 32px;
   display: grid;
   place-items: center;
-  font-size: 18px;
+  font-size: 13px;
   font-weight: 800;
   letter-spacing: .02em;
   line-height: 1;
