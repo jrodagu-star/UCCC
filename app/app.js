@@ -380,7 +380,7 @@ const SECTIONS = [
         id: 'inventario-uccc',
         title: 'Inventario UCCC',
         description: 'Enlace directo al inventario de la unidad.',
-        url: 'https://inventario-ucc-asistencia.pplx.app',
+        url: 'https://jrodagu-star.github.io/inventario-ecmo/',
         direct: true
       }
     ]
