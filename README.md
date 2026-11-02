@@ -9,7 +9,7 @@ App estática con menú lateral por áreas clínicas y panel de protocolos/herra
 | Respiratorio | Cuidados integrales en VM, Póster humidificador 6 |
 | Infecciones | DDS (folleto + protocolo detallado); Profilaxis (AMC, ISHLT 2024) |
 | Nutrición | Estreñimiento en UCI, Diarrea en UCI con NE, Calculadora nutrición clínica UCI |
-| Coagulación | Anticoagulación en SEC (protocolo clínico + resumen de enfermería) |
+| Coagulación | Anticoagulación en SEC (protocolo clínico + resumen de enfermería), Protocolo de anticoagulación en ECMO e Impella de Isabel Madrid |
 | Sedoanalgesia | Analgosedación en VM |
 | Hemodinámica | Escalas en shock cardiogénico (pantalla de inicio), Fármacos, Monitorización hemodinámica, TEP |
 | Neurológico | Monitorización CONOX |

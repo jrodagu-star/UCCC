@@ -182,6 +182,20 @@ const SECTIONS = [
         ]
       },
       {
+        id: 'anticoagulacion-ecmo-impella',
+        title: 'Protocolo de anticoagulación en ECMO e Impella de Isabel Madrid',
+        description: 'Protocolo de anticoagulación en ECMO e Impella.',
+        parts: [
+          {
+            id: 'protocolo',
+            title: 'Protocolo de anticoagulación en ECMO e Impella de Isabel Madrid',
+            description: 'Protocolo de anticoagulación en ECMO e Impella.',
+            path: '../assets/protocolos/anticoagulacion-ecmo-impella/protocolo-anticoagulacion-ecmo-impella.pdf',
+            ext: '.pdf'
+          }
+        ]
+      },
+      {
         id: 'transfusion-masiva',
         title: 'Protocolo transfusión masiva',
         description: 'Protocolo de transfusión masiva en UCI de cirugía cardiaca.',
