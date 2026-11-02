@@ -383,6 +383,14 @@ const SECTIONS = [
         ]
       },
       {
+        id: 'ecmovad-youtube',
+        group: 'conferencias',
+        title: 'Ecmovad',
+        description: 'Página de YouTube de Ecmovad.',
+        url: 'https://www.youtube.com/@ecmovad2023',
+        direct: true
+      },
+      {
         id: 'ecmo-v1',
         group: 'protocolos',
         title: 'Protocolo manejo paciente ECMO en UCI Montepríncipe 1ª versión octubre 2026',
