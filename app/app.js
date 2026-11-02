@@ -463,6 +463,7 @@ const state = {
 
 const els = {
   nav: document.getElementById('sectionNav'),
+  navAccess: document.getElementById('navAccess'),
   topbar: document.querySelector('.topbar'),
   title: document.getElementById('pageTitle'),
   crumbs: document.getElementById('crumbs'),
@@ -553,19 +554,10 @@ function accessButton(sectionId, icon, caption) {
 
 function renderNav() {
   const clinical = SECTIONS.filter((section) => section.id !== 'formacion');
-  const split = Math.ceil(clinical.length / 2);
-  const rows = [clinical.slice(0, split), clinical.slice(split)];
-  const sectionRows = rows.filter((row) => row.length).map((row) =>
-    '<div class="nav-row">' + row.map(navButton).join('') + '</div>'
-  ).join('');
-  els.nav.innerHTML =
-    '<div class="nav-access">' +
-      accessButton('formacion', 'formacion', 'Formación') +
-      accessButton('team', 'equipo', 'Equipo') +
-    '</div>' +
-    '<div class="nav-sections">' +
-      '<div class="nav-sections-track">' + sectionRows + '</div>' +
-    '</div>';
+  els.navAccess.innerHTML =
+    accessButton('formacion', 'formacion', 'Formación') +
+    accessButton('team', 'equipo', 'Equipo');
+  els.nav.innerHTML = '<div class="nav-row">' + clinical.map(navButton).join('') + '</div>';
   document.querySelectorAll('.nav-btn, .access-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       if (btn.dataset.sectionId === 'team') openTeam();
