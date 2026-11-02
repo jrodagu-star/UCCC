@@ -183,13 +183,13 @@ const SECTIONS = [
       },
       {
         id: 'anticoagulacion-ecmo-impella',
-        title: 'Protocolo de anticoagulación en ECMO e Impella de Isabel Madrid',
-        description: 'Protocolo de anticoagulación en ECMO e Impella.',
+        title: 'Anticoagulación ECMO e Impella',
+        description: 'Autor: Isabel Madrid',
         parts: [
           {
             id: 'protocolo',
-            title: 'Protocolo de anticoagulación en ECMO e Impella de Isabel Madrid',
-            description: 'Protocolo de anticoagulación en ECMO e Impella.',
+            title: 'Anticoagulación ECMO e Impella',
+            description: 'Autor: Isabel Madrid',
             path: '../assets/protocolos/anticoagulacion-ecmo-impella/protocolo-anticoagulacion-ecmo-impella.pdf',
             ext: '.pdf'
           }
