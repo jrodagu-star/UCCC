@@ -359,10 +359,56 @@ button { border: 0; background: none; color: inherit; }
 }
 .doc-view > .card-assignees { flex: 0 0 auto; }
 .crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
   font-size: 13px;
   color: var(--muted);
-  margin-top: 3px;
+  margin-top: 6px;
 }
+.crumbs-path { line-height: 1.3; }
+.group-jumps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.group-jump {
+  padding: 6px 12px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--tone) 30%, #fff);
+  background: linear-gradient(180deg, #fff 0%, color-mix(in srgb, var(--tone-bg) 78%, #fff) 100%);
+  color: var(--tone);
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.2;
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 2px 0 color-mix(in srgb, var(--tone) 34%, #c9c2b6),
+    0 4px 8px rgba(28, 32, 30, .1);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.group-jump:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 3px 0 color-mix(in srgb, var(--tone) 34%, #c9c2b6),
+    0 6px 10px rgba(28, 32, 30, .12);
+}
+.group-jump:active {
+  transform: translateY(2px);
+  box-shadow:
+    inset 0 2px 4px rgba(28, 32, 30, .16),
+    0 1px 0 color-mix(in srgb, var(--tone) 34%, #c9c2b6);
+}
+.group-jump.is-on {
+  background: linear-gradient(180deg, #fff 0%, var(--tone-bg) 100%);
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 2px 0 var(--tone),
+    0 4px 8px rgba(28, 32, 30, .12);
+}
+.form-group { scroll-margin-top: 8px; }
 .meta {
   font-size: 12px;
   font-weight: 700;

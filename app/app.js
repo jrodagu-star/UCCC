@@ -617,6 +617,39 @@ function openCourseImage(src, title) {
   });
 }
 
+function renderSectionSubtitle(section) {
+  const groups = (section.groups || []).filter((group) =>
+    (section.items || []).some((item) => item.group === group.id && !item.hidden)
+  );
+  if (!groups.length) {
+    els.crumbs.textContent = 'UCC Cardiológicos HM / ' + section.title;
+    return;
+  }
+  els.crumbs.innerHTML =
+    '<span class="crumbs-path">UCC Cardiológicos HM / ' + escapeHtml(section.title) + '</span>' +
+    '<span class="group-jumps">' +
+      groups.map((group) =>
+        '<button type="button" class="group-jump tone-' + escapeHtml(group.tone || section.id) + '" data-group-id="' + escapeHtml(group.id) + '">' +
+          escapeHtml(group.title) +
+        '</button>'
+      ).join('') +
+    '</span>';
+  els.crumbs.querySelectorAll('[data-group-id]').forEach((btn) => {
+    btn.addEventListener('click', () => scrollToGroup(btn.dataset.groupId));
+  });
+}
+
+function scrollToGroup(groupId) {
+  const target = document.getElementById('grupo-' + groupId);
+  const scroller = target && target.closest('.panel');
+  if (!target || !scroller) return;
+  const top = target.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop - 8;
+  scroller.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+  document.querySelectorAll('.group-jump').forEach((btn) => {
+    btn.classList.toggle('is-on', btn.dataset.groupId === groupId);
+  });
+}
+
 function bindSectionItems(section) {
   els.viewer.querySelectorAll('[data-item-id]').forEach((btn) => {
     btn.addEventListener('click', () => openItem(section.id, btn.dataset.itemId));
@@ -635,7 +668,7 @@ function openSection(sectionId) {
   setActiveNav(section.id);
   els.title.textContent = section.title;
   showSectionTeam(section.id);
-  els.crumbs.textContent = 'UCC Cardiológicos HM / ' + section.title;
+  renderSectionSubtitle(section);
   const items = visibleItems(section);
   els.meta.textContent = items.length
     ? (items.length + ' recurso' + (items.length === 1 ? '' : 's'))
@@ -657,7 +690,7 @@ function openSection(sectionId) {
       if (!groupItems.length) return '';
       const cards = groupItems.map((item) => sectionItemCard(section, item)).join('');
       const grid = groupItems.every((item) => item.image && item.url) ? 'course-grid' : 'grid';
-      return '<section class="form-group tone-' + escapeHtml(group.tone || section.id) + '">' +
+      return '<section class="form-group tone-' + escapeHtml(group.tone || section.id) + '" id="grupo-' + escapeHtml(group.id) + '">' +
         '<h2 class="form-group-title">' + escapeHtml(group.title) + '</h2>' +
         '<div class="' + grid + '">' + cards + '</div>' +
       '</section>';
