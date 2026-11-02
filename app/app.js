@@ -405,6 +405,20 @@ const SECTIONS = [
         ]
       },
       {
+        id: 'procedimientos-hemodinamica',
+        title: 'Procedimientos de hemodinámica y coordinación multidisciplinar',
+        description: 'U. de hemodinámica H Montepríncipe',
+        parts: [
+          {
+            id: 'documento',
+            title: 'Procedimientos de hemodinámica y coordinación multidisciplinar',
+            description: 'U. de hemodinámica H Montepríncipe',
+            path: '../assets/formacion/hemodinamica/procedimientos-hemodinamica-coordinacion-multidisciplinar.pdf',
+            ext: '.pdf'
+          }
+        ]
+      },
+      {
         id: 'inventario-uccc',
         title: 'Inventario UCCC',
         description: 'Enlace directo al inventario de la unidad.',
