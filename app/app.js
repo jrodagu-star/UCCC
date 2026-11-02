@@ -568,11 +568,16 @@ function folderTab(sectionId, icon, title, lead) {
 
 function renderNav() {
   const clinical = SECTIONS.filter((section) => section.id !== 'formacion');
-  els.nav.innerHTML = '<div class="nav-row" role="tablist">' +
-    folderTab('formacion', 'formacion', 'Formación', true) +
-    folderTab('team', 'equipo', 'Equipo', true) +
-    clinical.map((section) => folderTab(section.id, section.id, section.title, false)).join('') +
-  '</div>';
+  els.nav.innerHTML =
+    '<div class="nav-fixed">' +
+      folderTab('formacion', 'formacion', 'Formación', true) +
+      folderTab('team', 'equipo', 'Equipo', true) +
+    '</div>' +
+    '<div class="nav-scroll">' +
+      '<div class="nav-row">' +
+        clinical.map((section) => folderTab(section.id, section.id, section.title, false)).join('') +
+      '</div>' +
+    '</div>';
   document.querySelectorAll('.folder-tab').forEach((btn) => {
     btn.addEventListener('click', () => {
       if (btn.dataset.sectionId === 'team') openTeam();

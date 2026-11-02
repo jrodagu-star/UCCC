@@ -58,22 +58,37 @@ button { border: 0; background: none; color: inherit; }
   color: var(--menu-ink);
 }
 .nav {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
   width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+.nav-fixed {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  flex: 0 0 auto;
+  padding-top: 6px;
+}
+.nav-scroll {
+  flex: 1 1 auto;
   min-width: 0;
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, .55) transparent;
 }
-.nav::-webkit-scrollbar { height: 7px; }
-.nav::-webkit-scrollbar-track { background: transparent; }
-.nav::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .45); border-radius: 999px; }
+.nav-scroll::-webkit-scrollbar { height: 7px; }
+.nav-scroll::-webkit-scrollbar-track { background: transparent; }
+.nav-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .45); border-radius: 999px; }
 .nav-row {
   display: flex;
   align-items: flex-end;
   gap: 6px;
-  width: 100%;
-  min-width: max-content;
+  width: max-content;
+  min-width: 100%;
   padding: 6px 0 0;
 }
 .folder-tab {
@@ -105,7 +120,7 @@ button { border: 0; background: none; color: inherit; }
   background: linear-gradient(180deg, #f4ddaa 0%, #e2c27a 100%);
   color: #4a3412;
 }
-.folder-lead + .folder-tab:not(.folder-lead) { margin-left: 12px; }
+.nav-fixed .folder-tab { flex: 0 0 auto; }
 .folder-tab:hover { height: 40px; }
 .folder-tab:active { height: 34px; }
 .folder-tab.active {
