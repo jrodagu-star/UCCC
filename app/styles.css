@@ -60,17 +60,29 @@ button { border: 0; background: none; color: inherit; }
 .nav {
   display: flex;
   align-items: flex-end;
-  gap: 12px;
+  gap: 0;
   width: 100%;
   min-width: 0;
   overflow: hidden;
 }
 .nav-fixed {
+  position: relative;
   display: flex;
   align-items: flex-end;
   gap: 6px;
   flex: 0 0 auto;
-  padding-top: 6px;
+  margin-right: 14px;
+  padding: 6px 16px 0 0;
+}
+.nav-fixed::after {
+  content: "";
+  position: absolute;
+  top: 12px;
+  right: 0;
+  bottom: 4px;
+  width: 1px;
+  background: rgba(255, 255, 255, .72);
+  box-shadow: 1px 0 0 rgba(0, 0, 0, .45);
 }
 .nav-scroll {
   flex: 1 1 auto;
