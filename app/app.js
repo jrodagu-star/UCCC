@@ -426,6 +426,20 @@ const SECTIONS = [
         direct: true
       }
     ]
+  },
+  {
+    id: 'cursos',
+    title: 'Cursos próximos',
+    items: [
+      {
+        id: 'actualizacion-cuidados-criticos-2026',
+        title: 'Actualización de cuidados críticos cardiovasculares, Madrid 25-27 noviembre 2026',
+        description: 'II Jornadas de Cuidados Intensivos Cardiológicos, GTCICyRCP · SEMICYUC.',
+        url: 'https://gtcicyrcpsemicyuc.es/',
+        image: '../assets/cursos/actualizacion-cuidados-criticos-cardiovasculares-2026.jpg',
+        direct: true
+      }
+    ]
   }
 ];
 
@@ -487,6 +501,7 @@ const ICONS = {
   hemodinamica: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg>',
   neurologico: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6a3 3 0 0 1 5.8-1A3 3 0 0 1 18 8a3 3 0 0 1 1 5 3 3 0 0 1-2 5 3 3 0 0 1-5 1 3 3 0 0 1-5-1 3 3 0 0 1-2-5 3 3 0 0 1 1-5 3 3 0 0 1 3-2z"/><path d="M12 7v10M9 10h6"/></svg>',
   formacion: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l9-4 9 4-9 4-9-4z"/><path d="M7 11v5c0 1.5 2.2 3 5 3s5-1.5 5-3v-5"/></svg>',
+  cursos: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>',
   equipo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="2.2"/><circle cx="16" cy="9" r="1.8"/><path d="M4.5 18c.4-2.6 2.2-4 4.5-4s4.1 1.4 4.5 4"/><path d="M13 14.2c1.3-.5 2.6-.7 3.6-.4 1.6.4 2.6 1.6 3 3.2"/></svg>',
   doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>',
   file: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v6h6"/><path d="M8 16h3M8 12h8"/></svg>',
@@ -509,19 +524,32 @@ function itemKind(item) {
   return 'doc';
 }
 
+function navButton(section) {
+  return '<button type="button" class="nav-btn tone-' + escapeHtml(section.id) + '" data-section-id="' + escapeHtml(section.id) + '">' +
+    iconHtml(section.id) +
+    '<span class="nav-label">' + escapeHtml(section.title) + '</span>' +
+  '</button>';
+}
+
 function renderNav() {
-  const sections = SECTIONS.map((section) =>
-    '<button type="button" class="nav-btn tone-' + escapeHtml(section.id) + '" data-section-id="' + escapeHtml(section.id) + '">' +
-      iconHtml(section.id) +
-      '<span class="nav-label">' + escapeHtml(section.title) + '</span>' +
-    '</button>'
-  ).join('');
+  const before = [];
+  const after = [];
+  let split = false;
+  SECTIONS.forEach((section) => {
+    (split ? after : before).push(navButton(section));
+    if (section.id === 'formacion') split = true;
+  });
   els.nav.innerHTML =
-    '<button type="button" class="nav-btn tone-equipo" id="teamBtn" data-section-id="team">' +
-      iconHtml('equipo') +
-      '<span class="nav-label">Equipo</span>' +
-    '</button>' +
-    sections;
+    '<div class="nav-row">' +
+      '<button type="button" class="nav-btn tone-equipo" id="teamBtn" data-section-id="team">' +
+        iconHtml('equipo') +
+        '<span class="nav-label">Equipo</span>' +
+      '</button>' +
+      before.join('') +
+    '</div>' +
+    (after.length
+      ? '<div class="nav-sep" role="separator"></div><div class="nav-row">' + after.join('') + '</div>'
+      : '');
   els.nav.querySelectorAll('.nav-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       if (btn.dataset.sectionId === 'team') openTeam();
@@ -545,8 +573,9 @@ function openSection(sectionId) {
   showSectionTeam(section.id);
   els.crumbs.textContent = 'UCC Cardiológicos HM / ' + section.title;
   const items = visibleItems(section);
+  const courses = section.id === 'cursos';
   els.meta.textContent = items.length
-    ? (items.length + ' recurso' + (items.length === 1 ? '' : 's'))
+    ? (items.length + (courses ? (items.length === 1 ? ' curso' : ' cursos') : (' recurso' + (items.length === 1 ? '' : 's'))))
     : 'Sin protocolos todavía';
   if (!items.length) {
     els.viewer.innerHTML =
@@ -560,6 +589,16 @@ function openSection(sectionId) {
   }
 
   const cards = items.map((item) => {
+    if (item.image && item.url) {
+      return '<a class="course-card" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' +
+        '<img src="' + escapeHtml(item.image) + '" alt="' + escapeHtml(item.title) + '">' +
+        '<span class="course-card-copy">' +
+          '<span class="card-title">' + escapeHtml(item.title) + '</span>' +
+          '<span class="card-desc">' + escapeHtml(item.description || '') + '</span>' +
+          '<span class="card-cta">Abrir el curso</span>' +
+        '</span>' +
+      '</a>';
+    }
     const inner =
       iconHtml(itemKind(item)) +
       '<span class="card-title">' + escapeHtml(item.title) + '</span>' +
@@ -586,8 +625,8 @@ function openSection(sectionId) {
 
   els.viewer.innerHTML =
     '<div class="panel tone-' + escapeHtml(section.id) + '">' +
-      '<p class="panel-lead">Elige un protocolo o herramienta de ' + escapeHtml(section.title) + '.</p>' +
-      '<div class="grid">' + cards + '</div>' +
+      '<p class="panel-lead">' + (courses ? 'Cursos previstos.' : 'Elige un protocolo o herramienta de ' + escapeHtml(section.title) + '.') + '</p>' +
+      '<div class="' + (courses ? 'course-grid' : 'grid') + '">' + cards + '</div>' +
       poster +
     '</div>';
 
@@ -963,7 +1002,7 @@ function targetLabel(target) {
 
 function assignmentChecks(selected) {
   const chosen = new Set(Array.isArray(selected) ? selected : (selected ? [selected] : []));
-  return SECTIONS.map((section) => {
+  return SECTIONS.filter((section) => section.id !== 'cursos').map((section) => {
     const whole = 'section:' + section.id;
     const items = (section.items || []).filter((item) => !item.hidden || chosen.has('item:' + section.id + ':' + item.id)).map((item) => {
       const value = 'item:' + section.id + ':' + item.id;
@@ -1177,7 +1216,7 @@ function openTeam() {
   const count = team.length;
   els.meta.textContent = count + (count === 1 ? ' persona' : ' personas');
   renderUserMenu();
-  const tree = SECTIONS.filter((section) => section.id !== 'formacion').map((section) => {
+  const tree = SECTIONS.filter((section) => section.id !== 'formacion' && section.id !== 'cursos').map((section) => {
     const docs = visibleItems(section).map((item) => {
       const doctors = peopleForItem(section.id, item.id).map((person) =>
         '<span class="tree-doctor">' + miniAvatar(person) + '<span>' + escapeHtml(givenName(person.name)) + '</span></span>'

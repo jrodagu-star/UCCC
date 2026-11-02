@@ -35,6 +35,7 @@ button { border: 0; background: none; color: inherit; }
 .tone-hemodinamica { --tone: #9a3412; --tone-bg: #ecc4a4; }
 .tone-neurologico { --tone: #1e3a8a; --tone-bg: #c3d0ef; }
 .tone-formacion { --tone: #0f5c56; --tone-bg: #b5ddd6; }
+.tone-cursos { --tone: #12315c; --tone-bg: #c5d0e4; }
 .tone-equipo { --tone: #0b5f73; --tone-bg: #c5dde6; }
 
 .layout {
@@ -83,16 +84,29 @@ button { border: 0; background: none; color: inherit; }
   flex: 1;
   min-width: 0;
   display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  padding: 2px 2px 4px;
+}
+.nav-row {
+  display: flex;
   flex-direction: row;
   align-items: center;
   gap: 6px;
+  min-width: 0;
   overflow-x: auto;
-  padding: 4px 2px 22px;
+  padding: 2px 2px 8px;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, .4) transparent;
 }
-.nav::-webkit-scrollbar { height: 7px; }
-.nav::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .4); border-radius: 999px; }
+.nav-row::-webkit-scrollbar { height: 7px; }
+.nav-row::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .4); border-radius: 999px; }
+.nav-sep {
+  height: 1px;
+  margin: 0 4px;
+  background: rgba(255, 255, 255, .32);
+}
 .nav-btn {
   flex: 0 0 auto;
   display: flex;
@@ -413,6 +427,49 @@ button { border: 0; background: none; color: inherit; }
   font-size: 12px;
   font-weight: 750;
   color: var(--tone);
+}
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 420px));
+  gap: 16px;
+}
+.course-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  text-align: left;
+  text-decoration: none;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, .85);
+  background: linear-gradient(180deg, #ffffff 0%, var(--card) 100%);
+  color: var(--text);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .95),
+    0 1px 2px rgba(28, 32, 30, .06),
+    0 10px 22px rgba(28, 32, 30, .13);
+  transition: border-color .15s, box-shadow .15s, transform .15s;
+}
+.course-card:hover {
+  border-color: color-mix(in srgb, var(--tone) 40%, #fff);
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 2px 4px rgba(28, 32, 30, .06),
+    0 18px 34px rgba(28, 32, 30, .18);
+  transform: translateY(-3px);
+}
+.course-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  background: #101820;
+}
+.course-card-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 14px 16px 16px;
 }
 
 .poster-row {
@@ -878,7 +935,7 @@ button { border: 0; background: none; color: inherit; }
 
 @media (max-width: 720px) {
   .app-bar { gap: 10px; padding: 14px 10px 10px; }
-  .nav { padding-bottom: 22px; }
+  .nav-row { padding-bottom: 12px; }
   .brand-copy { display: none; }
   .topbar { flex-direction: column; align-items: flex-start; }
   .topbar-aside { align-self: stretch; justify-content: flex-end; }
