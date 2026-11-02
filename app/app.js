@@ -713,7 +713,7 @@ function openSection(sectionId) {
       const grid = groupItems.every((item) => item.image && item.url) ? 'course-grid' : 'grid';
       return '<section class="form-group tone-' + escapeHtml(group.tone || section.id) + '" id="grupo-' + escapeHtml(group.id) + '">' +
         '<h2 class="form-group-title">' + escapeHtml(group.title) + '</h2>' +
-        '<div class="' + grid + '">' + cards + '</div>' +
+        '<div class="form-group-body"><div class="' + grid + '">' + cards + '</div></div>' +
       '</section>';
     }).join('');
     els.viewer.innerHTML =
