@@ -464,7 +464,7 @@ const state = {
 
 const els = {
   nav: document.getElementById('sectionNav'),
-  navAccess: document.getElementById('navAccess'),
+  main: document.querySelector('.main'),
   topbar: document.querySelector('.topbar'),
   title: document.getElementById('pageTitle'),
   crumbs: document.getElementById('crumbs'),
@@ -499,11 +499,18 @@ function visibleItems(section) {
 }
 
 function setActiveNav(sectionId) {
-  document.querySelectorAll('.nav-btn, .access-btn').forEach((btn) => {
+  document.querySelectorAll('.folder-tab').forEach((btn) => {
     btn.classList.toggle('active', btn.dataset.sectionId === sectionId);
+    btn.setAttribute('aria-selected', btn.dataset.sectionId === sectionId ? 'true' : 'false');
   });
   const toneClass = sectionId === 'team' ? 'tone-equipo' : (sectionId ? 'tone-' + sectionId : '');
   if (els.topbar) els.topbar.className = toneClass ? 'topbar ' + toneClass : 'topbar';
+  if (els.main) {
+    els.main.className = toneClass ? 'main ' + toneClass : 'main';
+    els.main.classList.remove('is-opening');
+    void els.main.offsetWidth;
+    els.main.classList.add('is-opening');
+  }
   setUserMenuVisible(sectionId === 'team');
 }
 
@@ -546,27 +553,22 @@ function itemKind(item) {
   return 'doc';
 }
 
-function navButton(section) {
-  return '<button type="button" class="nav-btn tone-' + escapeHtml(section.id) + '" data-section-id="' + escapeHtml(section.id) + '">' +
-    iconHtml(section.id) +
-    '<span class="nav-label">' + escapeHtml(section.title) + '</span>' +
-  '</button>';
-}
-
-function accessButton(sectionId, icon, caption) {
-  return '<button type="button" class="access-btn tone-' + (sectionId === 'team' ? 'equipo' : icon) + '" data-section-id="' + escapeHtml(sectionId) + '">' +
+function folderTab(sectionId, icon, title, lead) {
+  const tone = sectionId === 'team' ? 'equipo' : icon;
+  return '<button type="button" class="folder-tab' + (lead ? ' folder-lead' : '') + ' tone-' + tone + '" role="tab" data-section-id="' + escapeHtml(sectionId) + '">' +
     iconHtml(icon) +
-    '<span class="access-caption">' + escapeHtml(caption) + '</span>' +
+    '<span class="nav-label">' + escapeHtml(title) + '</span>' +
   '</button>';
 }
 
 function renderNav() {
   const clinical = SECTIONS.filter((section) => section.id !== 'formacion');
-  els.navAccess.innerHTML =
-    accessButton('formacion', 'formacion', 'Formación') +
-    accessButton('team', 'equipo', 'Equipo');
-  els.nav.innerHTML = '<div class="nav-row">' + clinical.map(navButton).join('') + '</div>';
-  document.querySelectorAll('.nav-btn, .access-btn').forEach((btn) => {
+  els.nav.innerHTML = '<div class="nav-row" role="tablist">' +
+    folderTab('formacion', 'formacion', 'Formación', true) +
+    folderTab('team', 'equipo', 'Equipo', true) +
+    clinical.map((section) => folderTab(section.id, section.id, section.title, false)).join('') +
+  '</div>';
+  document.querySelectorAll('.folder-tab').forEach((btn) => {
     btn.addEventListener('click', () => {
       if (btn.dataset.sectionId === 'team') openTeam();
       else openSection(btn.dataset.sectionId);
