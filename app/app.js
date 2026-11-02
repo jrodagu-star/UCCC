@@ -1326,36 +1326,27 @@ function openTeam() {
   setPageBrand(false);
   showSectionTeam(null);
   els.crumbs.textContent = 'UCC Cardiológicos HM / Equipo';
-  setCover(true);
+  setCover(false);
   const count = team.length;
   els.meta.textContent = count + (count === 1 ? ' persona' : ' personas');
   renderUserMenu();
-  const tree = SECTIONS.filter((section) => section.id !== 'formacion').map((section) => {
+  const blocks = SECTIONS.filter((section) => section.id !== 'formacion').map((section) => {
     const docs = visibleItems(section).map((item) => {
-      const doctors = peopleForItem(section.id, item.id).map((person) =>
-        '<span class="tree-doctor">' + miniAvatar(person) + '<span>' + escapeHtml(givenName(person.name)) + '</span></span>'
-      ).join('');
-      return '<li><div class="tree-doc-row">' +
-        '<button type="button" data-tree-item="' + escapeHtml(section.id + ':' + item.id) + '">' + escapeHtml(item.title) + '</button>' +
-        (doctors ? '<span class="tree-doctors">' + doctors + '</span>' : '') +
-      '</div></li>';
+      const people = peopleForItem(section.id, item.id);
+      return '<li class="team-row">' +
+        '<button type="button" class="team-link" data-tree-item="' + escapeHtml(section.id + ':' + item.id) + '">' + escapeHtml(item.title) + '</button>' +
+        (people.length ? '<span class="team-chips">' + people.map(assigneeChip).join('') + '</span>' : '') +
+      '</li>';
     }).join('');
-    return '<li class="tree-section tone-' + escapeHtml(section.id) + '">' +
-      '<div class="tree-section-row">' +
-        '<button type="button" class="tree-section-btn" data-tree-section="' + escapeHtml(section.id) + '">' +
-          iconHtml(section.id) +
-          '<span>' + escapeHtml(section.title) + '</span>' +
-        '</button>' +
-      '</div>' +
-      '<ul>' + docs + '</ul>' +
-    '</li>';
+    return '<section class="team-block tone-' + escapeHtml(section.id) + '">' +
+      '<button type="button" class="team-block-title" data-tree-section="' + escapeHtml(section.id) + '">' +
+        iconHtml(section.id) +
+        '<span>' + escapeHtml(section.title) + '</span>' +
+      '</button>' +
+      '<ul class="team-rows">' + docs + '</ul>' +
+    '</section>';
   }).join('');
-  els.viewer.innerHTML =
-    '<div class="team-board">' +
-      '<section class="panel team-pane">' +
-        '<ul class="proto-tree">' + tree + '</ul>' +
-      '</section>' +
-    '</div>';
+  els.viewer.innerHTML = '<div class="team-page">' + blocks + '</div>';
   els.viewer.querySelectorAll('[data-tree-section]').forEach((btn) => {
     btn.addEventListener('click', () => openSection(btn.dataset.treeSection));
   });
