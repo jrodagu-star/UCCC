@@ -433,6 +433,7 @@ function setActiveNav(sectionId) {
   });
   const toneClass = sectionId === 'team' ? 'tone-equipo' : (sectionId ? 'tone-' + sectionId : '');
   if (els.topbar) els.topbar.className = toneClass ? 'topbar ' + toneClass : 'topbar';
+  setUserMenuVisible(sectionId === 'team');
 }
 
 const ICONS = {
@@ -1061,6 +1062,68 @@ function assignedProtocols(person) {
   return list;
 }
 
+function closeUserMenu() {
+  const btn = document.getElementById('userMenuBtn');
+  const panel = document.getElementById('userMenuPanel');
+  if (btn) btn.setAttribute('aria-expanded', 'false');
+  if (panel) panel.hidden = true;
+}
+
+function setUserMenuVisible(on) {
+  const menu = document.getElementById('userMenu');
+  if (!menu) return;
+  menu.hidden = !on;
+  if (!on) closeUserMenu();
+}
+
+function renderUserMenu() {
+  const panel = document.getElementById('userMenuPanel');
+  if (!panel) return;
+  panel.innerHTML = team.map((person) => {
+    const name = person.name || 'Sin nombre';
+    const protocols = assignedProtocols(person);
+    const list = protocols.length
+      ? '<ul class="user-menu-protocols">' + protocols.map((item) =>
+          '<li><button type="button" data-team-go="' + escapeHtml(item.target) + '">' + escapeHtml(item.title) + '</button></li>'
+        ).join('') + '</ul>'
+      : '<p class="user-menu-empty">Sin protocolos</p>';
+    return '<article class="user-menu-person">' +
+      '<div class="user-menu-identity">' +
+        '<span class="avatar shape-' + escapeHtml(person.shape) + '" style="background:' + escapeHtml(person.color) + ';color:' + inkFor(person.color) + '">' + avatarInner(person) + '</span>' +
+        '<span class="team-name">' + escapeHtml(name) + '</span>' +
+      '</div>' +
+      list +
+    '</article>';
+  }).join('');
+  panel.querySelectorAll('[data-team-go]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      closeUserMenu();
+      openAssignment(btn.dataset.teamGo);
+    });
+  });
+}
+
+function bindUserMenu() {
+  const btn = document.getElementById('userMenuBtn');
+  if (!btn || btn.dataset.bound) return;
+  btn.dataset.bound = '1';
+  btn.addEventListener('click', (event) => {
+    event.stopPropagation();
+    const panel = document.getElementById('userMenuPanel');
+    const open = btn.getAttribute('aria-expanded') !== 'true';
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (panel) panel.hidden = !open;
+  });
+  document.addEventListener('click', (event) => {
+    const menu = document.getElementById('userMenu');
+    if (!menu || menu.hidden || menu.contains(event.target)) return;
+    closeUserMenu();
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeUserMenu();
+  });
+}
+
 function openTeam() {
   state.sectionId = null;
   state.itemId = null;
@@ -1071,22 +1134,7 @@ function openTeam() {
   setCover(true);
   const count = team.length;
   els.meta.textContent = count + (count === 1 ? ' persona' : ' personas');
-  const rows = team.map((person) => {
-    const name = person.name || 'Sin nombre';
-    const protocols = assignedProtocols(person);
-    const list = protocols.length
-      ? '<ul class="team-protocols">' + protocols.map((item) =>
-          '<li><button type="button" data-team-go="' + escapeHtml(item.target) + '">' + escapeHtml(item.title) + '</button></li>'
-        ).join('') + '</ul>'
-      : '<p class="team-protocols-empty">Sin protocolos</p>';
-    const identity =
-      '<span class="avatar shape-' + escapeHtml(person.shape) + '" style="background:' + escapeHtml(person.color) + ';color:' + inkFor(person.color) + '">' + avatarInner(person) + '</span>' +
-      '<span class="team-name">' + escapeHtml(name) + '</span>';
-    const personHtml = protocols.length
-      ? '<button type="button" class="team-person" data-team-open="' + person.id + '" aria-label="' + escapeHtml(name) + '">' + identity + '</button>'
-      : '<div class="team-person">' + identity + '</div>';
-    return '<article class="team-slot">' + personHtml + list + '</article>';
-  }).join('');
+  renderUserMenu();
   const tree = SECTIONS.map((section) => {
     const docs = visibleItems(section).map((item) => {
       const doctors = peopleForItem(section.id, item.id).map((person) =>
@@ -1110,25 +1158,9 @@ function openTeam() {
   els.viewer.innerHTML =
     '<div class="team-board">' +
       '<section class="panel team-pane">' +
-        '<p class="panel-lead">Personas y protocolos asignados.</p>' +
-        '<div class="team-people">' + rows + '</div>' +
-      '</section>' +
-      '<section class="panel team-pane">' +
-        '<p class="panel-lead">Secciones y documentos.</p>' +
         '<ul class="proto-tree">' + tree + '</ul>' +
       '</section>' +
     '</div>';
-  els.viewer.querySelectorAll('[data-team-open]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const person = team.find((entry) => entry.id === btn.dataset.teamOpen);
-      if (!person) return;
-      const targets = personTargets(person);
-      if (targets.length) openAssignment(targets[0]);
-    });
-  });
-  els.viewer.querySelectorAll('[data-team-go]').forEach((btn) => {
-    btn.addEventListener('click', () => openAssignment(btn.dataset.teamGo));
-  });
   els.viewer.querySelectorAll('[data-tree-section]').forEach((btn) => {
     btn.addEventListener('click', () => openSection(btn.dataset.treeSection));
   });
@@ -1147,3 +1179,4 @@ loadTeam().then((loaded) => {
 });
 
 document.getElementById('homeBtn').addEventListener('click', openTeam);
+bindUserMenu();
