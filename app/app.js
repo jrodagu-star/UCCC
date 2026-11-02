@@ -467,6 +467,7 @@ const els = {
   main: document.querySelector('.main'),
   topbar: document.querySelector('.topbar'),
   title: document.getElementById('pageTitle'),
+  pageBrand: document.getElementById('pageBrand'),
   crumbs: document.getElementById('crumbs'),
   meta: document.getElementById('pageMeta'),
   viewer: document.getElementById('viewer')
@@ -496,6 +497,10 @@ function findItem(section, itemId) {
 
 function visibleItems(section) {
   return (section.items || []).filter((item) => !item.hidden);
+}
+
+function setPageBrand(on) {
+  if (els.pageBrand) els.pageBrand.hidden = !on;
 }
 
 function setActiveNav(sectionId) {
@@ -677,6 +682,7 @@ function openSection(sectionId) {
   state.itemId = null;
   setActiveNav(section.id);
   els.title.textContent = section.title;
+  setPageBrand(section.id === 'formacion');
   showSectionTeam(section.id);
   renderSectionSubtitle(section);
   const items = visibleItems(section);
@@ -801,6 +807,7 @@ function openItem(sectionId, itemId) {
   }
   if (!parts.length) {
     els.title.textContent = item.title;
+    setPageBrand(false);
     els.crumbs.textContent = 'UCC Cardiológicos HM / ' + section.title + ' / ' + item.title;
     els.meta.textContent = 'Documento pendiente';
     els.viewer.innerHTML =
@@ -812,6 +819,7 @@ function openItem(sectionId, itemId) {
   }
 
   els.title.textContent = item.title;
+  setPageBrand(false);
   els.crumbs.textContent = 'UCC Cardiológicos HM / ' + section.title + ' / ' + item.title;
   els.meta.textContent = parts.length + ' documentos';
 
@@ -847,6 +855,7 @@ function openItem(sectionId, itemId) {
 
 function openExternal(section, item) {
   els.title.textContent = item.title;
+  setPageBrand(false);
   els.crumbs.textContent = 'UCC Cardiológicos HM / ' + section.title + ' / ' + item.title;
   els.meta.textContent = 'Enlace externo';
   els.viewer.innerHTML =
@@ -870,6 +879,7 @@ function openPart(section, item, part) {
   const ext = (part.ext || extFromPath(part.path) || '').toLowerCase();
   const src = part.path;
   els.title.textContent = part.title;
+  setPageBrand(false);
   els.crumbs.textContent = 'UCC Cardiológicos HM / ' + section.title + ' / ' + item.title + ' / ' + part.title;
   els.meta.textContent = ext ? ext.replace('.', '').toUpperCase() : 'Documento';
 
@@ -1313,6 +1323,7 @@ function openTeam() {
   state.itemId = null;
   setActiveNav('team');
   els.title.textContent = 'Equipo';
+  setPageBrand(false);
   showSectionTeam(null);
   els.crumbs.textContent = 'UCC Cardiológicos HM / Equipo';
   setCover(true);
@@ -1362,5 +1373,4 @@ loadTeam().then((loaded) => {
   openSection('formacion');
 });
 
-document.getElementById('homeBtn').addEventListener('click', openTeam);
 bindUserMenu();
