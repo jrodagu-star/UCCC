@@ -388,6 +388,7 @@ const SECTIONS = [
         title: 'Ecmovad',
         description: 'Página de YouTube de Ecmovad.',
         url: 'https://www.youtube.com/@ecmovad2023',
+        icon: '../assets/formacion/ecmovad/logo-ecmovad.png',
         direct: true
       },
       {
@@ -528,6 +529,13 @@ function iconHtml(name) {
   return '<span class="ico" aria-hidden="true">' + (ICONS[name] || ICONS.doc) + '</span>';
 }
 
+function itemIcon(item) {
+  if (item.icon) {
+    return '<span class="ico ico-logo" aria-hidden="true"><img src="' + escapeHtml(item.icon) + '" alt=""></span>';
+  }
+  return iconHtml(itemKind(item));
+}
+
 function itemKind(item) {
   if (item.url) return 'link';
   const parts = item.parts || [];
@@ -584,7 +592,7 @@ function sectionItemCard(section, item) {
     '</article>';
   }
   const inner =
-    iconHtml(itemKind(item)) +
+    itemIcon(item) +
     '<span class="card-title">' + escapeHtml(item.title) + '</span>' +
     '<span class="card-desc">' + escapeHtml(item.description || '') + '</span>' +
     '<span class="card-cta">Abrir</span>';

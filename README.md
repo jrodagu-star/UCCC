@@ -13,7 +13,7 @@ App estática con menú lateral por áreas clínicas y panel de protocolos/herra
 | Sedoanalgesia | Analgosedación en VM |
 | Hemodinámica | Escalas en shock cardiogénico (pantalla de inicio), Fármacos, Monitorización hemodinámica, TEP |
 | Neurológico | Monitorización CONOX |
-| Formación | Protocolos y manuales; Cursos y Unidad Montepríncipe (actualización de cuidados críticos cardiovasculares, Madrid 25-27 noviembre 2026); Conferencias y recursos online (notas de cardiología crítica y canal de YouTube Ecmovad) |
+| Formación | Protocolos y manuales; Cursos y Unidad Montepríncipe (actualización de cuidados críticos cardiovasculares, Madrid 25-27 noviembre 2026); Conferencias y recursos online (notas de cardiología crítica y canal de YouTube Ecmovad, con su logo) |
 
 ## Cómo abrir en local
 

@@ -266,6 +266,19 @@ button { border: 0; background: none; color: inherit; }
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55), 0 2px 4px rgba(0, 0, 0, .18);
 }
 .ico svg { width: 18px; height: 18px; display: block; }
+.ico-logo {
+  width: 46px;
+  height: 46px;
+  background: #fff;
+  overflow: hidden;
+  padding: 4px;
+}
+.ico-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
 .nav-btn.active .ico { background: var(--panel); }
 
 .main {
