@@ -1135,7 +1135,7 @@ function openTeam() {
   const count = team.length;
   els.meta.textContent = count + (count === 1 ? ' persona' : ' personas');
   renderUserMenu();
-  const tree = SECTIONS.map((section) => {
+  const tree = SECTIONS.filter((section) => section.id !== 'formacion').map((section) => {
     const docs = visibleItems(section).map((item) => {
       const doctors = peopleForItem(section.id, item.id).map((person) =>
         '<span class="tree-doctor">' + miniAvatar(person) + '<span>' + escapeHtml(givenName(person.name)) + '</span></span>'
