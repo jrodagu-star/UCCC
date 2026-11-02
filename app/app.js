@@ -425,12 +425,12 @@ const SECTIONS = [
         id: 'procedimientos-hemodinamica',
         group: 'protocolos',
         title: 'Procedimientos de hemodinámica y coordinación multidisciplinar',
-        description: 'U. de hemodinámica H Montepríncipe',
+        description: 'Autor: U. Hemodinámica Montepríncipe',
         parts: [
           {
             id: 'documento',
             title: 'Procedimientos de hemodinámica y coordinación multidisciplinar',
-            description: 'U. de hemodinámica H Montepríncipe',
+            description: 'Autor: U. Hemodinámica Montepríncipe',
             path: '../assets/formacion/hemodinamica/procedimientos-hemodinamica-coordinacion-multidisciplinar.pdf',
             ext: '.pdf'
           }
