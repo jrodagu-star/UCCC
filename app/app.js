@@ -363,7 +363,7 @@ const SECTIONS = [
     groups: [
       { id: 'protocolos', title: 'Protocolos y manuales', tone: 'hemodinamica' },
       { id: 'cursos-unidad', title: 'Cursos y Unidad Montepríncipe', tone: 'cursos' },
-      { id: 'conferencias', title: 'Conferencias', tone: 'formacion' }
+      { id: 'conferencias', title: 'Conferencias y recursos online', tone: 'formacion' }
     ],
     items: [
       {
