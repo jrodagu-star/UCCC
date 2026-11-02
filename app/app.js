@@ -555,7 +555,9 @@ function renderNav() {
       accessButton('formacion', 'formacion', 'Formación') +
       accessButton('team', 'equipo', 'Equipo') +
     '</div>' +
-    '<div class="nav-sections">' + sectionRows + '</div>';
+    '<div class="nav-sections">' +
+      '<div class="nav-sections-track">' + sectionRows + '</div>' +
+    '</div>';
   document.querySelectorAll('.nav-btn, .access-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       if (btn.dataset.sectionId === 'team') openTeam();

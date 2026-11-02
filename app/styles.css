@@ -66,72 +66,89 @@ button { border: 0; background: none; color: inherit; }
 }
 .nav-access {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-end;
+  gap: 6px;
   flex: 0 0 auto;
   padding-bottom: 6px;
 }
 .nav-sections {
   flex: 1;
   min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, .7) rgba(255, 255, 255, .16);
+}
+.nav-sections::-webkit-scrollbar { height: 8px; }
+.nav-sections::-webkit-scrollbar-track { background: rgba(255, 255, 255, .16); border-radius: 999px; }
+.nav-sections::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .7); border-radius: 999px; }
+.nav-sections-track {
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 6px;
+  width: max-content;
+  min-width: 100%;
+  padding-bottom: 6px;
 }
 .access-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  width: 108px;
-  padding: 8px 6px 9px;
-  border-radius: 16px;
+  justify-content: center;
+  gap: 1px;
+  width: 92px;
+  height: 41px;
+  padding: 2px 6px;
+  border-radius: 11px;
   color: var(--menu-ink);
   background: linear-gradient(180deg, #4c5652 0%, #2a3330 100%);
   border: 1px solid rgba(255, 255, 255, .18);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, .32),
-    inset 0 -3px 0 rgba(0, 0, 0, .38),
-    0 5px 0 #141918,
-    0 10px 14px rgba(0, 0, 0, .34);
+    inset 0 -2px 0 rgba(0, 0, 0, .32),
+    0 2px 0 #141918,
+    0 3px 6px rgba(0, 0, 0, .24);
   transition: transform .12s ease, box-shadow .12s ease, background .12s ease, color .12s ease;
 }
 .access-btn:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, .4),
-    inset 0 -3px 0 rgba(0, 0, 0, .38),
-    0 7px 0 #141918,
-    0 14px 18px rgba(0, 0, 0, .38);
+    inset 0 -2px 0 rgba(0, 0, 0, .32),
+    0 3px 0 #141918,
+    0 5px 8px rgba(0, 0, 0, .28);
 }
 .access-btn:active {
-  transform: translateY(4px);
+  transform: translateY(2px);
   box-shadow:
-    inset 0 2px 5px rgba(0, 0, 0, .4),
-    0 1px 0 #141918,
-    0 2px 6px rgba(0, 0, 0, .3);
+    inset 0 2px 4px rgba(0, 0, 0, .35),
+    0 1px 0 #141918;
 }
 .access-btn.active {
   background: linear-gradient(180deg, #fff 0%, var(--tone-bg) 100%);
   color: var(--tone);
   box-shadow:
     inset 0 1px 0 #fff,
-    inset 0 -3px 0 color-mix(in srgb, var(--tone) 32%, #9a9186),
-    0 5px 0 color-mix(in srgb, var(--tone) 55%, #121816),
-    0 10px 14px rgba(0, 0, 0, .32);
+    inset 0 -2px 0 color-mix(in srgb, var(--tone) 32%, #9a9186),
+    0 2px 0 color-mix(in srgb, var(--tone) 55%, #121816),
+    0 3px 6px rgba(0, 0, 0, .24);
 }
 .access-btn .ico {
-  width: 36px;
-  height: 36px;
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, .75),
-    0 3px 0 rgba(0, 0, 0, .2);
+    0 1px 0 rgba(0, 0, 0, .16);
 }
+.access-btn .ico svg { width: 13px; height: 13px; }
 .access-caption {
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 750;
-  line-height: 1.15;
+  line-height: 13px;
   text-align: center;
 }
 .brand:hover .brand-mark { filter: brightness(1.08); }
@@ -155,7 +172,7 @@ button { border: 0; background: none; color: inherit; }
   min-width: 0;
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-end;
   gap: 12px;
   padding: 0 2px;
 }
@@ -164,14 +181,11 @@ button { border: 0; background: none; color: inherit; }
   flex-direction: row;
   align-items: center;
   gap: 10px;
-  min-width: 0;
-  overflow-x: auto;
-  padding: 1px 2px 6px;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, .4) transparent;
+  width: max-content;
+  min-width: 100%;
+  overflow: visible;
+  padding: 1px 2px 2px;
 }
-.nav-row::-webkit-scrollbar { height: 7px; }
-.nav-row::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .4); border-radius: 999px; }
 .nav-btn {
   flex: 0 0 auto;
   display: flex;
@@ -1089,7 +1103,7 @@ button { border: 0; background: none; color: inherit; }
 
 @media (max-width: 720px) {
   .app-bar { gap: 10px; padding: 14px 10px 10px; }
-  .nav-row { padding-bottom: 8px; }
+  .nav-sections { padding-bottom: 2px; }
   .brand-copy { display: none; }
   .topbar { flex-direction: column; align-items: flex-start; }
   .topbar-aside { align-self: stretch; justify-content: flex-end; }
