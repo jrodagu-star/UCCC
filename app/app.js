@@ -377,6 +377,20 @@ const SECTIONS = [
         ]
       },
       {
+        id: 'manual-valdecilla-2012',
+        title: 'Manual de Soporte mecánico circulatorio de corta duración de H Valdecilla 2012',
+        description: 'Manual de soporte mecánico circulatorio de corta duración del Hospital Valdecilla, 2012.',
+        parts: [
+          {
+            id: 'documento',
+            title: 'Manual de Soporte mecánico circulatorio de corta duración de H Valdecilla 2012',
+            description: 'Manual de soporte mecánico circulatorio de corta duración del Hospital Valdecilla, 2012.',
+            path: '../assets/formacion/valdecilla/manual-soporte-mecanico-circulatorio-corta-duracion-valdecilla-2012.pdf',
+            ext: '.pdf'
+          }
+        ]
+      },
+      {
         id: 'inventario-uccc',
         title: 'Inventario UCCC',
         description: 'Enlace directo al inventario de la unidad.',
