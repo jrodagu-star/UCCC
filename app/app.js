@@ -638,36 +638,21 @@ function openCourseImage(src, title) {
 }
 
 function renderSectionSubtitle(section) {
-  const groups = (section.groups || []).filter((group) =>
-    (section.items || []).some((item) => item.group === group.id && !item.hidden)
-  );
-  if (!groups.length) {
-    els.crumbs.textContent = 'UCC Cardiológicos HM / ' + section.title;
-    return;
-  }
-  els.crumbs.innerHTML =
-    '<span class="crumbs-path">UCC Cardiológicos HM / ' + escapeHtml(section.title) + '</span>' +
-    '<span class="group-jumps">' +
-      groups.map((group) =>
-        '<button type="button" class="group-jump tone-' + escapeHtml(group.tone || section.id) + '" data-group-id="' + escapeHtml(group.id) + '">' +
-          escapeHtml(group.title) +
-        '</button>'
-      ).join('') +
-    '</span>';
-  els.crumbs.querySelectorAll('[data-group-id]').forEach((btn) => {
-    btn.addEventListener('click', () => scrollToGroup(btn.dataset.groupId));
-  });
+  els.crumbs.textContent = 'UCC Cardiológicos HM / ' + section.title;
 }
 
-function scrollToGroup(groupId) {
-  const target = document.getElementById('grupo-' + groupId);
-  const scroller = target && target.closest('.panel');
-  if (!target || !scroller) return;
-  const top = target.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop - 8;
-  scroller.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
-  document.querySelectorAll('.group-jump').forEach((btn) => {
-    btn.classList.toggle('is-on', btn.dataset.groupId === groupId);
+function showFormFolder(groupId) {
+  const folders = document.querySelector('.form-folders');
+  const tabs = [...document.querySelectorAll('.form-folder-tab')];
+  tabs.forEach((btn) => {
+    const on = btn.dataset.folder === groupId;
+    btn.classList.toggle('is-on', on);
+    btn.setAttribute('aria-selected', on ? 'true' : 'false');
   });
+  document.querySelectorAll('.form-folder-panel').forEach((panel) => {
+    panel.classList.toggle('is-on', panel.dataset.folder === groupId);
+  });
+  if (folders) folders.classList.toggle('is-first', !!(tabs[0] && tabs[0].dataset.folder === groupId));
 }
 
 function bindSectionItems(section) {
@@ -706,20 +691,30 @@ function openSection(sectionId) {
   }
 
   if (section.groups && section.groups.length) {
-    const blocks = section.groups.map((group) => {
+    const present = section.groups.filter((group) => items.some((item) => item.group === group.id));
+    const tabs = present.map((group, index) =>
+      '<button type="button" class="form-folder-tab tone-' + escapeHtml(group.tone || section.id) + (index === 0 ? ' is-on' : '') + '" role="tab" data-folder="' + escapeHtml(group.id) + '" aria-selected="' + (index === 0 ? 'true' : 'false') + '">' +
+        escapeHtml(group.title) +
+      '</button>'
+    ).join('');
+    const panels = present.map((group, index) => {
       const groupItems = items.filter((item) => item.group === group.id);
-      if (!groupItems.length) return '';
       const cards = groupItems.map((item) => sectionItemCard(section, item)).join('');
       const grid = groupItems.every((item) => item.image && item.url) ? 'course-grid' : 'grid';
-      return '<section class="form-group tone-' + escapeHtml(group.tone || section.id) + '" id="grupo-' + escapeHtml(group.id) + '">' +
-        '<h2 class="form-group-title">' + escapeHtml(group.title) + '</h2>' +
-        '<div class="form-group-body"><div class="' + grid + '">' + cards + '</div></div>' +
+      return '<section class="form-folder-panel tone-' + escapeHtml(group.tone || section.id) + (index === 0 ? ' is-on' : '') + '" id="grupo-' + escapeHtml(group.id) + '" data-folder="' + escapeHtml(group.id) + '">' +
+        '<div class="' + grid + '">' + cards + '</div>' +
       '</section>';
     }).join('');
     els.viewer.innerHTML =
       '<div class="panel tone-' + escapeHtml(section.id) + '">' +
-        '<div class="form-groups">' + blocks + '</div>' +
+        '<div class="form-folders is-first">' +
+          '<div class="form-folder-tabs" role="tablist">' + tabs + '</div>' +
+          panels +
+        '</div>' +
       '</div>';
+    els.viewer.querySelectorAll('.form-folder-tab').forEach((btn) => {
+      btn.addEventListener('click', () => showFormFolder(btn.dataset.folder));
+    });
     bindSectionItems(section);
     return;
   }
