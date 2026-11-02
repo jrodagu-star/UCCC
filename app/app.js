@@ -1314,7 +1314,7 @@ function openTeam() {
 loadTeam().then((loaded) => {
   team = loaded;
   renderNav();
-  openTeam();
+  openSection('formacion');
 });
 
 document.getElementById('homeBtn').addEventListener('click', openTeam);
