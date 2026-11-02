@@ -536,10 +536,10 @@ function navButton(section) {
   '</button>';
 }
 
-function accessButton(sectionId, icon, caption, note) {
+function accessButton(sectionId, icon, caption) {
   return '<button type="button" class="access-btn tone-' + (sectionId === 'team' ? 'equipo' : icon) + '" data-section-id="' + escapeHtml(sectionId) + '">' +
     iconHtml(icon) +
-    '<span class="access-caption"><b>' + escapeHtml(caption) + '</b><small>' + escapeHtml(note) + '</small></span>' +
+    '<span class="access-caption">' + escapeHtml(caption) + '</span>' +
   '</button>';
 }
 
@@ -549,8 +549,8 @@ function renderNav() {
   const access = document.getElementById('brandAccess');
   if (access) {
     access.innerHTML =
-      accessButton('team', 'equipo', 'Equipo', 'Personas y protocolos') +
-      accessButton('formacion', 'formacion', 'Formación', 'Documentos y cursos');
+      accessButton('team', 'equipo', 'Equipo') +
+      accessButton('formacion', 'formacion', 'Formación');
   }
   document.querySelectorAll('.nav-btn, .access-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
