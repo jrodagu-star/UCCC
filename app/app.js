@@ -439,7 +439,7 @@ const SECTIONS = [
       {
         id: 'inventario-uccc',
         group: 'protocolos',
-        title: 'Inventario UCCC',
+        title: 'Inventario Unidad',
         description: 'Enlace directo al inventario de la unidad.',
         url: 'https://jrodagu-star.github.io/inventario-ecmo/',
         direct: true
