@@ -360,9 +360,15 @@ const SECTIONS = [
   {
     id: 'formacion',
     title: 'Formación',
+    groups: [
+      { id: 'conferencias', title: 'Conferencias', tone: 'formacion' },
+      { id: 'protocolos', title: 'Protocolos y manuales', tone: 'hemodinamica' },
+      { id: 'cursos-unidad', title: 'Cursos y Unidad Montepríncipe', tone: 'cursos' }
+    ],
     items: [
       {
         id: 'conferencias-cardiologia',
+        group: 'conferencias',
         title: 'Conferencias de cardiología crítica',
         description: 'Notas de conferencia: shock cardiogénico, TEP, IAM, ECMO, soporte mecánico y más.',
         parts: [
@@ -378,6 +384,7 @@ const SECTIONS = [
       },
       {
         id: 'ecmo-v1',
+        group: 'protocolos',
         title: 'Protocolo manejo paciente ECMO en UCI Montepríncipe 1ª versión octubre 2026',
         description: 'Documento de formación sobre ECMO.',
         parts: [
@@ -392,6 +399,7 @@ const SECTIONS = [
       },
       {
         id: 'manual-valdecilla-2012',
+        group: 'protocolos',
         title: 'Manual de Soporte mecánico circulatorio de corta duración de H Valdecilla 2012',
         description: 'Manual de soporte mecánico circulatorio de corta duración del Hospital Valdecilla, 2012.',
         parts: [
@@ -406,6 +414,7 @@ const SECTIONS = [
       },
       {
         id: 'procedimientos-hemodinamica',
+        group: 'protocolos',
         title: 'Procedimientos de hemodinámica y coordinación multidisciplinar',
         description: 'U. de hemodinámica H Montepríncipe',
         parts: [
@@ -420,19 +429,15 @@ const SECTIONS = [
       },
       {
         id: 'inventario-uccc',
+        group: 'protocolos',
         title: 'Inventario UCCC',
         description: 'Enlace directo al inventario de la unidad.',
         url: 'https://jrodagu-star.github.io/inventario-ecmo/',
         direct: true
-      }
-    ]
-  },
-  {
-    id: 'cursos',
-    title: 'Cursos próximos',
-    items: [
+      },
       {
         id: 'actualizacion-cuidados-criticos-2026',
+        group: 'cursos-unidad',
         title: 'Actualización de cuidados críticos cardiovasculares, Madrid 25-27 noviembre 2026',
         description: 'II Jornadas de Cuidados Intensivos Cardiológicos, GTCICyRCP · SEMICYUC.',
         url: 'https://gtcicyrcpsemicyuc.es/',
@@ -484,7 +489,7 @@ function visibleItems(section) {
 }
 
 function setActiveNav(sectionId) {
-  els.nav.querySelectorAll('.nav-btn').forEach((btn) => {
+  document.querySelectorAll('.nav-btn, .access-btn').forEach((btn) => {
     btn.classList.toggle('active', btn.dataset.sectionId === sectionId);
   });
   const toneClass = sectionId === 'team' ? 'tone-equipo' : (sectionId ? 'tone-' + sectionId : '');
@@ -531,26 +536,23 @@ function navButton(section) {
   '</button>';
 }
 
+function accessButton(sectionId, icon, caption, note) {
+  return '<button type="button" class="access-btn tone-' + (sectionId === 'team' ? 'equipo' : icon) + '" data-section-id="' + escapeHtml(sectionId) + '">' +
+    iconHtml(icon) +
+    '<span class="access-caption"><b>' + escapeHtml(caption) + '</b><small>' + escapeHtml(note) + '</small></span>' +
+  '</button>';
+}
+
 function renderNav() {
-  const before = [];
-  const after = [];
-  let split = false;
-  SECTIONS.forEach((section) => {
-    (split ? after : before).push(navButton(section));
-    if (section.id === 'formacion') split = true;
-  });
-  els.nav.innerHTML =
-    '<div class="nav-row">' +
-      '<button type="button" class="nav-btn tone-equipo" id="teamBtn" data-section-id="team">' +
-        iconHtml('equipo') +
-        '<span class="nav-label">Equipo</span>' +
-      '</button>' +
-      before.join('') +
-    '</div>' +
-    (after.length
-      ? '<div class="nav-sep" role="separator"></div><div class="nav-row">' + after.join('') + '</div>'
-      : '');
-  els.nav.querySelectorAll('.nav-btn').forEach((btn) => {
+  const clinical = SECTIONS.filter((section) => section.id !== 'formacion');
+  els.nav.innerHTML = '<div class="nav-row">' + clinical.map(navButton).join('') + '</div>';
+  const access = document.getElementById('brandAccess');
+  if (access) {
+    access.innerHTML =
+      accessButton('team', 'equipo', 'Equipo', 'Personas y protocolos') +
+      accessButton('formacion', 'formacion', 'Formación', 'Documentos y cursos');
+  }
+  document.querySelectorAll('.nav-btn, .access-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       if (btn.dataset.sectionId === 'team') openTeam();
       else openSection(btn.dataset.sectionId);
@@ -560,6 +562,34 @@ function renderNav() {
 
 function setCover(on) {
   els.viewer.classList.toggle('has-cover', !!on);
+}
+
+function sectionItemCard(section, item) {
+  if (item.image && item.url) {
+    return '<a class="course-card" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' +
+      '<img src="' + escapeHtml(item.image) + '" alt="' + escapeHtml(item.title) + '">' +
+      '<span class="course-card-copy">' +
+        '<span class="card-title">' + escapeHtml(item.title) + '</span>' +
+        '<span class="card-desc">' + escapeHtml(item.description || '') + '</span>' +
+        '<span class="card-cta">Abrir el curso</span>' +
+      '</span>' +
+    '</a>';
+  }
+  const inner =
+    iconHtml(itemKind(item)) +
+    '<span class="card-title">' + escapeHtml(item.title) + '</span>' +
+    '<span class="card-desc">' + escapeHtml(item.description || '') + '</span>' +
+    '<span class="card-cta">Abrir</span>';
+  const card = item.url && item.direct
+    ? '<a class="card" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' + inner + '</a>'
+    : '<button type="button" class="card" data-item-id="' + escapeHtml(item.id) + '">' + inner + '</button>';
+  return cardWithAssignees(card, peopleForItem(section.id, item.id));
+}
+
+function bindSectionItems(section) {
+  els.viewer.querySelectorAll('[data-item-id]').forEach((btn) => {
+    btn.addEventListener('click', () => openItem(section.id, btn.dataset.itemId));
+  });
 }
 
 function openSection(sectionId) {
@@ -573,9 +603,8 @@ function openSection(sectionId) {
   showSectionTeam(section.id);
   els.crumbs.textContent = 'UCC Cardiológicos HM / ' + section.title;
   const items = visibleItems(section);
-  const courses = section.id === 'cursos';
   els.meta.textContent = items.length
-    ? (items.length + (courses ? (items.length === 1 ? ' curso' : ' cursos') : (' recurso' + (items.length === 1 ? '' : 's'))))
+    ? (items.length + ' recurso' + (items.length === 1 ? '' : 's'))
     : 'Sin protocolos todavía';
   if (!items.length) {
     els.viewer.innerHTML =
@@ -588,27 +617,26 @@ function openSection(sectionId) {
     return;
   }
 
-  const cards = items.map((item) => {
-    if (item.image && item.url) {
-      return '<a class="course-card" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' +
-        '<img src="' + escapeHtml(item.image) + '" alt="' + escapeHtml(item.title) + '">' +
-        '<span class="course-card-copy">' +
-          '<span class="card-title">' + escapeHtml(item.title) + '</span>' +
-          '<span class="card-desc">' + escapeHtml(item.description || '') + '</span>' +
-          '<span class="card-cta">Abrir el curso</span>' +
-        '</span>' +
-      '</a>';
-    }
-    const inner =
-      iconHtml(itemKind(item)) +
-      '<span class="card-title">' + escapeHtml(item.title) + '</span>' +
-      '<span class="card-desc">' + escapeHtml(item.description || '') + '</span>' +
-      '<span class="card-cta">Abrir</span>';
-    const card = item.url && item.direct
-      ? '<a class="card" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' + inner + '</a>'
-      : '<button type="button" class="card" data-item-id="' + escapeHtml(item.id) + '">' + inner + '</button>';
-    return cardWithAssignees(card, peopleForItem(section.id, item.id));
-  }).join('');
+  if (section.groups && section.groups.length) {
+    const blocks = section.groups.map((group) => {
+      const groupItems = items.filter((item) => item.group === group.id);
+      if (!groupItems.length) return '';
+      const cards = groupItems.map((item) => sectionItemCard(section, item)).join('');
+      const grid = groupItems.every((item) => item.image && item.url) ? 'course-grid' : 'grid';
+      return '<section class="form-group tone-' + escapeHtml(group.tone || section.id) + '">' +
+        '<h2 class="form-group-title">' + escapeHtml(group.title) + '</h2>' +
+        '<div class="' + grid + '">' + cards + '</div>' +
+      '</section>';
+    }).join('');
+    els.viewer.innerHTML =
+      '<div class="panel tone-' + escapeHtml(section.id) + '">' +
+        '<div class="form-groups">' + blocks + '</div>' +
+      '</div>';
+    bindSectionItems(section);
+    return;
+  }
+
+  const cards = items.map((item) => sectionItemCard(section, item)).join('');
 
   const posters = section.posters || (section.poster ? [section.poster] : []);
   const poster = posters.length
@@ -625,14 +653,12 @@ function openSection(sectionId) {
 
   els.viewer.innerHTML =
     '<div class="panel tone-' + escapeHtml(section.id) + '">' +
-      '<p class="panel-lead">' + (courses ? 'Cursos previstos.' : 'Elige un protocolo o herramienta de ' + escapeHtml(section.title) + '.') + '</p>' +
-      '<div class="' + (courses ? 'course-grid' : 'grid') + '">' + cards + '</div>' +
+      '<p class="panel-lead">Elige un protocolo o herramienta de ' + escapeHtml(section.title) + '.</p>' +
+      '<div class="grid">' + cards + '</div>' +
       poster +
     '</div>';
 
-  els.viewer.querySelectorAll('[data-item-id]').forEach((btn) => {
-    btn.addEventListener('click', () => openItem(section.id, btn.dataset.itemId));
-  });
+  bindSectionItems(section);
   els.viewer.querySelectorAll('.poster-open').forEach((posterBtn) => {
     const item = posters.find((entry) => entry.title === posterBtn.dataset.poster);
     if (item) posterBtn.addEventListener('click', () => openPoster(item));
@@ -1002,9 +1028,9 @@ function targetLabel(target) {
 
 function assignmentChecks(selected) {
   const chosen = new Set(Array.isArray(selected) ? selected : (selected ? [selected] : []));
-  return SECTIONS.filter((section) => section.id !== 'cursos').map((section) => {
+  return SECTIONS.map((section) => {
     const whole = 'section:' + section.id;
-    const items = (section.items || []).filter((item) => !item.hidden || chosen.has('item:' + section.id + ':' + item.id)).map((item) => {
+    const items = (section.items || []).filter((item) => item.group !== 'cursos-unidad' && (!item.hidden || chosen.has('item:' + section.id + ':' + item.id))).map((item) => {
       const value = 'item:' + section.id + ':' + item.id;
       return '<label class="team-check"><input type="checkbox" name="targets" value="' + escapeHtml(value) + '"' + (chosen.has(value) ? ' checked' : '') + '>' + escapeHtml(item.title) + '</label>';
     }).join('');
@@ -1216,7 +1242,7 @@ function openTeam() {
   const count = team.length;
   els.meta.textContent = count + (count === 1 ? ' persona' : ' personas');
   renderUserMenu();
-  const tree = SECTIONS.filter((section) => section.id !== 'formacion' && section.id !== 'cursos').map((section) => {
+  const tree = SECTIONS.filter((section) => section.id !== 'formacion').map((section) => {
     const docs = visibleItems(section).map((item) => {
       const doctors = peopleForItem(section.id, item.id).map((person) =>
         '<span class="tree-doctor">' + miniAvatar(person) + '<span>' + escapeHtml(givenName(person.name)) + '</span></span>'
