@@ -566,14 +566,16 @@ function setCover(on) {
 
 function sectionItemCard(section, item) {
   if (item.image && item.url) {
-    return '<a class="course-card" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' +
-      '<img src="' + escapeHtml(item.image) + '" alt="' + escapeHtml(item.title) + '">' +
-      '<span class="course-card-copy">' +
+    return '<article class="course-card">' +
+      '<button type="button" class="course-thumb" data-course-image="' + escapeHtml(item.image) + '" data-course-title="' + escapeHtml(item.title) + '" aria-label="Ampliar ' + escapeHtml(item.title) + '">' +
+        '<img src="' + escapeHtml(item.image) + '" alt="">' +
+      '</button>' +
+      '<a class="course-card-copy" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' +
         '<span class="card-title">' + escapeHtml(item.title) + '</span>' +
         '<span class="card-desc">' + escapeHtml(item.description || '') + '</span>' +
         '<span class="card-cta">Abrir el curso</span>' +
-      '</span>' +
-    '</a>';
+      '</a>' +
+    '</article>';
   }
   const inner =
     iconHtml(itemKind(item)) +
@@ -586,9 +588,35 @@ function sectionItemCard(section, item) {
   return cardWithAssignees(card, peopleForItem(section.id, item.id));
 }
 
+function openCourseImage(src, title) {
+  const box = document.createElement('div');
+  box.className = 'poster-lightbox';
+  box.innerHTML =
+    '<div class="course-zoom" role="dialog" aria-modal="true" aria-label="' + escapeHtml(title) + '">' +
+      '<header><button type="button" class="btn btn-accent" id="courseZoomClose">Cerrar</button></header>' +
+      '<img src="' + escapeHtml(src) + '" alt="' + escapeHtml(title) + '">' +
+    '</div>';
+  document.body.appendChild(box);
+  function close() {
+    box.remove();
+    document.removeEventListener('keydown', onKey);
+  }
+  function onKey(event) {
+    if (event.key === 'Escape') close();
+  }
+  document.addEventListener('keydown', onKey);
+  box.querySelector('#courseZoomClose').addEventListener('click', close);
+  box.addEventListener('click', (event) => {
+    if (event.target === box) close();
+  });
+}
+
 function bindSectionItems(section) {
   els.viewer.querySelectorAll('[data-item-id]').forEach((btn) => {
     btn.addEventListener('click', () => openItem(section.id, btn.dataset.itemId));
+  });
+  els.viewer.querySelectorAll('[data-course-image]').forEach((btn) => {
+    btn.addEventListener('click', () => openCourseImage(btn.dataset.courseImage, btn.dataset.courseTitle || ''));
   });
 }
 
