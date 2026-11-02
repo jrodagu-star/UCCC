@@ -51,8 +51,8 @@ button { border: 0; background: none; color: inherit; }
   flex-direction: column;
   align-items: stretch;
   gap: 0;
-  padding: 12px 16px 8px;
-  background: linear-gradient(180deg, #343c39 0%, var(--menu) 100%);
+  padding: 0;
+  background: var(--menu);
   border-bottom: 1px solid #161c1a;
   box-shadow: 0 10px 24px rgba(12, 16, 14, .28);
   color: var(--menu-ink);
@@ -64,6 +64,9 @@ button { border: 0; background: none; color: inherit; }
   gap: 16px;
   min-width: 0;
   overflow: hidden;
+  padding: 12px 16px;
+  background: linear-gradient(180deg, #3d4743 0%, #313a37 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14);
 }
 .brand {
   display: flex;
@@ -82,15 +85,14 @@ button { border: 0; background: none; color: inherit; }
   flex: 0 0 auto;
 }
 .nav-split {
-  height: 7px;
-  margin: 10px 2px 10px;
-  border-radius: 999px;
-  background: linear-gradient(180deg, #6a756f 0%, #3a4440 46%, #1a211f 100%);
+  height: 14px;
+  margin: 0;
+  border-radius: 0;
+  background:
+    linear-gradient(180deg, #0c100e 0 42%, rgba(255, 255, 255, .38) 48%, rgba(255, 255, 255, .08) 54%, #101614 62% 100%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, .42),
-    inset 0 -2px 2px rgba(0, 0, 0, .45),
-    0 2px 0 #121816,
-    0 3px 6px rgba(0, 0, 0, .3);
+    inset 0 6px 7px rgba(0, 0, 0, .72),
+    inset 0 -1px 0 rgba(0, 0, 0, .45);
 }
 .access-btn {
   display: flex;
@@ -171,6 +173,8 @@ button { border: 0; background: none; color: inherit; }
   min-width: 0;
   overflow-x: auto;
   overflow-y: hidden;
+  padding: 12px 12px 4px;
+  background: linear-gradient(180deg, #262e2b 0%, var(--menu) 100%);
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, .7) rgba(255, 255, 255, .16);
 }
@@ -178,25 +182,25 @@ button { border: 0; background: none; color: inherit; }
 .nav::-webkit-scrollbar-track { background: rgba(255, 255, 255, .16); border-radius: 999px; }
 .nav::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .7); border-radius: 999px; }
 .nav-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(188px, 1fr));
+  align-items: stretch;
   gap: 10px;
-  width: max-content;
-  min-width: 100%;
+  width: 100%;
+  min-width: 188px;
   overflow: visible;
   padding: 2px 2px 8px;
 }
 .nav-btn {
-  flex: 0 0 auto;
   display: flex;
   align-items: center;
   gap: 10px;
-  min-width: 148px;
+  width: 100%;
+  min-width: 0;
+  height: 40px;
   white-space: nowrap;
   text-align: left;
-  padding: 4px 14px 4px 5px;
+  padding: 4px 12px 4px 5px;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, .18);
   background:
@@ -236,7 +240,11 @@ button { border: 0; background: none; color: inherit; }
     0 2px 0 color-mix(in srgb, var(--tone) 55%, #121816),
     0 4px 8px rgba(0, 0, 0, .26);
 }
-.nav-label { line-height: 1.2; }
+.nav-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  line-height: 1.2;
+}
 .nav-btn .ico {
   width: 28px;
   height: 28px;
@@ -1150,8 +1158,8 @@ button { border: 0; background: none; color: inherit; }
 .team-actions { display: flex; justify-content: flex-end; gap: 8px; }
 
 @media (max-width: 720px) {
-  .app-bar { padding: 10px 10px 6px; }
-  .app-bar-top { gap: 10px; }
+  .app-bar-top { gap: 10px; padding: 10px; }
+  .nav { padding: 10px 8px 4px; }
   .brand-copy { display: none; }
   .topbar { flex-direction: column; align-items: flex-start; }
   .topbar-aside { align-self: stretch; justify-content: flex-end; }
