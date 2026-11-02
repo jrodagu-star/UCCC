@@ -364,12 +364,12 @@ const SECTIONS = [
       },
       {
         id: 'ecmo-v1',
-        title: 'ECMO V1 borrador',
+        title: 'Protocolo manejo paciente ECMO en UCI Montepríncipe 1ª versión octubre 2026',
         description: 'Documento de formación sobre ECMO.',
         parts: [
           {
             id: 'documento',
-            title: 'ECMO V1 borrador',
+            title: 'Protocolo manejo paciente ECMO en UCI Montepríncipe 1ª versión octubre 2026',
             description: 'Documento de formación sobre ECMO.',
             path: '../assets/formacion/ecmo/ecmo-v1-borrador.pdf',
             ext: '.pdf'

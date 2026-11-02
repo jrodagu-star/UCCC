@@ -13,7 +13,7 @@ App estática con menú lateral por áreas clínicas y panel de protocolos/herra
 | Sedoanalgesia | Analgosedación en VM |
 | Hemodinámica | Escalas en shock cardiogénico (pantalla de inicio), Fármacos, Monitorización hemodinámica, TEP |
 | Neurológico | Monitorización CONOX |
-| Formación | Conferencias de cardiología crítica, ECMO V1 borrador |
+| Formación | Conferencias de cardiología crítica, Protocolo manejo paciente ECMO en UCI Montepríncipe 1ª versión octubre 2026 |
 
 ## Cómo abrir en local
 
