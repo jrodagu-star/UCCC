@@ -407,6 +407,21 @@ const SECTIONS = [
         ]
       },
       {
+        id: 'protocolo-enfermeria-ecmo-adultos',
+        group: 'protocolos',
+        title: 'Protocolo de enfermería ECMO adultos (borrador v01)',
+        description: 'Borrador v01 del protocolo de enfermería en ECMO de adultos.',
+        parts: [
+          {
+            id: 'documento',
+            title: 'Protocolo de enfermería ECMO adultos (borrador v01)',
+            description: 'Borrador v01 del protocolo de enfermería en ECMO de adultos.',
+            path: '../assets/formacion/ecmo/protocolo-enfermeria-ecmo-adultos-borrador-v01.pdf',
+            ext: '.pdf'
+          }
+        ]
+      },
+      {
         id: 'manual-valdecilla-2012',
         group: 'protocolos',
         title: 'Manual de Soporte mecánico circulatorio de corta duración de H Valdecilla 2012',
