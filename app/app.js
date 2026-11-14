@@ -383,6 +383,22 @@ const SECTIONS = [
         ]
       },
       {
+        id: 'hemodynamics-bootcamp-fundamental',
+        group: 'conferencias',
+        title: 'Hemodynamics Bootcamp Fundamental',
+        description: 'Apuntes de hemodinámica en UCI, shock cardiogénico y asistencias circulatorias.',
+        parts: [
+          {
+            id: 'apuntes',
+            title: 'Hemodynamics Bootcamp Fundamental',
+            description: 'Apuntes de hemodinámica en UCI, shock cardiogénico y asistencias circulatorias.',
+            path: '../assets/formacion/hemodynamics-bootcamp/hemodynamics-bootcamp-fundamental.html',
+            ext: '.html',
+            view: 'document'
+          }
+        ]
+      },
+      {
         id: 'ecmovad-youtube',
         group: 'conferencias',
         title: 'Ecmovad',
