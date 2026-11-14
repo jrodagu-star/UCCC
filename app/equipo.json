@@ -64,7 +64,10 @@
     "color": "#1e3a8a",
     "shape": "pentagon",
     "mark": "woman",
-    "target": ""
+    "target": "item:sedoanalgesia:analgosedacion-vm",
+    "targets": [
+      "item:sedoanalgesia:analgosedacion-vm"
+    ]
   },
   {
     "id": "p8",
@@ -73,7 +76,10 @@
     "color": "#0f5c56",
     "shape": "octagon",
     "mark": "man",
-    "target": ""
+    "target": "item:neurologico:monitorizacion-conox",
+    "targets": [
+      "item:neurologico:monitorizacion-conox"
+    ]
   },
   {
     "id": "p9",
