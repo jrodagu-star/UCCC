@@ -37,6 +37,8 @@ button { border: 0; background: none; color: inherit; }
 .tone-formacion { --tone: #0f5c56; --tone-bg: #b5ddd6; }
 .tone-cursos { --tone: #12315c; --tone-bg: #c5d0e4; }
 .tone-equipo { --tone: #0b5f73; --tone-bg: #c5dde6; }
+.tone-medicos { --tone: #0b5f73; --tone-bg: #c5dde6; }
+.tone-enfermeria { --tone: #0f766e; --tone-bg: #cce8e4; }
 
 .layout {
   display: flex;
@@ -875,13 +877,72 @@ button { border: 0; background: none; color: inherit; }
   height: 100%;
   min-height: 0;
   overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 2px 4px 10px;
+}
+.team-roster {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+.team-role-block {
+  padding: 12px 12px 14px;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--tone-bg) 48%, #fff);
+  border: 1px solid color-mix(in srgb, var(--tone) 16%, #fff);
+  box-shadow: 0 8px 18px rgba(28, 32, 30, .08);
+}
+.team-role-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 750;
+  color: var(--tone);
+}
+.team-role-title .ico {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--tone);
+  color: #fff;
+  box-shadow: none;
+}
+.team-role-title .ico svg { width: 16px; height: 16px; }
+.team-assignments {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   align-content: start;
   align-items: start;
-  padding: 2px 4px 10px;
 }
+.user-menu-role + .user-menu-role {
+  border-top: 1px solid var(--line);
+  margin-top: 6px;
+  padding-top: 8px;
+}
+.user-menu-role-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 750;
+  color: var(--ink);
+}
+.user-menu-role-title .ico {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: var(--tone, #0b5f73);
+  color: #fff;
+  box-shadow: none;
+}
+.user-menu-role-title .ico svg { width: 13px; height: 13px; }
 .team-block {
   overflow: hidden;
   border-radius: 16px;
@@ -1124,6 +1185,7 @@ button { border: 0; background: none; color: inherit; }
     width: auto;
     top: auto;
   }
-  .team-page { grid-template-columns: 1fr; gap: 12px; }
+  .team-roster,
+  .team-assignments { grid-template-columns: 1fr; gap: 12px; }
   .team-people { grid-template-columns: 1fr 1fr; }
 }

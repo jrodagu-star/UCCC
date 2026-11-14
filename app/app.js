@@ -545,6 +545,8 @@ const ICONS = {
   formacion: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l9-4 9 4-9 4-9-4z"/><path d="M7 11v5c0 1.5 2.2 3 5 3s5-1.5 5-3v-5"/></svg>',
   cursos: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>',
   equipo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="2.2"/><circle cx="16" cy="9" r="1.8"/><path d="M4.5 18c.4-2.6 2.2-4 4.5-4s4.1 1.4 4.5 4"/><path d="M13 14.2c1.3-.5 2.6-.7 3.6-.4 1.6.4 2.6 1.6 3 3.2"/></svg>',
+  medicos: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 10h14"/><circle cx="12" cy="12" r="9"/></svg>',
+  enfermeria: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12v3a6 6 0 0 1-12 0V8z"/><path d="M9 4h6v4H9z"/><path d="M12 11v4"/><path d="M10 13h4"/></svg>',
   doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>',
   file: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v6h6"/><path d="M8 16h3M8 12h8"/></svg>',
   image: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.4"/><path d="M7 17l4-4 3 3 2-2 2 3"/></svg>',
@@ -961,15 +963,24 @@ const TEAM_SHAPES = [
   { id: 'octagon', label: 'Octágono' },
   { id: 'arch', label: 'Arco' }
 ];
+const TEAM_ROLES = [
+  { id: 'medicos', title: 'Médicos', icon: 'medicos' },
+  { id: 'enfermeria', title: 'Enfermería', icon: 'enfermeria' }
+];
 const PERSON_SVG = {
   man: '<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="15" r="9"/><path d="M8 58V40c0-10 8-16 24-16s24 6 24 16v18z"/></svg>',
   woman: '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M18 20c0-8 6-14 14-14s14 6 14 14v20c0 2-1 3-2 3h-3V24c0-5-4-9-9-9s-9 4-9 9v19h-3c-1 0-2-1-2-3z"/><circle cx="32" cy="20" r="8"/><path d="M22 42h20l8 16H14z"/></svg>'
 };
 
+function normalizeRole(role) {
+  return role === 'enfermeria' ? 'enfermeria' : 'medicos';
+}
+
 function defaultTeam() {
   return TEAM_COLORS.map((color, index) => ({
     id: 'p' + (index + 1),
     name: '',
+    role: 'medicos',
     color: color,
     shape: TEAM_SHAPES[index % TEAM_SHAPES.length].id,
     mark: index % 2 === 0 ? 'woman' : 'man',
@@ -987,12 +998,17 @@ function personFrom(person, found) {
   return {
     id: person.id,
     name: String(found.name || '').slice(0, 40),
+    role: normalizeRole(found.role || person.role),
     color: color,
     shape: shape,
     mark: mark,
     target: targets[0] || '',
     targets: targets
   };
+}
+
+function peopleByRole(roleId) {
+  return team.filter((person) => normalizeRole(person.role) === roleId);
 }
 
 function personTargets(person) {
@@ -1022,6 +1038,7 @@ function mergeTeam(base, entries, skipEmpty) {
     merged.push(personFrom({
       id: entry.id,
       name: '',
+      role: normalizeRole(entry.role),
       color: '#146b34',
       shape: 'circle',
       mark: 'man',
@@ -1035,7 +1052,7 @@ async function loadTeam() {
   const base = defaultTeam();
   let published = [];
   try {
-    const response = await fetch('equipo.json?v=20261031aa');
+    const response = await fetch('equipo.json?v=20261114a');
     if (response.ok) published = await response.json();
   } catch (err) {}
   try { localStorage.removeItem(TEAM_KEY); } catch (err) {}
@@ -1288,21 +1305,30 @@ function setUserMenuVisible(on) {
 function renderUserMenu() {
   const panel = document.getElementById('userMenuPanel');
   if (!panel) return;
-  panel.innerHTML = team.map((person) => {
-    const name = person.name || 'Sin nombre';
-    const protocols = assignedProtocols(person);
-    const list = protocols.length
-      ? '<ul class="user-menu-protocols">' + protocols.map((item) =>
-          '<li><button type="button" data-team-go="' + escapeHtml(item.target) + '">' + escapeHtml(item.title) + '</button></li>'
-        ).join('') + '</ul>'
-      : '<p class="user-menu-empty">Sin protocolos</p>';
-    return '<article class="user-menu-person">' +
-      '<div class="user-menu-identity">' +
-        '<span class="avatar shape-' + escapeHtml(person.shape) + '" style="background:' + escapeHtml(person.color) + ';color:' + inkFor(person.color) + '">' + avatarInner(person) + '</span>' +
-        '<span class="team-name">' + escapeHtml(name) + '</span>' +
-      '</div>' +
-      list +
-    '</article>';
+  panel.innerHTML = TEAM_ROLES.map((role) => {
+    const people = peopleByRole(role.id);
+    const rows = people.length
+      ? people.map((person) => {
+          const name = person.name || 'Sin nombre';
+          const protocols = assignedProtocols(person);
+          const list = protocols.length
+            ? '<ul class="user-menu-protocols">' + protocols.map((item) =>
+                '<li><button type="button" data-team-go="' + escapeHtml(item.target) + '">' + escapeHtml(item.title) + '</button></li>'
+              ).join('') + '</ul>'
+            : '<p class="user-menu-empty">Sin protocolos</p>';
+          return '<article class="user-menu-person">' +
+            '<div class="user-menu-identity">' +
+              '<span class="avatar shape-' + escapeHtml(person.shape) + '" style="background:' + escapeHtml(person.color) + ';color:' + inkFor(person.color) + '">' + avatarInner(person) + '</span>' +
+              '<span class="team-name">' + escapeHtml(name) + '</span>' +
+            '</div>' +
+            list +
+          '</article>';
+        }).join('')
+      : '<p class="user-menu-empty">Sin personas</p>';
+    return '<section class="user-menu-role">' +
+      '<h3 class="user-menu-role-title">' + iconHtml(role.icon) + '<span>' + escapeHtml(role.title) + '</span></h3>' +
+      rows +
+    '</section>';
   }).join('');
   panel.querySelectorAll('[data-team-go]').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -1342,9 +1368,26 @@ function openTeam() {
   showSectionTeam(null);
   els.crumbs.textContent = 'UCC Cardiológicos HM / Equipo';
   setCover(false);
-  const count = team.length;
-  els.meta.textContent = count + (count === 1 ? ' persona' : ' personas');
+  const medicos = peopleByRole('medicos').length;
+  const enfermeria = peopleByRole('enfermeria').length;
+  els.meta.textContent = medicos + ' médicos · ' + enfermeria + ' enfermería';
   renderUserMenu();
+  const roster = TEAM_ROLES.map((role) => {
+    const people = peopleByRole(role.id);
+    const cards = people.map((person) => {
+      const name = person.name || 'Sin nombre';
+      return '<div class="team-slot">' +
+        '<button type="button" class="team-person" data-edit-person="' + escapeHtml(person.id) + '">' +
+          '<span class="avatar shape-' + escapeHtml(person.shape) + '" style="background:' + escapeHtml(person.color) + ';color:' + inkFor(person.color) + '">' + avatarInner(person) + '</span>' +
+          '<span class="team-name">' + escapeHtml(name) + '</span>' +
+        '</button>' +
+      '</div>';
+    }).join('');
+    return '<section class="team-role-block tone-' + escapeHtml(role.id) + '">' +
+      '<h2 class="team-role-title">' + iconHtml(role.icon) + '<span>' + escapeHtml(role.title) + '</span></h2>' +
+      '<div class="team-people">' + cards + '</div>' +
+    '</section>';
+  }).join('');
   const blocks = SECTIONS.filter((section) => section.id !== 'formacion').map((section) => {
     const docs = visibleItems(section).map((item) => {
       const people = peopleForItem(section.id, item.id);
@@ -1361,7 +1404,13 @@ function openTeam() {
       '<ul class="team-rows">' + docs + '</ul>' +
     '</section>';
   }).join('');
-  els.viewer.innerHTML = '<div class="team-page">' + blocks + '</div>';
+  els.viewer.innerHTML = '<div class="team-page">' +
+    '<div class="team-roster">' + roster + '</div>' +
+    '<div class="team-assignments">' + blocks + '</div>' +
+  '</div>';
+  els.viewer.querySelectorAll('[data-edit-person]').forEach((btn) => {
+    btn.addEventListener('click', () => openTeamEditor(btn.dataset.editPerson));
+  });
   els.viewer.querySelectorAll('[data-tree-section]').forEach((btn) => {
     btn.addEventListener('click', () => openSection(btn.dataset.treeSection));
   });

@@ -2,6 +2,7 @@
   {
     "id": "p1",
     "name": "Monica",
+    "role": "medicos",
     "color": "#0b5f73",
     "shape": "circle",
     "mark": "woman",
@@ -10,6 +11,7 @@
   {
     "id": "p2",
     "name": "Asier",
+    "role": "medicos",
     "color": "#8a3d08",
     "shape": "rounded",
     "mark": "man",
@@ -22,6 +24,7 @@
   {
     "id": "p3",
     "name": "Carlos",
+    "role": "medicos",
     "color": "#146b34",
     "shape": "hex",
     "mark": "man",
@@ -30,6 +33,7 @@
   {
     "id": "p4",
     "name": "Jaime",
+    "role": "medicos",
     "color": "#9a1236",
     "shape": "diamond",
     "mark": "man",
@@ -38,6 +42,7 @@
   {
     "id": "p5",
     "name": "Jaml",
+    "role": "medicos",
     "color": "#5b21b6",
     "shape": "shield",
     "mark": "man",
@@ -46,6 +51,7 @@
   {
     "id": "p6",
     "name": "Nacho",
+    "role": "medicos",
     "color": "#9a3412",
     "shape": "square",
     "mark": "man",
@@ -54,6 +60,7 @@
   {
     "id": "p7",
     "name": "Marta",
+    "role": "medicos",
     "color": "#1e3a8a",
     "shape": "pentagon",
     "mark": "woman",
@@ -62,6 +69,7 @@
   {
     "id": "p8",
     "name": "Jose",
+    "role": "medicos",
     "color": "#0f5c56",
     "shape": "octagon",
     "mark": "man",
@@ -70,6 +78,7 @@
   {
     "id": "p9",
     "name": "Galo",
+    "role": "medicos",
     "color": "#3d4f5f",
     "shape": "arch",
     "mark": "man",
@@ -78,9 +87,37 @@
   {
     "id": "p10",
     "name": "Jordi",
+    "role": "medicos",
     "color": "#146b34",
     "shape": "circle",
     "mark": "man",
     "target": "item:infecciones:dds"
+  },
+  {
+    "id": "n1",
+    "name": "Marta",
+    "role": "enfermeria",
+    "color": "#0f766e",
+    "shape": "rounded",
+    "mark": "woman",
+    "target": ""
+  },
+  {
+    "id": "n2",
+    "name": "Claudia",
+    "role": "enfermeria",
+    "color": "#0369a1",
+    "shape": "circle",
+    "mark": "woman",
+    "target": ""
+  },
+  {
+    "id": "n3",
+    "name": "Rubén",
+    "role": "enfermeria",
+    "color": "#7c3aed",
+    "shape": "hex",
+    "mark": "man",
+    "target": ""
   }
 ]
