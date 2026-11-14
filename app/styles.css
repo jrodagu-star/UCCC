@@ -379,6 +379,7 @@ button { border: 0; background: none; color: inherit; }
   align-items: flex-end;
   gap: 10px;
 }
+.user-menus[hidden] { display: none; }
 .user-menu { position: relative; }
 .user-menu-btn {
   min-width: 72px;
