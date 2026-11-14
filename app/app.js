@@ -1052,7 +1052,7 @@ async function loadTeam() {
   const base = defaultTeam();
   let published = [];
   try {
-    const response = await fetch('equipo.json?v=20261114d');
+    const response = await fetch('equipo.json?v=20261114e');
     if (response.ok) published = await response.json();
   } catch (err) {}
   try { localStorage.removeItem(TEAM_KEY); } catch (err) {}
@@ -1292,7 +1292,8 @@ function roleMenuIds(roleId) {
   const suffix = roleId === 'enfermeria' ? 'Enfermeria' : 'Medicos';
   return {
     btn: 'userMenuBtn' + suffix,
-    panel: 'userMenuPanel' + suffix
+    panel: 'userMenuPanel' + suffix,
+    count: 'userMenuCount' + suffix
   };
 }
 
@@ -1319,6 +1320,16 @@ function renderRoleMenu(roleId) {
   const panel = document.getElementById(ids.panel);
   if (!panel) return;
   const people = peopleByRole(roleId);
+  const countEl = document.getElementById(ids.count);
+  const btn = document.getElementById(ids.btn);
+  const role = TEAM_ROLES.find((item) => item.id === roleId);
+  const label = (role && role.title) || roleId;
+  if (countEl) countEl.textContent = String(people.length);
+  if (btn) {
+    const caption = label + ' ' + people.length;
+    btn.setAttribute('aria-label', caption);
+    btn.title = caption;
+  }
   panel.innerHTML = people.length
     ? people.map((person) => {
         const name = person.name || 'Sin nombre';

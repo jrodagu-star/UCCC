@@ -376,28 +376,43 @@ button { border: 0; background: none; color: inherit; }
 }
 .user-menus {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  align-items: flex-end;
+  gap: 10px;
 }
 .user-menu { position: relative; }
 .user-menu-btn {
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
+  min-width: 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
   border-radius: 12px;
   border: 1px solid var(--line);
   background: #fff;
-  color: var(--accent);
+  color: var(--ink);
   box-shadow: 0 4px 10px rgba(28, 32, 30, .08);
-  padding: 3px;
+  padding: 6px 8px 5px;
 }
 .user-menu-btn-img img {
-  width: 100%;
-  height: 100%;
+  width: 36px;
+  height: 36px;
   object-fit: contain;
   display: block;
   border-radius: 8px;
+}
+.user-menu-caption {
+  display: block;
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.15;
+  text-align: center;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.user-menu-count {
+  font-weight: 800;
+  color: var(--muted);
 }
 .user-menu-btn:hover { background: #f3f0ea; }
 .user-menu-btn[aria-expanded="true"] {
