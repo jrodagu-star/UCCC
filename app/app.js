@@ -964,7 +964,7 @@ const TEAM_SHAPES = [
   { id: 'arch', label: 'Arco' }
 ];
 const TEAM_ROLES = [
-  { id: 'medicos', title: 'Médicos', icon: 'medicos' },
+  { id: 'medicos', title: 'Médic@s', icon: 'medicos' },
   { id: 'enfermeria', title: 'Enfermería', icon: 'enfermeria' }
 ];
 const PERSON_SVG = {
