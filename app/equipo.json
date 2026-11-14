@@ -125,5 +125,14 @@
     "shape": "hex",
     "mark": "man",
     "target": ""
+  },
+  {
+    "id": "n4",
+    "name": "Nines",
+    "role": "enfermeria",
+    "color": "#be185d",
+    "shape": "diamond",
+    "mark": "woman",
+    "target": ""
   }
 ]
