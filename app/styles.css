@@ -187,6 +187,12 @@ button { border: 0; background: none; color: inherit; }
   overflow: hidden;
   padding: 4px;
 }
+.ico-logo-wide {
+  width: 118px;
+  height: 36px;
+  padding: 3px 4px;
+  border-radius: 10px;
+}
 .ico-logo img {
   width: 100%;
   height: 100%;

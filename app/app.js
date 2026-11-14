@@ -387,6 +387,8 @@ const SECTIONS = [
         group: 'conferencias',
         title: 'Hemodynamics Bootcamp Fundamental',
         description: 'Apuntes de hemodinámica en UCI, shock cardiogénico y asistencias circulatorias.',
+        icon: '../assets/formacion/hemodynamics-bootcamp/icono-hemodynamics-bootcamp.jpg',
+        iconWide: true,
         parts: [
           {
             id: 'apuntes',
@@ -576,7 +578,8 @@ function iconHtml(name) {
 
 function itemIcon(item) {
   if (item.icon) {
-    return '<span class="ico ico-logo" aria-hidden="true"><img src="' + escapeHtml(item.icon) + '" alt=""></span>';
+    const logoClass = item.iconWide ? 'ico ico-logo ico-logo-wide' : 'ico ico-logo';
+    return '<span class="' + logoClass + '" aria-hidden="true"><img src="' + escapeHtml(item.icon) + '" alt=""></span>';
   }
   return iconHtml(itemKind(item));
 }
