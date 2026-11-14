@@ -1052,7 +1052,7 @@ async function loadTeam() {
   const base = defaultTeam();
   let published = [];
   try {
-    const response = await fetch('equipo.json?v=20261114b');
+    const response = await fetch('equipo.json?v=20261114c');
     if (response.ok) published = await response.json();
   } catch (err) {}
   try { localStorage.removeItem(TEAM_KEY); } catch (err) {}
@@ -1288,11 +1288,23 @@ function assignedProtocols(person) {
   return list;
 }
 
-function closeUserMenu() {
-  const btn = document.getElementById('userMenuBtn');
-  const panel = document.getElementById('userMenuPanel');
-  if (btn) btn.setAttribute('aria-expanded', 'false');
-  if (panel) panel.hidden = true;
+function roleMenuIds(roleId) {
+  const suffix = roleId === 'enfermeria' ? 'Enfermeria' : 'Medicos';
+  return {
+    btn: 'userMenuBtn' + suffix,
+    panel: 'userMenuPanel' + suffix
+  };
+}
+
+function closeUserMenu(exceptRole) {
+  TEAM_ROLES.forEach((role) => {
+    if (exceptRole && role.id === exceptRole) return;
+    const ids = roleMenuIds(role.id);
+    const btn = document.getElementById(ids.btn);
+    const panel = document.getElementById(ids.panel);
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+    if (panel) panel.hidden = true;
+  });
 }
 
 function setUserMenuVisible(on) {
@@ -1302,34 +1314,29 @@ function setUserMenuVisible(on) {
   if (!on) closeUserMenu();
 }
 
-function renderUserMenu() {
-  const panel = document.getElementById('userMenuPanel');
+function renderRoleMenu(roleId) {
+  const ids = roleMenuIds(roleId);
+  const panel = document.getElementById(ids.panel);
   if (!panel) return;
-  panel.innerHTML = TEAM_ROLES.map((role) => {
-    const people = peopleByRole(role.id);
-    const rows = people.length
-      ? people.map((person) => {
-          const name = person.name || 'Sin nombre';
-          const protocols = assignedProtocols(person);
-          const list = protocols.length
-            ? '<ul class="user-menu-protocols">' + protocols.map((item) =>
-                '<li><button type="button" data-team-go="' + escapeHtml(item.target) + '">' + escapeHtml(item.title) + '</button></li>'
-              ).join('') + '</ul>'
-            : '<p class="user-menu-empty">Sin protocolos</p>';
-          return '<article class="user-menu-person">' +
-            '<div class="user-menu-identity">' +
-              '<span class="avatar shape-' + escapeHtml(person.shape) + '" style="background:' + escapeHtml(person.color) + ';color:' + inkFor(person.color) + '">' + avatarInner(person) + '</span>' +
-              '<span class="team-name">' + escapeHtml(name) + '</span>' +
-            '</div>' +
-            list +
-          '</article>';
-        }).join('')
-      : '<p class="user-menu-empty">Sin personas</p>';
-    return '<section class="user-menu-role">' +
-      '<h3 class="user-menu-role-title">' + iconHtml(role.icon) + '<span>' + escapeHtml(role.title) + '</span></h3>' +
-      rows +
-    '</section>';
-  }).join('');
+  const people = peopleByRole(roleId);
+  panel.innerHTML = people.length
+    ? people.map((person) => {
+        const name = person.name || 'Sin nombre';
+        const protocols = assignedProtocols(person);
+        const list = protocols.length
+          ? '<ul class="user-menu-protocols">' + protocols.map((item) =>
+              '<li><button type="button" data-team-go="' + escapeHtml(item.target) + '">' + escapeHtml(item.title) + '</button></li>'
+            ).join('') + '</ul>'
+          : '<p class="user-menu-empty">Sin protocolos</p>';
+        return '<article class="user-menu-person">' +
+          '<div class="user-menu-identity">' +
+            '<span class="avatar shape-' + escapeHtml(person.shape) + '" style="background:' + escapeHtml(person.color) + ';color:' + inkFor(person.color) + '">' + avatarInner(person) + '</span>' +
+            '<span class="team-name">' + escapeHtml(name) + '</span>' +
+          '</div>' +
+          list +
+        '</article>';
+      }).join('')
+    : '<p class="user-menu-empty">Sin personas</p>';
   panel.querySelectorAll('[data-team-go]').forEach((btn) => {
     btn.addEventListener('click', () => {
       closeUserMenu();
@@ -1338,16 +1345,26 @@ function renderUserMenu() {
   });
 }
 
+function renderUserMenu() {
+  TEAM_ROLES.forEach((role) => renderRoleMenu(role.id));
+}
+
 function bindUserMenu() {
-  const btn = document.getElementById('userMenuBtn');
-  if (!btn || btn.dataset.bound) return;
-  btn.dataset.bound = '1';
-  btn.addEventListener('click', (event) => {
-    event.stopPropagation();
-    const panel = document.getElementById('userMenuPanel');
-    const open = btn.getAttribute('aria-expanded') !== 'true';
-    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    if (panel) panel.hidden = !open;
+  const root = document.getElementById('userMenu');
+  if (!root || root.dataset.bound) return;
+  root.dataset.bound = '1';
+  TEAM_ROLES.forEach((role) => {
+    const ids = roleMenuIds(role.id);
+    const btn = document.getElementById(ids.btn);
+    if (!btn) return;
+    btn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const panel = document.getElementById(ids.panel);
+      const open = btn.getAttribute('aria-expanded') !== 'true';
+      closeUserMenu(open ? role.id : null);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (panel) panel.hidden = !open;
+    });
   });
   document.addEventListener('click', (event) => {
     const menu = document.getElementById('userMenu');
@@ -1372,22 +1389,6 @@ function openTeam() {
   const enfermeria = peopleByRole('enfermeria').length;
   els.meta.textContent = medicos + ' médicos · ' + enfermeria + ' enfermería';
   renderUserMenu();
-  const roster = TEAM_ROLES.map((role) => {
-    const people = peopleByRole(role.id);
-    const cards = people.map((person) => {
-      const name = person.name || 'Sin nombre';
-      return '<div class="team-slot">' +
-        '<button type="button" class="team-person" data-edit-person="' + escapeHtml(person.id) + '">' +
-          '<span class="avatar shape-' + escapeHtml(person.shape) + '" style="background:' + escapeHtml(person.color) + ';color:' + inkFor(person.color) + '">' + avatarInner(person) + '</span>' +
-          '<span class="team-name">' + escapeHtml(name) + '</span>' +
-        '</button>' +
-      '</div>';
-    }).join('');
-    return '<section class="team-role-block tone-' + escapeHtml(role.id) + '">' +
-      '<h2 class="team-role-title">' + iconHtml(role.icon) + '<span>' + escapeHtml(role.title) + '</span></h2>' +
-      '<div class="team-people">' + cards + '</div>' +
-    '</section>';
-  }).join('');
   const blocks = SECTIONS.filter((section) => section.id !== 'formacion').map((section) => {
     const docs = visibleItems(section).map((item) => {
       const people = peopleForItem(section.id, item.id);
@@ -1404,13 +1405,7 @@ function openTeam() {
       '<ul class="team-rows">' + docs + '</ul>' +
     '</section>';
   }).join('');
-  els.viewer.innerHTML = '<div class="team-page">' +
-    '<div class="team-roster">' + roster + '</div>' +
-    '<div class="team-assignments">' + blocks + '</div>' +
-  '</div>';
-  els.viewer.querySelectorAll('[data-edit-person]').forEach((btn) => {
-    btn.addEventListener('click', () => openTeamEditor(btn.dataset.editPerson));
-  });
+  els.viewer.innerHTML = '<div class="team-page">' + blocks + '</div>';
   els.viewer.querySelectorAll('[data-tree-section]').forEach((btn) => {
     btn.addEventListener('click', () => openSection(btn.dataset.treeSection));
   });
