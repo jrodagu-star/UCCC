@@ -387,8 +387,8 @@ const SECTIONS = [
         group: 'conferencias',
         title: 'Hemodynamics Bootcamp Fundamental',
         description: 'Apuntes de hemodinámica en UCI, shock cardiogénico y asistencias circulatorias.',
-        icon: '../assets/formacion/hemodynamics-bootcamp/icono-hemodynamics-bootcamp.jpg',
-        iconWide: true,
+        icon: '../assets/formacion/hemodynamics-bootcamp/icono-hemodynamics-bootcamp-stack.jpg',
+        iconBanner: true,
         parts: [
           {
             id: 'apuntes',
@@ -639,14 +639,18 @@ function sectionItemCard(section, item) {
       '</a>' +
     '</article>';
   }
+  const banner = item.iconBanner
+    ? '<span class="card-banner" aria-hidden="true"><img src="' + escapeHtml(item.icon) + '" alt=""></span>'
+    : itemIcon(item);
   const inner =
-    itemIcon(item) +
+    banner +
     '<span class="card-title">' + escapeHtml(item.title) + '</span>' +
     '<span class="card-desc">' + escapeHtml(item.description || '') + '</span>' +
     '<span class="card-cta">Abrir</span>';
+  const cardClass = item.iconBanner ? 'card card-bannered' : 'card';
   const card = item.url && item.direct
-    ? '<a class="card" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' + inner + '</a>'
-    : '<button type="button" class="card" data-item-id="' + escapeHtml(item.id) + '">' + inner + '</button>';
+    ? '<a class="' + cardClass + '" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' + inner + '</a>'
+    : '<button type="button" class="' + cardClass + '" data-item-id="' + escapeHtml(item.id) + '">' + inner + '</button>';
   return cardWithAssignees(card, peopleForItem(section.id, item.id));
 }
 

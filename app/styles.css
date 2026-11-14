@@ -590,6 +590,31 @@ button { border: 0; background: none; color: inherit; }
   font-weight: 750;
   color: var(--tone);
 }
+.card-bannered {
+  padding: 0 0 14px;
+  overflow: hidden;
+}
+.card-banner {
+  display: block;
+  width: 100%;
+  margin: 0 0 12px;
+  background: #f3f0ea;
+  border-bottom: 1px solid rgba(213, 207, 196, .9);
+}
+.card-banner img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 8 / 3;
+  object-fit: cover;
+  object-position: center;
+}
+.card-bannered .card-title,
+.card-bannered .card-desc,
+.card-bannered .card-cta {
+  padding-left: 16px;
+  padding-right: 16px;
+}
 .course-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 420px));
