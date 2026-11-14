@@ -1052,7 +1052,7 @@ async function loadTeam() {
   const base = defaultTeam();
   let published = [];
   try {
-    const response = await fetch('equipo.json?v=20261114i');
+    const response = await fetch('equipo.json?v=20261114j');
     if (response.ok) published = await response.json();
   } catch (err) {}
   try { localStorage.removeItem(TEAM_KEY); } catch (err) {}
@@ -1080,9 +1080,19 @@ function givenName(name) {
   return part || 'Sin nombre';
 }
 
-function miniAvatar(person) {
+function personAvatar(person, sizeClass) {
   const name = person.name || 'Sin nombre';
-  return '<span class="mini-avatar shape-' + escapeHtml(person.shape) + '" style="background:' + escapeHtml(person.color) + ';color:' + inkFor(person.color) + '" title="' + escapeHtml(name) + '">' + avatarInner(person) + '</span>';
+  const role = normalizeRole(person.role);
+  const avatar =
+    '<span class="' + sizeClass + ' shape-' + escapeHtml(person.shape) + '" style="background:' + escapeHtml(person.color) + ';color:' + inkFor(person.color) + '" title="' + escapeHtml(name) + '">' +
+      avatarInner(person) +
+    '</span>';
+  if (role !== 'enfermeria') return avatar;
+  return '<span class="avatar-ring role-enfermeria" title="' + escapeHtml(name) + '">' + avatar + '</span>';
+}
+
+function miniAvatar(person) {
+  return personAvatar(person, 'mini-avatar');
 }
 
 function assigneeChip(person) {
@@ -1341,7 +1351,7 @@ function renderRoleMenu(roleId) {
           : '<p class="user-menu-empty">Sin protocolos</p>';
         return '<article class="user-menu-person">' +
           '<div class="user-menu-identity">' +
-            '<span class="avatar shape-' + escapeHtml(person.shape) + '" style="background:' + escapeHtml(person.color) + ';color:' + inkFor(person.color) + '">' + avatarInner(person) + '</span>' +
+            personAvatar(person, 'avatar') +
             '<span class="team-name">' + escapeHtml(name) + '</span>' +
           '</div>' +
           list +

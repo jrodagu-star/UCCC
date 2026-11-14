@@ -306,6 +306,23 @@ button { border: 0; background: none; color: inherit; }
   color: var(--ink);
   box-shadow: 0 4px 10px rgba(28, 32, 30, .08);
 }
+.avatar-ring {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+.avatar-ring.role-enfermeria {
+  padding: 2px;
+  border: 2px solid #0f766e;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(15, 118, 110, .18);
+}
+.avatar-ring .mini-avatar,
+.avatar-ring .avatar {
+  display: grid;
+}
 .mini-avatar {
   width: 16px;
   height: 16px;
@@ -317,6 +334,7 @@ button { border: 0; background: none; color: inherit; }
   line-height: 1;
 }
 .section-person .mini-avatar { width: 18px; height: 18px; font-size: 8px; }
+.section-person .avatar-ring.role-enfermeria { padding: 1px; border-width: 1.5px; }
 .mini-avatar svg { width: 68%; height: 68%; fill: currentColor; display: block; }
 .mini-avatar.shape-circle { border-radius: 50%; }
 .mini-avatar.shape-rounded { border-radius: 28%; }
