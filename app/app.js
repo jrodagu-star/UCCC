@@ -1396,9 +1396,7 @@ function openTeam() {
   showSectionTeam(null);
   els.crumbs.textContent = 'UCC Cardiológicos HM / Equipo';
   setCover(false);
-  const medicos = peopleByRole('medicos').length;
-  const enfermeria = peopleByRole('enfermeria').length;
-  els.meta.textContent = medicos + ' médicos · ' + enfermeria + ' enfermería';
+  els.meta.textContent = '';
   renderUserMenu();
   const blocks = SECTIONS.filter((section) => section.id !== 'formacion').map((section) => {
     const docs = visibleItems(section).map((item) => {
