@@ -417,6 +417,7 @@ const SECTIONS = [
         group: 'protocolos',
         title: 'Protocolo manejo paciente ECMO en UCI Montepríncipe 1ª versión octubre 2026',
         description: 'Autor: U.S.C. Montepríncipe',
+        icon: '../assets/formacion/ecmo/icono-protocolo-hm.png',
         parts: [
           {
             id: 'documento',
@@ -481,6 +482,7 @@ const SECTIONS = [
         group: 'protocolos',
         title: 'Procedimientos de hemodinámica y coordinación multidisciplinar',
         description: 'Autor: U. Hemodinámica Montepríncipe',
+        icon: '../assets/formacion/ecmo/icono-protocolo-hm.png',
         parts: [
           {
             id: 'documento',
