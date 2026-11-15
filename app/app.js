@@ -440,6 +440,22 @@ const SECTIONS = [
         ]
       },
       {
+        id: 'recogida-datos-ecmo',
+        group: 'protocolos',
+        title: 'Recogida datos ECMO',
+        description: 'Gráfica A3 horizontal para la recogida de datos en ECMO.',
+        icon: '../assets/formacion/recogida-datos-ecmo/icono-recogida-datos-ecmo.png',
+        parts: [
+          {
+            id: 'documento',
+            title: 'Recogida datos ECMO',
+            description: 'Gráfica A3 horizontal para la recogida de datos en ECMO.',
+            path: '../assets/formacion/recogida-datos-ecmo/grafica-ecmo-a3-horizontal.pdf',
+            ext: '.pdf'
+          }
+        ]
+      },
+      {
         id: 'manual-valdecilla-2012',
         group: 'protocolos',
         title: 'Manual de Soporte mecánico circulatorio de corta duración de H Valdecilla 2012',
