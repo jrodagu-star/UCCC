@@ -429,6 +429,7 @@ const SECTIONS = [
         group: 'protocolos',
         title: 'Protocolo de enfermería ECMO adultos (borrador v01)',
         description: 'Borrador v01 del protocolo de enfermería en ECMO de adultos.',
+        cornerBadge: '../assets/formacion/ecmo/badge-enfermeria.png',
         parts: [
           {
             id: 'documento',
@@ -445,6 +446,7 @@ const SECTIONS = [
         title: 'Recogida datos ECMO',
         description: 'Gráfica A3 horizontal para la recogida de datos en ECMO.',
         icon: '../assets/formacion/recogida-datos-ecmo/icono-recogida-datos-ecmo.png',
+        cornerBadge: '../assets/formacion/ecmo/badge-enfermeria.png',
         parts: [
           {
             id: 'documento',
@@ -659,12 +661,18 @@ function sectionItemCard(section, item) {
   const banner = item.iconBanner
     ? '<span class="card-banner" aria-hidden="true"><img src="' + escapeHtml(item.icon) + '" alt=""></span>'
     : itemIcon(item);
+  const badge = item.cornerBadge
+    ? '<span class="card-corner-badge" aria-hidden="true"><img src="' + escapeHtml(item.cornerBadge) + '" alt=""></span>'
+    : '';
   const inner =
+    badge +
     banner +
     '<span class="card-title">' + escapeHtml(item.title) + '</span>' +
     '<span class="card-desc">' + escapeHtml(item.description || '') + '</span>' +
     '<span class="card-cta">Abrir</span>';
-  const cardClass = item.iconBanner ? 'card card-bannered' : 'card';
+  const cardClass = 'card' +
+    (item.iconBanner ? ' card-bannered' : '') +
+    (item.cornerBadge ? ' has-corner-badge' : '');
   const card = item.url && item.direct
     ? '<a class="' + cardClass + '" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' + inner + '</a>'
     : '<button type="button" class="' + cardClass + '" data-item-id="' + escapeHtml(item.id) + '">' + inner + '</button>';

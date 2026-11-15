@@ -547,6 +547,7 @@ button { border: 0; background: none; color: inherit; }
   gap: 14px;
 }
 .card {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -563,6 +564,24 @@ button { border: 0; background: none; color: inherit; }
     0 1px 2px rgba(28, 32, 30, .06),
     0 10px 22px rgba(28, 32, 30, .13);
   transition: border-color .15s, box-shadow .15s, transform .15s;
+}
+.card.has-corner-badge {
+  padding-right: 58px;
+}
+.card-corner-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 42px;
+  height: 42px;
+  z-index: 1;
+  pointer-events: none;
+}
+.card-corner-badge img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 }
 .card:hover {
   border-color: color-mix(in srgb, var(--tone) 40%, #fff);
