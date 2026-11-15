@@ -632,6 +632,14 @@ button { border: 0; background: none; color: inherit; }
   object-fit: cover;
   object-position: center;
 }
+.card-bannered.banner-contain .card-banner {
+  background: #fff;
+}
+.card-bannered.banner-contain .card-banner img {
+  aspect-ratio: 628 / 221;
+  object-fit: contain;
+  padding: 8px 10px;
+}
 .card-bannered .card-title,
 .card-bannered .card-desc,
 .card-bannered .card-cta {

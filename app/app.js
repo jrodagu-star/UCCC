@@ -371,6 +371,9 @@ const SECTIONS = [
         group: 'conferencias',
         title: 'Conferencias de cardiología crítica',
         description: 'Notas de conferencia: shock cardiogénico, TEP, IAM, ECMO, soporte mecánico y más.',
+        icon: '../assets/formacion/conferencias-cardiologia/icono-accis-2026.png',
+        iconBanner: true,
+        iconBannerContain: true,
         parts: [
           {
             id: 'notas',
@@ -672,6 +675,7 @@ function sectionItemCard(section, item) {
     '<span class="card-cta">Abrir</span>';
   const cardClass = 'card' +
     (item.iconBanner ? ' card-bannered' : '') +
+    (item.iconBannerContain ? ' banner-contain' : '') +
     (item.cornerBadge ? ' has-corner-badge' : '');
   const card = item.url && item.direct
     ? '<a class="' + cardClass + '" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' + inner + '</a>'
