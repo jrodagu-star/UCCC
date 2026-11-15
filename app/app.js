@@ -460,6 +460,7 @@ const SECTIONS = [
         group: 'protocolos',
         title: 'Manual de Soporte mecánico circulatorio de corta duración de H Valdecilla 2012',
         description: 'Autor: Hospital Valdecilla',
+        icon: '../assets/formacion/valdecilla/icono-manual-soporte-mecanico.png',
         parts: [
           {
             id: 'documento',
