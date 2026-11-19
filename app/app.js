@@ -1106,7 +1106,7 @@ async function loadTeam() {
   const base = defaultTeam();
   let published = [];
   try {
-    const response = await fetch('equipo.json?v=20261114j');
+    const response = await fetch('equipo.json?v=20261119a');
     if (response.ok) published = await response.json();
   } catch (err) {}
   try { localStorage.removeItem(TEAM_KEY); } catch (err) {}
