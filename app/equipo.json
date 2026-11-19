@@ -134,5 +134,14 @@
     "shape": "diamond",
     "mark": "woman",
     "target": ""
+  },
+  {
+    "id": "n5",
+    "name": "Marina",
+    "role": "enfermeria",
+    "color": "#c2410c",
+    "shape": "shield",
+    "mark": "woman",
+    "target": ""
   }
 ]
