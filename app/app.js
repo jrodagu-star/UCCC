@@ -510,6 +510,22 @@ const SECTIONS = [
         ]
       },
       {
+        id: 'manual-asturias-ecmo-2021',
+        group: 'protocolos',
+        title: 'Manual de enfermería soporte ECMO H.U. Asturias 2021',
+        description: 'Hospital Universitario Central de Asturias. Guía de manejo y cuidados de enfermería al paciente portador de ECMO, diciembre 2021.',
+        icon: '../assets/formacion/valdecilla/icono-manual-soporte-mecanico.png',
+        parts: [
+          {
+            id: 'documento',
+            title: 'Manual de enfermería soporte ECMO H.U. Asturias 2021',
+            description: 'Hospital Universitario Central de Asturias. Guía de manejo y cuidados de enfermería al paciente portador de ECMO, diciembre 2021.',
+            path: '../assets/formacion/asturias/manual-enfermeria-soporte-ecmo-hu-asturias-2021.pdf',
+            ext: '.pdf'
+          }
+        ]
+      },
+      {
         id: 'procedimientos-hemodinamica',
         group: 'protocolos',
         title: 'Procedimientos de hemodinámica y coordinación multidisciplinar',
@@ -1437,7 +1453,7 @@ const PROTOCOL_ICON_LEGEND = [
   {
     id: 'manual',
     src: '../assets/formacion/valdecilla/icono-manual-soporte-mecanico.png',
-    label: 'Manual de soporte mecánico circulatorio'
+    label: 'Manual externo'
   },
   {
     id: 'pdf',
