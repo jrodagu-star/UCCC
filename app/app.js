@@ -526,6 +526,22 @@ const SECTIONS = [
         ]
       },
       {
+        id: 'manual-sermas-ecmo-priming',
+        group: 'protocolos',
+        title: 'Documento de Manejo de ECMO Priming y Donación Asistolia. SERMAS.',
+        description: 'SERMAS. Cebado y manejo de ECMO Cardiohelp-i en donación en asistolia.',
+        icon: '../assets/formacion/valdecilla/icono-manual-soporte-mecanico.png',
+        parts: [
+          {
+            id: 'documento',
+            title: 'Documento de Manejo de ECMO Priming y Donación Asistolia. SERMAS.',
+            description: 'SERMAS. Cebado y manejo de ECMO Cardiohelp-i en donación en asistolia.',
+            path: '../assets/formacion/sermas/documento-manejo-ecmo-priming-donacion-asistolia-sermas.pdf',
+            ext: '.pdf'
+          }
+        ]
+      },
+      {
         id: 'procedimientos-hemodinamica',
         group: 'protocolos',
         title: 'Procedimientos de hemodinámica y coordinación multidisciplinar',
