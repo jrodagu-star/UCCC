@@ -683,9 +683,14 @@ function setCover(on) {
   els.viewer.classList.toggle('has-cover', !!on);
 }
 
+function withIconKinds(html, item) {
+  const kinds = itemIconKinds(item).join(' ');
+  return html.replace(/^<([a-z]+)/, '<$1 data-icon-kinds="' + escapeHtml(kinds) + '"');
+}
+
 function sectionItemCard(section, item) {
   if (item.image && item.url) {
-    return '<article class="course-card">' +
+    return withIconKinds('<article class="course-card">' +
       '<button type="button" class="course-thumb" data-course-image="' + escapeHtml(item.image) + '" data-course-title="' + escapeHtml(item.title) + '" aria-label="Ampliar ' + escapeHtml(item.title) + '">' +
         '<img src="' + escapeHtml(item.image) + '" alt="">' +
       '</button>' +
@@ -694,7 +699,7 @@ function sectionItemCard(section, item) {
         '<span class="card-desc">' + escapeHtml(item.description || '') + '</span>' +
         '<span class="card-cta">Abrir el curso</span>' +
       '</a>' +
-    '</article>';
+    '</article>', item);
   }
   const banner = item.iconBanner
     ? '<span class="card-banner" aria-hidden="true"><img src="' + escapeHtml(item.icon) + '" alt=""></span>'
@@ -715,7 +720,7 @@ function sectionItemCard(section, item) {
   const card = item.url && item.direct
     ? '<a class="' + cardClass + '" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' + inner + '</a>'
     : '<button type="button" class="' + cardClass + '" data-item-id="' + escapeHtml(item.id) + '">' + inner + '</button>';
-  return cardWithAssignees(card, peopleForItem(section.id, item.id));
+  return withIconKinds(cardWithAssignees(card, peopleForItem(section.id, item.id)), item);
 }
 
 function openCourseImage(src, title) {
@@ -820,6 +825,7 @@ function openSection(sectionId) {
       btn.addEventListener('click', () => showFormFolder(btn.dataset.folder));
     });
     bindSectionItems(section);
+    applyIconFilter();
     return;
   }
 
@@ -846,6 +852,7 @@ function openSection(sectionId) {
     '</div>';
 
   bindSectionItems(section);
+  applyIconFilter();
   els.viewer.querySelectorAll('.poster-open').forEach((posterBtn) => {
     const item = posters.find((entry) => entry.title === posterBtn.dataset.poster);
     if (item) posterBtn.addEventListener('click', () => openPoster(item));
@@ -1396,30 +1403,60 @@ function roleMenuIds(roleId) {
 
 const PROTOCOL_ICON_LEGEND = [
   {
+    id: 'hm',
     src: '../assets/formacion/ecmo/icono-protocolo-hm.png',
     label: 'Protocolo de HM Hospitales'
   },
   {
+    id: 'enfermeria',
     src: '../assets/formacion/ecmo/badge-enfermeria.png',
     label: 'Material de enfermería. Va en la esquina de la ficha.'
   },
   {
+    id: 'datos',
     src: '../assets/formacion/recogida-datos-ecmo/icono-recogida-datos-ecmo.png',
     label: 'Recogida de datos'
   },
   {
+    id: 'manual',
     src: '../assets/formacion/valdecilla/icono-manual-soporte-mecanico.png',
     label: 'Manual de soporte mecánico circulatorio'
   },
   {
+    id: 'pdf',
     kind: 'file',
     label: 'Documento PDF'
   },
   {
+    id: 'link',
     kind: 'link',
     label: 'Enlace externo'
   }
 ];
+
+const selectedIconKinds = new Set(PROTOCOL_ICON_LEGEND.map((entry) => entry.id));
+
+function itemIconKinds(item) {
+  const kinds = [];
+  PROTOCOL_ICON_LEGEND.forEach((entry) => {
+    if (entry.src && (item.icon === entry.src || item.cornerBadge === entry.src)) kinds.push(entry.id);
+  });
+  if (!item.icon && !item.image) {
+    const kind = itemKind(item);
+    if (kind === 'file') kinds.push('pdf');
+    if (kind === 'link') kinds.push('link');
+  }
+  return kinds;
+}
+
+function iconFilterShowsAll() {
+  return selectedIconKinds.size === PROTOCOL_ICON_LEGEND.length;
+}
+
+function cardMatchesIconFilter(kinds) {
+  if (iconFilterShowsAll()) return true;
+  return kinds.some((id) => selectedIconKinds.has(id));
+}
 
 function protocolIconMark(entry) {
   if (entry.src) {
@@ -1432,11 +1469,51 @@ function renderIconLegend() {
   const body = document.getElementById('iconLegendBody');
   if (!body) return;
   body.innerHTML = PROTOCOL_ICON_LEGEND.map((entry) =>
-    '<tr>' +
+    '<tr data-icon-kind="' + escapeHtml(entry.id) + '">' +
+      '<td class="icon-legend-check"><input type="checkbox" data-icon-kind="' + escapeHtml(entry.id) + '"' +
+        (selectedIconKinds.has(entry.id) ? ' checked' : '') +
+        ' aria-label="Mostrar ' + escapeHtml(entry.label) + '"></td>' +
       '<td class="icon-legend-mark">' + protocolIconMark(entry) + '</td>' +
       '<td>' + escapeHtml(entry.label) + '</td>' +
     '</tr>'
   ).join('');
+}
+
+function applyIconFilter() {
+  if (state.sectionId !== 'formacion' || state.itemId) return;
+  const nodes = [...els.viewer.querySelectorAll('[data-icon-kinds]')];
+  if (!nodes.length) return;
+  let shown = 0;
+  nodes.forEach((node) => {
+    const kinds = (node.dataset.iconKinds || '').split(/\s+/).filter(Boolean);
+    const show = cardMatchesIconFilter(kinds);
+    node.classList.toggle('is-icon-hidden', !show);
+    if (show) shown += 1;
+  });
+  els.viewer.querySelectorAll('.form-folder-panel').forEach((panel) => {
+    const visible = panel.querySelector('[data-icon-kinds]:not(.is-icon-hidden)');
+    let note = panel.querySelector('.icon-filter-empty');
+    if (visible) {
+      if (note) note.remove();
+      return;
+    }
+    if (!note) {
+      note = document.createElement('p');
+      note.className = 'icon-filter-empty';
+      note.textContent = 'Ningún recurso con los iconos seleccionados.';
+      panel.appendChild(note);
+    }
+  });
+  els.meta.textContent = shown + ' recurso' + (shown === 1 ? '' : 's');
+}
+
+function setAllIconKinds(on) {
+  selectedIconKinds.clear();
+  if (on) PROTOCOL_ICON_LEGEND.forEach((entry) => selectedIconKinds.add(entry.id));
+  document.querySelectorAll('#iconLegendBody input[data-icon-kind]').forEach((input) => {
+    input.checked = on;
+  });
+  applyIconFilter();
 }
 
 function placeIconLegend() {
@@ -1445,7 +1522,7 @@ function placeIconLegend() {
   if (!btn || !panel || panel.hidden) return;
   const rect = btn.getBoundingClientRect();
   const margin = 12;
-  const width = Math.min(440, window.innerWidth - margin * 2);
+  const width = Math.min(480, window.innerWidth - margin * 2);
   const maxRight = window.innerWidth - width - margin;
   let right = window.innerWidth - rect.right;
   right = Math.min(right, maxRight);
@@ -1476,6 +1553,29 @@ function bindIconLegend() {
   if (!root || !btn || root.dataset.bound) return;
   root.dataset.bound = '1';
   renderIconLegend();
+  const body = document.getElementById('iconLegendBody');
+  if (body) {
+    body.addEventListener('change', (event) => {
+      const input = event.target.closest('input[data-icon-kind]');
+      if (!input) return;
+      if (input.checked) selectedIconKinds.add(input.dataset.iconKind);
+      else selectedIconKinds.delete(input.dataset.iconKind);
+      applyIconFilter();
+    });
+    body.addEventListener('click', (event) => {
+      if (event.target.closest('input')) return;
+      const row = event.target.closest('tr[data-icon-kind]');
+      if (!row) return;
+      const input = row.querySelector('input[data-icon-kind]');
+      if (!input) return;
+      input.checked = !input.checked;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+  }
+  const selectAll = document.getElementById('iconLegendAll');
+  const selectNone = document.getElementById('iconLegendNone');
+  if (selectAll) selectAll.addEventListener('click', () => setAllIconKinds(true));
+  if (selectNone) selectNone.addEventListener('click', () => setAllIconKinds(false));
   btn.addEventListener('click', (event) => {
     event.stopPropagation();
     const open = btn.getAttribute('aria-expanded') !== 'true';

@@ -421,7 +421,7 @@ button { border: 0; background: none; color: inherit; }
 .icon-legend-panel {
   position: fixed;
   z-index: 30;
-  width: min(440px, calc(100vw - 24px));
+  width: min(480px, calc(100vw - 24px));
   padding: 12px 14px 8px;
   background: #fffdf9;
   border: 1px solid var(--line);
@@ -434,6 +434,35 @@ button { border: 0; background: none; color: inherit; }
   font-size: 14px;
   font-weight: 800;
   color: var(--ink);
+}
+.icon-legend-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.icon-legend-actions button {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--tone, var(--accent));
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 10px;
+}
+.icon-legend-actions button:hover { background: #f3f0ea; }
+.icon-legend-check { width: 36px; }
+.icon-legend-check input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--tone, var(--accent));
+}
+.icon-legend-table tbody tr { cursor: pointer; }
+.is-icon-hidden { display: none !important; }
+.icon-filter-empty {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
 }
 .icon-legend-table {
   width: 100%;
