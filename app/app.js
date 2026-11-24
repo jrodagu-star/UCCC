@@ -429,6 +429,38 @@ const SECTIONS = [
         ]
       },
       {
+        id: 'consentimiento-informado-ecmo',
+        group: 'protocolos',
+        title: 'Consentimiento informado ECMO HM Hospitales (v2)',
+        description: 'Consentimiento informado para ECMO de HM Hospitales, versión 2.',
+        icon: '../assets/formacion/ecmo/icono-protocolo-hm.png',
+        parts: [
+          {
+            id: 'documento',
+            title: 'Consentimiento informado ECMO HM Hospitales (v2)',
+            description: 'Consentimiento informado para ECMO de HM Hospitales, versión 2.',
+            path: '../assets/formacion/ecmo/consentimiento-informado-ecmo-hm-hospitales-v2.pdf',
+            ext: '.pdf'
+          }
+        ]
+      },
+      {
+        id: 'checklist-canulacion-ecmo',
+        group: 'protocolos',
+        title: 'Checklist de canulación ECMO HM Hospitales (v2)',
+        description: 'Checklist de canulación de ECMO de HM Hospitales, versión 2.',
+        icon: '../assets/formacion/ecmo/icono-protocolo-hm.png',
+        parts: [
+          {
+            id: 'documento',
+            title: 'Checklist de canulación ECMO HM Hospitales (v2)',
+            description: 'Checklist de canulación de ECMO de HM Hospitales, versión 2.',
+            path: '../assets/formacion/ecmo/checklist-canulacion-ecmo-hm-hospitales-v2.pdf',
+            ext: '.pdf'
+          }
+        ]
+      },
+      {
         id: 'protocolo-enfermeria-ecmo-adultos',
         group: 'protocolos',
         title: 'Protocolo de enfermería ECMO adultos (borrador v01)',
@@ -574,6 +606,7 @@ function setActiveNav(sectionId) {
     els.main.classList.add('is-opening');
   }
   setUserMenuVisible(sectionId === 'team');
+  setIconLegendVisible(sectionId === 'formacion');
 }
 
 const ICONS = {
@@ -1361,6 +1394,106 @@ function roleMenuIds(roleId) {
   };
 }
 
+const PROTOCOL_ICON_LEGEND = [
+  {
+    src: '../assets/formacion/ecmo/icono-protocolo-hm.png',
+    label: 'Protocolo de HM Hospitales'
+  },
+  {
+    src: '../assets/formacion/ecmo/badge-enfermeria.png',
+    label: 'Material de enfermería. Va en la esquina de la ficha.'
+  },
+  {
+    src: '../assets/formacion/recogida-datos-ecmo/icono-recogida-datos-ecmo.png',
+    label: 'Recogida de datos'
+  },
+  {
+    src: '../assets/formacion/valdecilla/icono-manual-soporte-mecanico.png',
+    label: 'Manual de soporte mecánico circulatorio'
+  },
+  {
+    kind: 'file',
+    label: 'Documento PDF'
+  },
+  {
+    kind: 'link',
+    label: 'Enlace externo'
+  }
+];
+
+function protocolIconMark(entry) {
+  if (entry.src) {
+    return '<span class="ico ico-logo" aria-hidden="true"><img src="' + escapeHtml(entry.src) + '" alt=""></span>';
+  }
+  return iconHtml(entry.kind);
+}
+
+function renderIconLegend() {
+  const body = document.getElementById('iconLegendBody');
+  if (!body) return;
+  body.innerHTML = PROTOCOL_ICON_LEGEND.map((entry) =>
+    '<tr>' +
+      '<td class="icon-legend-mark">' + protocolIconMark(entry) + '</td>' +
+      '<td>' + escapeHtml(entry.label) + '</td>' +
+    '</tr>'
+  ).join('');
+}
+
+function placeIconLegend() {
+  const btn = document.getElementById('iconLegendBtn');
+  const panel = document.getElementById('iconLegendPanel');
+  if (!btn || !panel || panel.hidden) return;
+  const rect = btn.getBoundingClientRect();
+  const margin = 12;
+  const width = Math.min(440, window.innerWidth - margin * 2);
+  const maxRight = window.innerWidth - width - margin;
+  let right = window.innerWidth - rect.right;
+  right = Math.min(right, maxRight);
+  right = Math.max(margin, right);
+  panel.style.width = width + 'px';
+  panel.style.right = right + 'px';
+  panel.style.top = Math.round(rect.bottom + 8) + 'px';
+}
+
+function closeIconLegend() {
+  const btn = document.getElementById('iconLegendBtn');
+  const panel = document.getElementById('iconLegendPanel');
+  if (btn) btn.setAttribute('aria-expanded', 'false');
+  if (panel) panel.hidden = true;
+}
+
+function setIconLegendVisible(on) {
+  const root = document.getElementById('iconLegend');
+  if (!root) return;
+  root.hidden = !on;
+  closeIconLegend();
+}
+
+function bindIconLegend() {
+  const root = document.getElementById('iconLegend');
+  const btn = document.getElementById('iconLegendBtn');
+  const panel = document.getElementById('iconLegendPanel');
+  if (!root || !btn || root.dataset.bound) return;
+  root.dataset.bound = '1';
+  renderIconLegend();
+  btn.addEventListener('click', (event) => {
+    event.stopPropagation();
+    const open = btn.getAttribute('aria-expanded') !== 'true';
+    closeUserMenu();
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (panel) panel.hidden = !open;
+    if (open) placeIconLegend();
+  });
+  window.addEventListener('resize', placeIconLegend);
+  document.addEventListener('click', (event) => {
+    if (root.hidden || root.contains(event.target)) return;
+    closeIconLegend();
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeIconLegend();
+  });
+}
+
 function closeUserMenu(exceptRole) {
   TEAM_ROLES.forEach((role) => {
     if (exceptRole && role.id === exceptRole) return;
@@ -1434,6 +1567,7 @@ function bindUserMenu() {
     if (!btn) return;
     btn.addEventListener('click', (event) => {
       event.stopPropagation();
+      closeIconLegend();
       const panel = document.getElementById(ids.panel);
       const open = btn.getAttribute('aria-expanded') !== 'true';
       closeUserMenu(open ? role.id : null);
@@ -1497,3 +1631,4 @@ loadTeam().then((loaded) => {
 });
 
 bindUserMenu();
+bindIconLegend();

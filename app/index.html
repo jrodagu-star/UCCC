@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-title" content="UCC Cardiológicos HM">
   <title>Unidad Cuidados Críticos Cardiológicos HM</title>
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="styles.css?v=20261115e">
+  <link rel="stylesheet" href="styles.css?v=20261124a">
 </head>
 <body>
   <div class="layout">
@@ -46,12 +46,27 @@
               <div class="user-menu-panel" id="userMenuPanelEnfermeria" hidden></div>
             </div>
           </div>
-          <p class="meta" id="pageMeta">7 recursos</p>
+          <div class="icon-legend" id="iconLegend">
+            <button type="button" class="icon-legend-btn" id="iconLegendBtn" aria-expanded="false" aria-controls="iconLegendPanel" aria-haspopup="dialog">Iconos</button>
+            <div class="icon-legend-panel" id="iconLegendPanel" hidden role="dialog" aria-labelledby="iconLegendTitle">
+              <p class="icon-legend-title" id="iconLegendTitle">Iconos</p>
+              <table class="icon-legend-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Icono</th>
+                    <th scope="col">Significado</th>
+                  </tr>
+                </thead>
+                <tbody id="iconLegendBody"></tbody>
+              </table>
+            </div>
+          </div>
+          <p class="meta" id="pageMeta">12 recursos</p>
         </div>
       </header>
       <div class="viewer" id="viewer"></div>
     </main>
   </div>
-  <script src="app.js?v=20261115f"></script>
+  <script src="app.js?v=20261124a"></script>
 </body>
 </html>
