@@ -541,6 +541,17 @@ const SECTIONS = [
         url: 'https://gtcicyrcpsemicyuc.es/',
         image: '../assets/cursos/actualizacion-cuidados-criticos-cardiovasculares-2026.jpg',
         direct: true
+      },
+      {
+        id: 'curso-la-fe-2027',
+        group: 'cursos-unidad',
+        title: 'III Curso de Asistencia Ventricular y Trasplante Cardíaco',
+        description: 'Hospital Universitari i Politècnic La Fe, Valencia, 1-3 febrero 2027.',
+        url: 'https://forms.cloud.microsoft/pages/responsepage.aspx?id=sPLEJpzX2EibbGBSSkjxKNHinKB82hhEgNx0arw_KzFUMjNLTUU1RU5WMFNTRUNZQ1BMSkpTME9CUi4u&route=shorturl',
+        image: '../assets/cursos/la-fe-asistencia-ventricular-2027.png',
+        imageTall: true,
+        program: '../assets/cursos/programme-book-la-fe-2027.pdf',
+        direct: true
       }
     ]
   }
@@ -690,16 +701,22 @@ function withIconKinds(html, item) {
 
 function sectionItemCard(section, item) {
   if (item.image && item.url) {
-    return withIconKinds('<article class="course-card">' +
-      '<button type="button" class="course-thumb" data-course-image="' + escapeHtml(item.image) + '" data-course-title="' + escapeHtml(item.title) + '" aria-label="Ampliar ' + escapeHtml(item.title) + '">' +
+    const thumbClass = 'course-thumb' + (item.imageTall ? ' thumb-tall' : '');
+    const thumb =
+      '<button type="button" class="' + thumbClass + '" data-course-image="' + escapeHtml(item.image) + '" data-course-title="' + escapeHtml(item.title) + '" aria-label="Ampliar ' + escapeHtml(item.title) + '">' +
         '<img src="' + escapeHtml(item.image) + '" alt="">' +
-      '</button>' +
-      '<a class="course-card-copy" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' +
-        '<span class="card-title">' + escapeHtml(item.title) + '</span>' +
-        '<span class="card-desc">' + escapeHtml(item.description || '') + '</span>' +
-        '<span class="card-cta">Abrir el curso</span>' +
-      '</a>' +
-    '</article>', item);
+      '</button>';
+    const copyBody =
+      '<span class="card-title">' + escapeHtml(item.title) + '</span>' +
+      '<span class="card-desc">' + escapeHtml(item.description || '') + '</span>' +
+      '<span class="card-cta">' + (item.program ? 'Inscripción' : 'Abrir el curso') + '</span>';
+    const copy = item.program
+      ? '<div class="course-card-copy">' +
+          '<a class="course-card-main" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' + copyBody + '</a>' +
+          '<a class="card-cta course-program" href="' + escapeHtml(item.program) + '" target="_blank" rel="noopener noreferrer">Programa</a>' +
+        '</div>'
+      : '<a class="course-card-copy" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' + copyBody + '</a>';
+    return withIconKinds('<article class="course-card">' + thumb + copy + '</article>', item);
   }
   const banner = item.iconBanner
     ? '<span class="card-banner" aria-hidden="true"><img src="' + escapeHtml(item.icon) + '" alt=""></span>'

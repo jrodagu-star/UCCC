@@ -785,6 +785,24 @@ button { border: 0; background: none; color: inherit; }
   object-fit: cover;
   background: #101820;
 }
+.course-thumb.thumb-tall {
+  width: 78px;
+  height: 132px;
+  background: #eef5fb;
+}
+.course-thumb.thumb-tall img {
+  object-fit: contain;
+  background: #eef5fb;
+}
+.course-card-main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+}
+.course-program { align-self: flex-start; text-decoration: none; }
 .course-card-copy {
   display: flex;
   flex-direction: column;
