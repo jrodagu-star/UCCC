@@ -570,10 +570,8 @@ const SECTIONS = [
         group: 'cursos-unidad',
         title: 'Actualización de cuidados críticos cardiovasculares, Madrid 25-27 noviembre 2026',
         description: 'II Jornadas de Cuidados Intensivos Cardiológicos, GTCICyRCP · SEMICYUC.',
-        url: 'https://gtcicyrcpsemicyuc.es/',
         image: '../assets/cursos/actualizacion-cuidados-criticos-cardiovasculares-2026.jpg',
-        summary: '../assets/cursos/resumen-congreso-cuidados-criticos-cardiovasculares.html',
-        direct: true
+        summary: '../assets/cursos/resumen-congreso-cuidados-criticos-cardiovasculares.html'
       },
       {
         id: 'curso-la-fe-2027',
@@ -733,22 +731,23 @@ function withIconKinds(html, item) {
 }
 
 function sectionItemCard(section, item) {
-  if (item.image && item.url) {
+  if (item.image && (item.url || item.summary)) {
     const thumbClass = 'course-thumb' + (item.imageTall ? ' thumb-tall' : '');
     const thumbImg = '<img src="' + escapeHtml(item.image) + '" alt="">';
     const thumb = item.summary
       ? '<a class="' + thumbClass + ' course-doc" href="' + escapeHtml(item.summary) + '" target="_blank" rel="noopener noreferrer" aria-label="Abrir el resumen de ' + escapeHtml(item.title) + '">' + thumbImg + '</a>'
       : '<button type="button" class="' + thumbClass + '" data-course-image="' + escapeHtml(item.image) + '" data-course-title="' + escapeHtml(item.title) + '" aria-label="Ampliar ' + escapeHtml(item.title) + '">' + thumbImg + '</button>';
+    const dest = item.url || item.summary;
     const copyBody =
       '<span class="card-title">' + escapeHtml(item.title) + '</span>' +
       '<span class="card-desc">' + escapeHtml(item.description || '') + '</span>' +
-      '<span class="card-cta">' + (item.program ? 'Inscripción' : 'Abrir el curso') + '</span>';
+      '<span class="card-cta">' + (item.program ? 'Inscripción' : (item.url ? 'Abrir el curso' : 'Abrir')) + '</span>';
     const copy = item.program
       ? '<div class="course-card-copy">' +
           '<a class="course-card-main" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' + copyBody + '</a>' +
           '<a class="card-cta course-program" href="' + escapeHtml(item.program) + '" target="_blank" rel="noopener noreferrer">Programa</a>' +
         '</div>'
-      : '<a class="course-card-copy" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' + copyBody + '</a>';
+      : '<a class="course-card-copy" href="' + escapeHtml(dest) + '" target="_blank" rel="noopener noreferrer">' + copyBody + '</a>';
     return withIconKinds('<article class="course-card">' + thumb + copy + '</article>', item);
   }
   const banner = item.iconBanner
