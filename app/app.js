@@ -572,6 +572,7 @@ const SECTIONS = [
         description: 'II Jornadas de Cuidados Intensivos Cardiológicos, GTCICyRCP · SEMICYUC.',
         url: 'https://gtcicyrcpsemicyuc.es/',
         image: '../assets/cursos/actualizacion-cuidados-criticos-cardiovasculares-2026.jpg',
+        summary: '../assets/cursos/resumen-congreso-cuidados-criticos-cardiovasculares.html',
         direct: true
       },
       {
@@ -734,10 +735,10 @@ function withIconKinds(html, item) {
 function sectionItemCard(section, item) {
   if (item.image && item.url) {
     const thumbClass = 'course-thumb' + (item.imageTall ? ' thumb-tall' : '');
-    const thumb =
-      '<button type="button" class="' + thumbClass + '" data-course-image="' + escapeHtml(item.image) + '" data-course-title="' + escapeHtml(item.title) + '" aria-label="Ampliar ' + escapeHtml(item.title) + '">' +
-        '<img src="' + escapeHtml(item.image) + '" alt="">' +
-      '</button>';
+    const thumbImg = '<img src="' + escapeHtml(item.image) + '" alt="">';
+    const thumb = item.summary
+      ? '<a class="' + thumbClass + ' course-doc" href="' + escapeHtml(item.summary) + '" target="_blank" rel="noopener noreferrer" aria-label="Abrir el resumen de ' + escapeHtml(item.title) + '">' + thumbImg + '</a>'
+      : '<button type="button" class="' + thumbClass + '" data-course-image="' + escapeHtml(item.image) + '" data-course-title="' + escapeHtml(item.title) + '" aria-label="Ampliar ' + escapeHtml(item.title) + '">' + thumbImg + '</button>';
     const copyBody =
       '<span class="card-title">' + escapeHtml(item.title) + '</span>' +
       '<span class="card-desc">' + escapeHtml(item.description || '') + '</span>' +

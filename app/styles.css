@@ -778,6 +778,11 @@ button { border: 0; background: none; color: inherit; }
   cursor: zoom-in;
   box-shadow: 0 6px 14px rgba(28, 32, 30, .16);
 }
+a.course-thumb {
+  display: block;
+  text-decoration: none;
+}
+a.course-thumb.course-doc { cursor: pointer; }
 .course-thumb img {
   display: block;
   width: 100%;
