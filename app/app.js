@@ -738,17 +738,22 @@ function sectionItemCard(section, item) {
       ? '<a class="' + thumbClass + ' course-doc" href="' + escapeHtml(item.summary) + '" target="_blank" rel="noopener noreferrer" aria-label="Abrir el resumen de ' + escapeHtml(item.title) + '">' + thumbImg + '</a>'
       : '<button type="button" class="' + thumbClass + '" data-course-image="' + escapeHtml(item.image) + '" data-course-title="' + escapeHtml(item.title) + '" aria-label="Ampliar ' + escapeHtml(item.title) + '">' + thumbImg + '</button>';
     const dest = item.url || item.summary;
-    const copyBody =
-      '<span class="card-title">' + escapeHtml(item.title) + '</span>' +
-      '<span class="card-desc">' + escapeHtml(item.description || '') + '</span>' +
-      '<span class="card-cta">' + (item.program ? 'Inscripción' : (item.url ? 'Abrir el curso' : 'Abrir')) + '</span>';
-    const copy = item.program
-      ? '<div class="course-card-copy">' +
-          '<a class="course-card-main" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' + copyBody + '</a>' +
+    const title = '<a class="course-title-link" href="' + escapeHtml(dest) + '" target="_blank" rel="noopener noreferrer">' +
+      '<span class="card-title">' + escapeHtml(item.title) + '</span></a>';
+    const desc = '<span class="card-desc">' + escapeHtml(item.description || '') + '</span>';
+    const actions = item.program
+      ? '<span class="course-actions">' +
+          '<a class="card-cta" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">Inscripción</a>' +
           '<a class="card-cta course-program" href="' + escapeHtml(item.program) + '" target="_blank" rel="noopener noreferrer">Programa</a>' +
-        '</div>'
-      : '<a class="course-card-copy" href="' + escapeHtml(dest) + '" target="_blank" rel="noopener noreferrer">' + copyBody + '</a>';
-    return withIconKinds('<article class="course-card">' + thumb + copy + '</article>', item);
+        '</span>'
+      : '<a class="card-cta" href="' + escapeHtml(dest) + '" target="_blank" rel="noopener noreferrer">' + (item.url ? 'Abrir el curso' : 'Abrir') + '</a>';
+    return withIconKinds(
+      '<article class="course-card">' +
+        '<div class="course-head">' + thumb + title + '</div>' +
+        '<div class="course-foot">' + desc + actions + '</div>' +
+      '</article>',
+      item
+    );
   }
   const banner = item.iconBanner
     ? '<span class="card-banner" aria-hidden="true"><img src="' + escapeHtml(item.icon) + '" alt=""></span>'
@@ -858,7 +863,7 @@ function openSection(sectionId) {
     const panels = present.map((group, index) => {
       const groupItems = items.filter((item) => item.group === group.id);
       const cards = groupItems.map((item) => sectionItemCard(section, item)).join('');
-      const grid = groupItems.every((item) => item.image && item.url) ? 'course-grid' : 'grid';
+      const grid = groupItems.every((item) => item.image && (item.url || item.summary)) ? 'course-grid' : 'grid';
       return '<section class="form-folder-panel tone-' + escapeHtml(group.tone || section.id) + (index === 0 ? ' is-on' : '') + '" id="grupo-' + escapeHtml(group.id) + '" data-folder="' + escapeHtml(group.id) + '">' +
         '<div class="' + grid + '">' + cards + '</div>' +
       '</section>';
